@@ -16,7 +16,7 @@ const app = express();
 app.disable("x-powered-by");
 registerCheckpoints(app, store);
 app.get("/api/health", (_q, r) =>
-  r.json({ ok: true, version: "0.1.0", contentHash }),
+  r.json({ ok: true, version: "0.1.1", contentHash }),
 );
 app.get("/api/profile", (_q, r) => r.json({ unlocks: store.unlocked() }));
 app.get("/api/catalog", (_q, r) => r.json(catalog));

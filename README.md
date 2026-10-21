@@ -1,6 +1,6 @@
 # THE CRAWL — The Concourse
 
-**LOCAL_ALPHA 0.1.0.** An implemented, server-authoritative six-floor tactical browser co-op game for 1–4 crawlers, based on the original design package below. This is an unofficial private fan-setting interpretation with original playable characters, writing, floors and procedural pixel art.
+**LOCAL_ALPHA 0.1.1.** An implemented, server-authoritative six-floor tactical browser co-op game for 1–4 crawlers, based on the original design package below. This is an unofficial private fan-setting interpretation with original playable characters, writing, floors and procedural pixel art.
 
 ```sh
 npm ci

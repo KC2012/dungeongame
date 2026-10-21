@@ -34,7 +34,7 @@ To use another machine on a trusted LAN, deliberately bind the host to the desir
 
 ## Saves and reconnect
 
-The host writes versioned SHA-256 checked checkpoints under `.data/`, with fsync/rename, three backups, plans, nonces, RNG streams, and room credentials stored as hashes. The append-only journal records committed revisions. Never delete this directory to resolve a load failure.
+The host writes versioned SHA-256 checked checkpoints under `.data/`, with file fsync/rename (plus directory fsync on POSIX; unsupported on Windows), three backups, plans, nonces, RNG streams, and room credentials stored as hashes. The append-only journal records committed revisions. Never delete this directory to resolve a load failure.
 
 The browser stores its invitation and session token in localStorage. After a live transport drop, the client attempts bounded automatic reconnection. Unacknowledged exploration input uses the original nonce for retry; no predicted movement is committed locally. If automatic recovery cannot reach the host, reload and choose **Reconnect / resume saved run**. After restarting the same host with the same DATA_DIR, the same button restores the checkpoint and the original crawler. Do not share the localStorage session token; it identifies that player's slot. A session takeover closes the older transport; it does not add a fifth crawler.
 
@@ -72,3 +72,5 @@ The campaign is explicitly debug assisted unless `CAMPAIGN_ASSISTED=0`. See JSON
 The browser soak owns a separate local host on port 2581 and four Chromium contexts. Default duration is 1800 seconds; `BROWSER_SOAK_SECONDS` changes duration, `BROWSER_SOAK_PORT` selects an isolated port, and `BROWSER_SOAK_OUTPUT` chooses a report path. Short checks must use a different output path so they do not overwrite the full endurance evidence. A failed or `complete:false` report is not a passing soak.
 
 For a restored cloud workspace, dependencies/build files can survive a snapshot; host processes do not. Start the documented command again and verify `/api/health`, then create a room or run the browser smoke. On this managed machine set `npm_config_cache=/workspace/.cache/npm` if the default home cache is not writable.
+
+Version 0.1.1 fixes Windows `EPERM` during room creation by omitting unsupported directory fsync. Keep the checkpoint-file flush active; running as Administrator or deleting saves is not required for this compatibility fix.

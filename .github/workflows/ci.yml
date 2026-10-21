@@ -28,3 +28,26 @@ jobs:
         with:
           name: browser-failure
           path: test-results/
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run tests/integration/persistence.test.ts tests/integration/windows-persistence.test.ts
+      - run: npm run build
+      - run: npx playwright install chromium
+      - name: Real Windows browser and room-save smoke
+        shell: pwsh
+        run: |
+          $env:CHROMIUM_PATH = node --input-type=module -e "import { chromium } from '@playwright/test'; console.log(chromium.executablePath())"
+          npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: windows-browser-failure
+          path: test-results/

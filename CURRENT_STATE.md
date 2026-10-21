@@ -1,6 +1,12 @@
 # Current state — 2026-10-21 UTC
 
-Version **0.1.0 LOCAL_ALPHA**. Full six-floor gameplay is implemented. **Not PLAYABLE_RC:** separate-network acceptance, a desktop performance baseline and human balance/accessibility review are outstanding. No public deployment, tunnel, paid account or purchase was made.
+Version **0.1.1 LOCAL_ALPHA**. Full six-floor gameplay is implemented. **Not PLAYABLE_RC:** separate-network acceptance, a desktop performance baseline and human balance/accessibility review are outstanding. No public deployment, tunnel, paid account or purchase was made.
+
+## Windows save compatibility patch (0.1.1)
+
+A real Windows user reported `EPERM: operation not permitted, fsync` while creating a room. The original Linux-only validation missed this. Node cannot flush a directory handle on Windows; the save routine now skips only that directory flush on Windows. The checkpoint file is still fsynced before atomic rename on every platform, and genuine file-write/flush errors still propagate. The journal and backup/version/checksum protections remain active. Existing schema-1 saves stay compatible.
+
+Focused verification: nine persistence tests pass, including two new Windows-branch cases that reject directory flushes, verify room checkpoints/journals/backups, and ensure a denied file flush preserves the prior save. Typecheck and production build pass. Full-suite/browser repeat and the native Windows CI job are being verified for this patch. The original 0.1.0 evidence below is retained as historical evidence rather than relabeled as Windows validation.
 
 | Milestone | Actual implementation and evidence |
 | --- | --- |
@@ -32,6 +38,6 @@ Version **0.1.0 LOCAL_ALPHA**. Full six-floor gameplay is implemented. **Not PLA
 - Ordinary four-crawler sample: alternate seed 0 and combat seed 3 VICTORY; seed 2 DEFEAT on floor 6; seed 1 initially bot-stuck at a narrow exit. Diagnostics proved a legal step aside cleared the route. Corrected voting/parking policy repeated seed 1 to VICTORY on floor 6 in 3,624 turns without assistance. Initial outcomes and follow-up are separate reports. This is not a human win-rate estimate.
 - Complete reusable setup script repeated Python checks, frozen npm install, all 527 tests and production build successfully. Cloud `install_script` and `start_skill` draft saved; no snapshot publication is claimed.
 
-The intended M0–M8 implementation is delivered as a **local alpha**, with milestone evidence and remaining external gates explicitly separated. The tagged source, compiled host/client and notices are packaged under /workspace/artifacts; docs/RELEASE.md describes extraction and runtime-only install. No checkpoint or session token is included. Source was committed locally, with no push or deployment.
+The intended M0–M8 implementation is delivered as a **local alpha**, with milestone evidence and remaining external gates explicitly separated. The tagged source, compiled host/client and notices are packaged under /workspace/artifacts; docs/RELEASE.md describes extraction and runtime-only install. No checkpoint or session token is included. Source was committed locally. The complete archive was subsequently uploaded to the existing public GitHub repository on delivery/local-alpha-zip to provide a tested HTTPS download; no game server was deployed.
 
 Remaining acceptance work: actual separate-internet/degraded-WAN play, desktop long-tail profiling, complete human accessibility/keyboard review, friends rubric, normal solo/team balance and run-length measurement. See docs/ACCEPTANCE_REPORT.md and docs/ISSUES.md. The 16.23-second load-test maximum is retained and prevents claiming full performance certification. No reproduced core save-loss, duplication, false-victory or infinite-reaction defect remains in the executed tests.

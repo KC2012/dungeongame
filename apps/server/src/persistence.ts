@@ -12,6 +12,7 @@ import {
   appendFileSync,
 } from "node:fs";
 import { join } from "node:path";
+import { platform } from "node:process";
 import { createHash } from "node:crypto";
 import { contentHash } from "../../../packages/content/src/index";
 import type { State, Action } from "../../../packages/engine/src/types";
@@ -116,11 +117,15 @@ export class SaveStore {
       closeSync(fd);
     }
     renameSync(temp, file);
-    const dir = openSync(this.directory, "r");
-    try {
-      fsyncSync(dir);
-    } finally {
-      closeSync(dir);
+    // Windows cannot fsync a directory handle (EPERM). The checkpoint file
+    // itself was still flushed before the atomic rename on every platform.
+    if (platform !== "win32") {
+      const dir = openSync(this.directory, "r");
+      try {
+        fsyncSync(dir);
+      } finally {
+        closeSync(dir);
+      }
     }
     appendFileSync(
       join(this.directory, id + ".journal"),
