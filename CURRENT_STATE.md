@@ -1,25 +1,30 @@
 # Current state — 2026-10-20
 
-STATUS: **SPEC_READY (v1.0 proposed design), GAME NOT BUILT.**
+Version: 0.1.0 local alpha in active implementation. **Not PLAYABLE_RC.**
 
-## What exists
-- Design bible, exact proposed mechanics, six floor objective/alternate boss data, room prefabs, content schema and generator, multiplayer, architecture, UI, Director, IP boundaries and testing/acceptance docs.
-- 448 *structured records* in 15 content catalogs (including 60 event-emitter coverage records, six floor configuration records). This figure is NOT 448 usable gameplay entities yet.
-- Python content validator plus 11 standard-library unit tests. Both executed and passed on 2026-10-20. No game simulation, runtime or network tests exist yet.
-- Copy-ready agent instructions and autonomous M0–M8 milestone plan.
+## Implemented checkpoint
+- Pinned TypeScript workspaces; Phaser 3.90 client, Colyseus 0.16 authoritative server, Vite build, Ajv content loader, Vitest and Playwright.
+- Server-backed 1–4 player private lobby; invitation secret, per-player session token, server-only command execution, AP action queues and readiness.
+- Headless seeded engine: movement, LOS/pathfinding, basic combat, inventory, effects, environmental queue, progression, floor objectives, boss telegraphs, saferoom actions and run endings. These systems still require full integration/balance verification.
+- Authored JSON content loaded; named trait/compiler tables. Compilation coverage is not proof every behavior is complete.
+- Six-floor room-template generator and connectivity checks; functional canvas map and DOM controls.
+- Atomic checksummed checkpoints with three backups, corrupt-file preservation and recovery; session plans/nonces retained.
 
-## Known material tasks for Codex
-1. Build actual engine, UI, server, content compiler, map generator, boss scripts, effect/AIs and networking.
-2. Compile content `trait` shorthand into fully specified runtime modifiers and triggers. Run catalog coverage tests to detect inert effects; adjust balance safely.
-3. Implement achievement event emitters, not just their data mapping. The 60 entries in `achievement_events.json` are **required hooks**, not implemented events.
-4. Perform fair 1–4 player balancing and all in-game headless simulation and remote multiplayer tests.
-5. Test quick tunnel integration on Windows/other target OS; include offline fallback and persistence behavior.
+## Evidence at this checkpoint
+- `npm run validate:content`: 448 entries validated with Ajv and reference checks.
+- `npm test`: 244 tests passed (includes 600 floor-generation seeds). Initial save/hash regression corrected.
+- `npm run build`: TypeScript check and production client/server build passed.
+- `npm run e2e`: 2 tests passed using system Chromium, including two independent browser contexts in one real Colyseus lobby and confirmed movement; settings tested at 1280×720 and 1920×1080.
+- Python content validator passed before implementation.
 
-## Claims deliberately NOT made
-- Not a playable game or working app.
-- Not a proof that generated dungeon graphs always connect; **only** local 9×9 prefab connectivity is checked today.
-- Not evidence that 75–120 minute run pacing works.
-- Not evidence of network latency, operating-system support, sprite quality, combat balance, six boss resolutions, or user playtest satisfaction.
+## Remaining milestone work
+- M0 lobby gate demonstrated. M1/M2 core and generator exist; extend deterministic replay, system scenarios and validation.
+- M3: verify actual effect/trait behaviors and event emitters, not only compiler coverage.
+- M4: demonstrate complete runs, both victory routes per boss, solo/team balance.
+- M5: four-browser tactical round, malformed/duplicate packets, reconnect and actual host process restart.
+- M6: full keyboard and gameplay flows; currently pass only title/settings and basic map/inventory smoke.
+- M7: seed fuzz, 30k-round soak, performance measurements and defect remediation.
+- M8: hosting docs, coverage report, actual acceptance comparison and local release artifact.
+- Separate-internet testing requires actual separate networks and remains unverified. No public deployment or tunnel started.
 
-## Update after each implementation milestone
-Actual tests, actual blockers, commands, content compilation coverage, mini-run completion, four-client multi-browser logs, saved seed fixtures, runtime version and next step.
+Continue implementation autonomously. Do not claim completion from this checkpoint.
