@@ -1,3 +1,21 @@
+0.1.1 WINDOWS COMPATIBILITY PATCH — 2026-10-21
+
+A Windows user reproduced EPERM during room creation. Unconditional directory
+fsync was the cause; Windows does not support it. The file itself remains fsynced
+before atomic rename. Only Windows directory flushing is skipped; real file
+flush errors still abort the save and preserve the previous checkpoint.
+
+PASS: 9 focused persistence tests, including 2 simulated Windows regressions.
+PASS: local full suite, 10 files / 529 tests / zero failures, 94.27 seconds.
+PASS: typecheck and rebuilt production server/client.
+PASS: all 6 local browser scenarios after rebuild.
+PASS: actual windows-latest CI persistence tests, build and all 6 browser cases.
+PASS: ubuntu-latest CI validation, full suite, build and all 6 browser cases.
+Workflow: https://github.com/KC2012/dungeongame/actions/runs/39559708156
+Evidence: docs/windows-fix-verification.json.
+No dependency upgrade, save-schema change, administrator privileges or save
+removal is required. The historical 0.1.0 report below remains its actual evidence.
+
 THE CRAWL 0.1.0 LOCAL_ALPHA — actual verification, 2026-10-21 UTC
 
 Host: Linux x86_64 KVM cloud VM; 5 visible logical CPUs, Intel Xeon Platinum

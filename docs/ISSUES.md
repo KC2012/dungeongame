@@ -1,6 +1,6 @@
 # Known limits and remaining acceptance work
 
-Release status: **LOCAL_ALPHA 0.1.0**. No reproduced save-loss, duplication, false-victory or unbounded-reaction defect remains in the final automated suite. That is bounded evidence, not a guarantee of defect-free play.
+Release status: **LOCAL_ALPHA 0.1.1**. No reproduced save-loss, duplication, false-victory or unbounded-reaction defect remains in the final automated suite. That is bounded evidence, not a guarantee of defect-free play.
 
 | Priority | Issue | Reproduction/evidence and next useful check |
 | --- | --- | --- |
@@ -14,3 +14,5 @@ Release status: **LOCAL_ALPHA 0.1.0**. No reproduced save-loss, duplication, fal
 Initial browser soak failure is preserved, not counted as a pass. See ACCEPTANCE_REPORT.md and the final endurance report for the scope of the repeat. Saved drafts and CI configuration are not evidence that a new cloud snapshot or GitHub workflow was published/executed.
 
 No content catalogs were removed to satisfy tests. No paid service, registration, public deployment, remote AI, live spectator account, mobile control scheme or PvP was added. Those excluded product scopes remain as documented in DECISIONS.md.
+
+Fixed in 0.1.1: Windows room creation failed on unsupported directory fsync. Native Windows persistence/build/browser CI now passes; see windows-fix-verification.json. File flush failures are still fatal, so this fix does not mask actual write permission errors.

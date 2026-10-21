@@ -1,0 +1,25 @@
+{
+  "version": "0.1.1",
+  "codeCommit": "5e506c0baf99c61c9dd5a668da8f509e572c8b92",
+  "workflow": "https://github.com/KC2012/dungeongame/actions/runs/39559708156",
+  "nativeWindows": {
+    "job": "https://github.com/KC2012/dungeongame/actions/runs/39559708156/job/119087732383",
+    "persistenceTests": "passed",
+    "productionBuild": "passed",
+    "sixBrowserScenarios": "passed",
+    "jobConclusion": "success"
+  },
+  "ubuntuCI": {
+    "job": "https://github.com/KC2012/dungeongame/actions/runs/39559708156/job/119087732600",
+    "jobConclusion": "success"
+  },
+  "local": {
+    "testsPassed": 529,
+    "testFiles": 10,
+    "failed": 0,
+    "durationSeconds": 94.27,
+    "browserTestsPassed": 6,
+    "productionBuild": "passed"
+  },
+  "change": "Skip unsupported directory fsync on Windows only. Preserve checkpoint file fsync, atomic rename, checksums, backups, journal and file-error propagation."
+}
