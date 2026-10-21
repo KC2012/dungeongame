@@ -1,0 +1,9 @@
+{
+  "round": 20814,
+  "samples": 50,
+  "medianMs": 15.202289999999948,
+  "p95Ms": 22.936623999999938,
+  "maxMs": 57.122375000000034,
+  "distinctChecksums": 1,
+  "qualification": "Repeated the previously slow round from a captured state, after full load run; wall-clock stalls did not reproduce in this focused check."
+}

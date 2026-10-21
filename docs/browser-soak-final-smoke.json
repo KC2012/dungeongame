@@ -1,0 +1,49 @@
+{
+  "complete": true,
+  "seconds": 60,
+  "elapsedSeconds": 62.763,
+  "players": 4,
+  "cycles": 57,
+  "initialHeapMiB": [
+    6.554191589355469,
+    7.294399261474609,
+    6.9202117919921875,
+    7.010154724121094
+  ],
+  "finalHeapMiB": [
+    7.921955108642578,
+    7.342628479003906,
+    7.341533660888672,
+    7.342311859130859
+  ],
+  "samples": [
+    {
+      "elapsedSeconds": 1.448,
+      "heapMiB": [
+        7.575843811035156,
+        7.080589294433594,
+        6.955818176269531,
+        7.0103607177734375
+      ],
+      "revision": 3
+    },
+    {
+      "elapsedSeconds": 62.294,
+      "heapMiB": [
+        7.919841766357422,
+        7.342647552490234,
+        7.341587066650391,
+        7.342037200927734
+      ],
+      "revision": 59
+    }
+  ],
+  "errors": [],
+  "finalRevisions": [
+    "59",
+    "59",
+    "59",
+    "59"
+  ],
+  "qualification": "Four independent local Chromium contexts; active server-confirmed keyboard exploration and snapshot rendering. Not a remote network or human balance test."
+}

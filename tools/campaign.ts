@@ -5,6 +5,7 @@ const count = Number(process.env.CAMPAIGN_SEEDS ?? 100);
 const assisted = process.env.CAMPAIGN_ASSISTED !== "0";
 const players = Number(process.env.CAMPAIGN_PLAYERS ?? 1);
 const rows: any[] = [];
+const botSourceHash = createHash("sha256").update(readFileSync("tools/bot.ts")).digest("hex");
 const sourceHash = createHash("sha256")
   .update(
     ["packages/engine/src", "packages/content/src"]
@@ -42,6 +43,7 @@ for (let seed = first; seed < first + count; seed++) {
       {
         assisted,
         sourceHash,
+        botSourceHash,
         assistance: assisted
           ? "Starting 500 HP, +8 armor and rail driver; no teleporting, save resets, free objective flags or in-run stat modifications."
           : "None",

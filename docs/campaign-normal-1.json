@@ -1,0 +1,43 @@
+{
+  "assisted": false,
+  "assistance": "None",
+  "elapsedSeconds": 24.303,
+  "rows": [
+    {
+      "seed": 0,
+      "players": 1,
+      "route": "alternate",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 875,
+      "reason": "achievement"
+    },
+    {
+      "seed": 1,
+      "players": 1,
+      "route": "combat",
+      "result": "DEFEAT",
+      "floor": 2,
+      "turns": 208,
+      "reason": "party_wipe"
+    },
+    {
+      "seed": 2,
+      "players": 1,
+      "route": "combat",
+      "result": "DEFEAT",
+      "floor": 3,
+      "turns": 419,
+      "reason": "party_wipe"
+    },
+    {
+      "seed": 3,
+      "players": 1,
+      "route": "combat",
+      "result": "DEFEAT",
+      "floor": 3,
+      "turns": 415,
+      "reason": "party_wipe"
+    }
+  ]
+}

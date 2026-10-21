@@ -1,0 +1,12 @@
+{
+  "numTotalTestSuites": 20,
+  "numPassedTestSuites": 20,
+  "numFailedTestSuites": 0,
+  "numTotalTests": 527,
+  "numPassedTests": 527,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "success": true,
+  "command": "npm test -- --reporter=default --reporter=json --outputFile=/tmp/crawl-final-tests.json",
+  "qualification": "Local unit/integration suite; does not establish remote or human acceptance."
+}

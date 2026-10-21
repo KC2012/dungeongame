@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 const seconds = Number(process.env.BROWSER_SOAK_SECONDS ?? 1800);
+const port = process.env.BROWSER_SOAK_PORT ?? "2581";
 const reportPath =
   process.env.BROWSER_SOAK_OUTPUT ?? "docs/browser-soak-report.json";
 const dir = mkdtempSync(join(tmpdir(), "crawl-browser-"));
@@ -13,7 +14,7 @@ const errors: string[] = [];
 let browser: Browser | undefined;
 try {
   host = spawn("node", ["dist/server.js"], {
-    env: { ...process.env, DATA_DIR: dir, PORT: "2581" },
+    env: { ...process.env, DATA_DIR: dir, PORT: port },
     stdio: ["ignore", "pipe", "pipe"],
   });
   host.stdout?.on("data", (c) => (output += String(c)));
@@ -34,7 +35,7 @@ try {
   );
   const pages = await Promise.all(contexts.map((c) => c.newPage()));
   for (const p of pages) p.on("pageerror", (e) => errors.push(e.message));
-  const root = "http://127.0.0.1:2581";
+  const root = "http://127.0.0.1:" + port;
   await pages[0].goto(root);
   await pages[0].locator("#seed").fill("1234");
   await pages[0]

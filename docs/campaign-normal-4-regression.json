@@ -1,0 +1,19 @@
+{
+  "assisted": false,
+  "sourceHash": "26ac24175d4e3fcfb23b920e423b02ba00690a4b16c9a4c4272b33730d0c0a0a",
+  "assistance": "None",
+  "elapsedSeconds": 49.951,
+  "rows": [
+    {
+      "seed": 1,
+      "players": 4,
+      "route": "combat",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 3624,
+      "reason": "achievement"
+    }
+  ],
+  "botSourceHash": "ff25b99a4b01519985ea84c7b47323ce2262eb1de7ea9c5669f7f41a4a9324c8",
+  "qualification": "Unassisted follow-up after bots learned to clear the exit after voting and route remaining voters independently. Initial failed sample is retained separately. One seed is not a balance estimate."
+}

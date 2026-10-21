@@ -190,10 +190,44 @@ export function playBot(
         return { type: "ABILITY", id: "throw_debris", target: threat.id };
       return moveToward(a, threat);
     }
+    // A vote persists. Move voted crawlers away from a narrow exit so the
+    // remaining crew can approach and vote instead of blocking one another.
+    if (s.bossDefeated && s.descendVotes?.includes(a.id)) {
+      const exit = s.objects.find((o) => o.kind === "exit")!;
+      if (distance(a, exit) >= 3) return { type: "WAIT" };
+      const occupied = Object.values(s.actors).filter(
+        (v) => !v.dead && v.id !== a.id,
+      );
+      const approach = Object.values(s.actors)
+        .filter(
+          (v) =>
+            v.kind === "crawler" && !v.dead && !s.descendVotes?.includes(v.id),
+        )
+        .flatMap((v) => path(s, v, exit, true));
+      const options: Point[][] = [];
+      for (let y = exit.y - 4; y <= exit.y + 4; y++)
+        for (let x = exit.x - 4; x <= exit.x + 4; x++) {
+          const p = { x, y };
+          if (
+            distance(p, exit) < 3 ||
+            distance(p, exit) > 4 ||
+            !walkable(s, p) ||
+            occupied.some((v) => samePoint(v, p)) ||
+            approach.some((v) => samePoint(v, p)) ||
+            Object.values(tile(s, p)!.hazards).some((h) => h.damage > 0)
+          )
+            continue;
+          const steps = path(s, a, p, true, occupied);
+          if (steps.length) options.push(steps);
+        }
+      options.sort((p, q) => p.length - q.length);
+      if (options[0]) return { type: "MOVE", ...options[0][0] };
+      return { type: "WAIT" };
+    }
     const leader = s.actors.p0;
     if (a.id !== "p0" && !leader.dead && !leader.downed) {
       const exit = s.objects.find((o) => o.kind === "exit")!;
-      if (s.bossDefeated && distance(leader, exit) <= 2) {
+      if (s.bossDefeated && s.objective.length >= catalog.floors[s.floor - 1].requiredObjective.goal) {
         if (distance(a, exit) <= 1) return { type: "INTERACT", id: exit.id };
         return moveToward(a, exit);
       }

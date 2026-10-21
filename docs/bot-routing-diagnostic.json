@@ -1,0 +1,10 @@
+{
+  "seed": 1,
+  "players": 4,
+  "result": "BOT_GATE_CONGESTION",
+  "floor": 2,
+  "reason": "Voted bots remained in the narrow exit approach. Votes persist; an ordinary one-tile step aside clears a reachable route for the remaining crawler. Bot now parks voted crawlers off approach paths.",
+  "legalStepAside": true,
+  "remainingCrawlerPathSteps": 14,
+  "followup": "Seed 1 repeated without assistance: VICTORY on floor 6, 3,624 turns. See campaign-normal-4-regression.json."
+}

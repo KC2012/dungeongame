@@ -1,16 +1,130 @@
-test_abilities_are_not_stubs (test_preproduction.CatalogContract.test_abilities_are_not_stubs) ... ok
-test_achievement_events_have_emitters (test_preproduction.CatalogContract.test_achievement_events_have_emitters) ... ok
-test_boss_alternatives (test_preproduction.CatalogContract.test_boss_alternatives) ... ok
-test_broker_cannot_infinite_money (test_preproduction.CatalogContract.test_broker_cannot_infinite_money) ... ok
-test_class_and_adaptation_supply (test_preproduction.CatalogContract.test_class_and_adaptation_supply) ... ok
-test_ingredients_and_sponsor_items_exist (test_preproduction.CatalogContract.test_ingredients_and_sponsor_items_exist) ... ok
-test_no_zero_power_active_effect (test_preproduction.CatalogContract.test_no_zero_power_active_effect) ... ok
-test_room_structure (test_preproduction.CatalogContract.test_room_structure) ... ok
-test_saved_manifest_matches (test_preproduction.CatalogContract.test_saved_manifest_matches) ... ok
-test_six_floors_unique_and_ordered (test_preproduction.CatalogContract.test_six_floors_unique_and_ordered) ... ok
-test_validator (test_preproduction.CatalogContract.test_validator) ... ok
+THE CRAWL 0.1.0 LOCAL_ALPHA — actual verification, 2026-10-21 UTC
 
-----------------------------------------------------------------------
-Ran 11 tests in 1.850s
+Host: Linux x86_64 KVM cloud VM; 5 visible logical CPUs, Intel Xeon Platinum
+8573C; Node v24.19.0, npm 11.9.0, Python 3.12.14, Chromium 154.0.8037.57. Shared
+virtual-machine timings are not a standard-desktop performance baseline.
 
-OK
+PASS: frozen dependency installation
+  npm ci --no-audit --no-fund
+  192 packages installed from the pinned package-lock.json.
+  The complete reusable setup script was executed again successfully, including
+  Python validation/tests, npm ci, TS validation, all 527 tests and build.
+
+PASS: original schema/data checks
+  PYTHONDONTWRITEBYTECODE=1 /workspace/.venvs/dungeongame/bin/python tools/validate.py
+  448 records: structure/schema, references, local room connectivity valid.
+  .../bin/python -m unittest discover -s tests -v
+  11 tests passed. Formal jsonschema installed, not silently skipped.
+
+PASS: TypeScript content validation/coverage
+  npm run validate:content — 448 records passed Ajv/reference checks.
+  npm run coverage:content — all 15 catalogs listed with IDs/executable routes;
+  60 achievement-event sources, zero missing source mentions. Structural coverage
+  is not asserted to prove all behaviors. See docs/content-coverage.json.
+
+PASS: automated engine and integration tests
+  npm test -- --reporter=default --reporter=json --outputFile=/tmp/crawl-final-tests.json
+  9 files, 527 passed, 0 failed, 0 skipped, 56.05s.
+  Full fresh-install setup repeat: 527 passed, 64.40s.
+  Engine 237; content behavior 152; progression 24; reactions 11;
+  achievement hooks 60; offers 33; fuzz 2; persistence 7; network 1.
+  Includes 10,000 randomized rounds / 80,000 submitted commands, independent-
+  process replay, 12 boss routes, all 58 skill actions, equipment/item paths,
+  environmental gold incidents, all 60 actual-outcome hooks, all 25 bargains,
+  resource/transaction invariants and unknown-ID refunded rejection.
+  Integration exercises four independent SDK clients, spoofed/duplicate/stale
+  commands, oversized input, role transfer, saved plans/telegraphs/RNG, actual
+  authority process termination/restart and checkpoint API authorization/fork.
+  Expected SDK onError logs occur during controlled host termination.
+  Summary without credentials: docs/test-summary.json.
+
+PASS: production build and local host
+  npm run build — TypeScript, Vite client and esbuild server passed.
+  Client ~1.93MB JavaScript (~459KB gzip); Vite chunk-size warning retained.
+  npm run host and npm run dev both served a real playable browser lobby/map.
+  No public host/tunnel or paid external service was launched.
+
+PASS: browser smoke
+  npm run e2e — 6 tests passed with system Chromium.
+  Two and four separate contexts join the same real authority; tactical round
+  canonical hashes agree. Reload/reconnect retains the crawler identity.
+  Keyboard settings/inventory/movement/targeting and 1280x720/1920x1080 fit;
+  crawler outline remains visible after resize. Tools expose active Use.
+  Controlled transport loss drops an unacknowledged ACTION before disconnect;
+  automatic reconnect restores input. A separate dropped ACTION is resent with
+  its original nonce and does not resolve a duplicate turn.
+  These are local transport tests, not separate-internet or 3% WAN-loss evidence.
+  Runner owns port 2570 and isolated .data/e2e, no reused unknown server.
+
+PASS: generation sweep
+  npx tsx tools/seed-sweep.ts
+  10,000 seeds per floor; 60,000 total valid, 78.26s. Four safe spawns and required
+  objectives/devices/safe/exit reachable with optional links locked. A separate
+  forced fixture checks the authored fallback. docs/generation-report.json.
+
+PASS: assisted whole campaigns (progression, not balance)
+  npx tsx tools/campaign.ts
+  Two 50-seed solo partitions, same recorded source hash: 100 VICTORY on floor 6;
+  10 alternate-route and 90 combat-route seeds. Ordinary walking/AP/objective
+  interactions/saferoom descent; no teleports, checkpoint resets or objective
+  flag cheats. Starting 500 HP, +8 armor and rail driver explicitly disclosed.
+  Four-crawler assisted seed 0 also VICTORY, 4,568 turns.
+  Reports retain the actual source hash where captured, not the release hash.
+  docs/campaign-assisted-{1,4}.json.
+
+DIAGNOSTIC: ordinary bots
+  Solo sample: one alternate victory, three combat defeats on floors 2-3.
+  Four-crawler sample: alternate seed 0 and combat seed 3 VICTORY, seed 2
+  DEFEAT on floor 6, seed 1 bot exit congestion. An ordinary legal step aside
+  clears the route; the corrected bot then won seed 1 on floor 6 without
+  assistance (3,624 turns). Initial failures remain recorded separately.
+  docs/campaign-normal-{1,4}.json and bot-routing-diagnostic.json.
+  Small samples are not human win rates; debug-
+  assisted success cannot certify normal balance or desired run duration.
+
+PASS WITH PERFORMANCE LIMIT: 30,000-round load/invariant soak
+  npm run soak — four crawlers + 50 enemies, debug survival stats, 45x45 arena.
+  741.36s total; median 18.92ms; p95 43.76ms; MAXIMUM 16,227.21ms.
+  Max sampled heap 64.20MiB; max deferred events 0; no invariant failure.
+  docs/soak-report.json records the long-tail stalls, not only favorable metrics.
+  Fifty repeated replays of a prior captured slow round had one hash, median
+  15.20ms, p95 22.94ms, maximum 57.12ms. That does not explain every stall.
+  Desktop baseline/profiling remains open; no full performance certification.
+
+BROWSER ENDURANCE
+  The first attempt stalled around minute 23; partial evidence preserved as
+  docs/browser-soak-initial.json, never counted as a pass. Root cause was not
+  established by that driver. See the final browser-soak-report.json complete
+  flag and CURRENT_STATE.md for the repeat outcome.
+  Repeat PASS: 1,801.48s, 3,384 actions, zero browser errors, four final
+  revisions 3,386; final heaps 7.71/7.55/7.15/7.55MiB. This run began before
+  final targeting/camera/watchdog polish. Final-build separate smoke PASS:
+  62.76s, 57 actions, zero errors, four revisions 59; six browser tests also pass. The driver now waits for
+  revision confirmation, captures diagnostics, and supports separate outputs.
+
+Remaining acceptance limits
+  No four-person separate-internet session/tunnel, different-machine test,
+  250ms RTT/3% WAN packet loss, host sleep or tab-hidden acceptance run.
+  Human friends rubric, solo/team balance, 75-120 minute duration, full keyboard/
+  screen-reader audit, cross-OS replay and standard-desktop timing unmeasured.
+  GitHub CI file authored locally; no push or GitHub workflow run claimed.
+  LOCAL_ALPHA status is mandatory until all release gates have evidence.
+
+Reproduction and delivery
+  README.md and docs/HOSTING.md describe install/dev/build/host and controls.
+  docs/ACCEPTANCE_REPORT.md maps every gate; docs/ISSUES.md lists current limits.
+  docs/THIRD_PARTY_NOTICES.md contains installed dependency notices (181 versions).
+  Source commits and a local version tag accompany a source+compiled zip and
+  SHA-256 in /workspace/artifacts. Runtime dependencies still require npm ci.
+  No private run checkpoints or session tokens are included in that archive.
+
+Failures investigated during development (not counted as passes)
+  An initial blocking fuzz loop exceeded its worker timeout under concurrent
+  load. It now yields between batches with a 180s bound, preserving all 10,000
+  rounds and assertions; final complete suites passed.
+  The first WebSocket-route test stalled before joining; controlled native
+  transport interception now exercises actual delivered/lost ACTION messages.
+  Screenshot review caught viewport-resize camera drift; recentering and a real
+  canvas crawler-visibility regression passed at both supported resolutions.
+  The optional official Playwright browser download was denied by cloud egress.
+  Tests used the available system Chromium; verification/TLS were not disabled.
