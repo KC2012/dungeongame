@@ -87,7 +87,7 @@ export function deriveEvents(s: State, from: number) {
       if (s.objective.length >= 2) add("multiple_checks", e);
     }
     if (e.type === "machine_hacked") {
-      add("objective_exploit", e);
+      if (e.payload.objective) add("objective_exploit", e);
       if (current.some((v) => v.type === "machine_disable"))
         add("device_combo", e);
       if (e.payload.wasLocked) add("locked_path_bypass", e);

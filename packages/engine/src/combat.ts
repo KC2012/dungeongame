@@ -11,7 +11,9 @@ export function status(
   potency: number,
   source: string,
 ) {
+  a.statusSerial = (a.statusSerial ?? 0) + 1;
   a.statuses[name] = {
+    serial: a.statusSerial,
     duration: Math.max(a.statuses[name]?.duration ?? 0, duration),
     potency,
     source,
@@ -35,7 +37,10 @@ export function hurt(
     target.kind === "enemy" && !target.tags.includes("boss")
       ? entry("monsters", target.catalogId).weakness
       : undefined;
-  let n = Math.max(0, amount - resistance + (weakness === element ? 3 : 0));
+  let n = Math.max(
+    guaranteed ? 0 : 1,
+    amount - resistance + (weakness === element ? 3 : 0),
+  );
   if (
     (target.tags.includes("metal") || stat(target, "metal") > 0) &&
     tile(s, target)?.tags.includes("wet") &&
@@ -54,11 +59,16 @@ export function hurt(
     { amount: n, absorbed: barrier, element },
     target,
   );
-  if (barrier && target.kind === "crawler")
+  if (
+    barrier &&
+    target.kind === "crawler" &&
+    target.shieldSource &&
+    target.shieldSource !== target.id
+  )
     emit(
       s,
       element === "shock" ? "shock_ally_saved" : "guard_ally",
-      source,
+      target.shieldSource,
       [target.id],
       { absorbed: barrier },
     );
@@ -92,6 +102,7 @@ export function hurt(
         emit(s, "first_death", source, [target.id], {}, target);
       } else {
         target.downed = 3;
+        target.ap = 0;
         target.downedAt = s.round;
         emit(s, "downed", source, [target.id], {}, target);
       }
@@ -206,7 +217,7 @@ export function push(
   for (let i = 0; i < magnitude; i++) {
     const p = { x: t.x + dx, y: t.y + dy };
     if (
-      (!walkable(s, p)&&tile(s,p)?.kind!=='pit') ||
+      (!walkable(s, p) && tile(s, p)?.kind !== "pit") ||
       Object.values(s.actors).some((o) => !o.dead && !same(o, t) && same(o, p))
     ) {
       hurt(s, t, 2 * (magnitude - i), "physical", a.id);
@@ -214,14 +225,79 @@ export function push(
     }
     t.x = p.x;
     t.y = p.y;
-    if(tile(s,p)?.kind==='pit'){hurt(s,t,9,'physical',a.id,true);emit(s,'pit_fall',a.id,[t.id],{},p);break;}
-    for (const [el, h] of Object.entries(tile(s, t)!.hazards)) {
-      if (h.damage) hurt(s, t, h.damage, el as Element, a.id, true);
+    if (tile(s, p)?.kind === "pit") {
+      hurt(s, t, 9, "physical", a.id, true);
+      emit(s, "pit_fall", a.id, [t.id], {}, p);
+      break;
     }
+    applyTileHazards(s, t, a.id);
     if (t.dead) {
       emit(s, "push_hazard_kill", a.id, [t.id], {}, t);
       break;
     }
   }
   emit(s, pull ? "pull" : "push", a.id, [t.id], {}, t);
+}
+
+/** Shared arrival/standing exposure ledger prevents double damage in one resolution. */
+export function applyTileHazards(s: State, a: Actor, credit?: string): void {
+  const exposed = new Set(s.exposures ?? []);
+  for (let hop = 0; hop < 4 && !a.dead; hop++) {
+    const origin = { x: a.x, y: a.y },
+      t = tile(s, a);
+    if (!t) break;
+    for (const [element, h] of Object.entries(t.hazards)) {
+      const key = a.id + ":" + element;
+      if (exposed.has(key) || (h.disabled && h.disabled > 0)) continue;
+      exposed.add(key);
+      const source = credit ?? h.source;
+      if (
+        h.source === "conveyor_belt" ||
+        (h.source === "magnetic_pulse" &&
+          (a.tags.includes("metal") || stat(a, "metal") > 0))
+      ) {
+        const next = { x: a.x + 1, y: a.y };
+        if (
+          walkable(s, next) &&
+          !Object.values(s.actors).some((v) => !v.dead && same(v, next))
+        ) {
+          a.x = next.x;
+          a.y = next.y;
+          emit(s, "conveyor", source, [a.id], {}, next);
+        }
+      }
+      if (h.source === "glue_trap") status(a, "chilled", 2, 1, source);
+      if (h.source === "crusher_plate" && s.round % 2 === 1) continue;
+      if (
+        h.damage &&
+        a.kind === "crawler" &&
+        ["glue_trap", "crusher_plate", "spiked_grate", "trapdoor_pit"].includes(
+          h.source,
+        )
+      )
+        emit(s, "trap_trigger_self", a.id, [], { hazard: h.source }, a);
+      if (h.damage) hurt(s, a, h.damage, element as Element, source, true);
+      if (element === "fire" && h.damage) status(a, "burning", 2, 3, source);
+      if (element === "poison") status(a, "poisoned", 3, 2, source);
+      if (element === "acid" && h.intensity >= 2)
+        status(a, "corroded", 2, 2, source);
+      if (element === "cold" && h.intensity >= 2)
+        status(a, "chilled", 1, 1, source);
+      if (element === "shock" && (t.tags.includes("wet") || h.intensity >= 2))
+        status(a, "stunned", 1, 1, source);
+    }
+    if (t.trap && a.kind === "enemy") {
+      let dealt = 0;
+      if (!exposed.has(a.id + ":physical")) {
+        exposed.add(a.id + ":physical");
+        dealt = hurt(s, a, t.trap.damage, "physical", t.trap.owner, true);
+      }
+      if (dealt && a.dead && t.kind === "door")
+        emit(s, "door_trap_kill", t.trap.owner, [a.id], {}, a);
+      status(a, "chilled", 1, 1, t.trap.owner);
+      delete t.trap;
+    }
+    if (same(origin, a)) break;
+  }
+  s.exposures = [...exposed];
 }

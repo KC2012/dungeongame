@@ -1,3 +1,4 @@
+import { compareIds } from "./random";
 import type { Action, Actor, Plan, Point, State } from "./types";
 import {
   catalog,
@@ -9,7 +10,7 @@ import { clone, hash, random, seedNumber } from "./random";
 import { generateFloor, makeActor } from "./generation";
 import { distance, los, neighbors, path, same, tile, walkable } from "./grid";
 import { emit, reject, award } from "./events";
-import { attack, hurt, push, status } from "./combat";
+import { attack, hurt, push, status, applyTileHazards } from "./combat";
 import { effect, revive } from "./effects";
 import { environment, enqueue } from "./environment";
 import { applyOffer, enterRiskRoom } from "./offers";
@@ -170,8 +171,10 @@ function phaseCheck(s: State) {
         (visible(s, a) ||
           (a.alert && living(s).some((c) => distance(a, c) <= 12))),
     ) ||
-    living(s).some((a) =>
-      Object.values(tile(s, a)?.hazards ?? {}).some((h) => h.damage > 0),
+    living(s).some(
+      (a) =>
+        Object.values(tile(s, a)?.hazards ?? {}).some((h) => h.damage > 0) ||
+        ["burning", "poisoned", "bleeding"].some((k) => !!a.statuses[k]),
     );
   s.phase =
     alerted ||
@@ -199,7 +202,7 @@ export function actionCost(s: State, a: Actor, c: Action): number {
     ].includes(c.type)
   )
     return s.phase === "SAFE_ROOM" ? 0 : c.type === "EQUIP" ? 1 : 0;
-  if (c.type === "ABILITY") return entry("abilities", c.id ?? "").apCost;
+  if (c.type === "ABILITY") return catalog.abilities.find(e=>e.id===c.id)?.apCost??4;
   if (c.type === "ATTACK")
     return a.equipment.weapon &&
       entry("items", a.equipment.weapon).range === 1 &&
@@ -207,7 +210,7 @@ export function actionCost(s: State, a: Actor, c: Action): number {
       ? 1
       : 2;
   if (c.type === "REVIVE" || c.type === "CRAFT") return 2;
-  if (c.type === "USE") return entry("items", c.id ?? "").useCost ?? 1;
+  if (c.type === "USE") return catalog.items.find(e=>e.id===c.id)?.useCost??1;
   if (c.type === "MOVE") {
     const t = tile(s, { x: c.x!, y: c.y! });
     return (
@@ -291,7 +294,7 @@ function equipmentAttack(s: State, a: Actor, t: Actor): boolean {
               Math.sign(v.x - t.x) === Math.sign(t.x - a.x))) &&
           los(s, t, v),
       )
-      .sort((a, b) => a.id.localeCompare(b.id))[0];
+      .sort((a, b) => compareIds(a.id, b.id))[0];
     if (second)
       attack(
         s,
@@ -308,6 +311,8 @@ function equipmentAttack(s: State, a: Actor, t: Actor): boolean {
 }
 export function perform(s: State, a: Actor, c: Action): boolean {
   if (a.dead || a.downed || s.phase === "RESULT") return false;
+  const requiredCatalog=c.type==='ABILITY'?'abilities':c.type==='CRAFT'?'recipes':['USE','EQUIP','DROP','GIVE','BUY','SELL'].includes(c.type)?'items':c.type==='CHOOSE'&&c.choice==='profession'?'professions':c.type==='CHOOSE'&&c.choice==='adaptation'?'adaptations':undefined;
+  if(requiredCatalog&&!catalog[requiredCatalog].some(e=>e.id===c.id))return false;
   const target = c.target ? s.actors[c.target] : undefined;
   const p: Point =
     c.x !== undefined && c.y !== undefined
@@ -369,6 +374,7 @@ export function perform(s: State, a: Actor, c: Action): boolean {
       }
       ok = true;
       emit(s, "move", a.id, [], {}, a);
+      applyTileHazards(s, a);
       break;
     }
     case "ATTACK":
@@ -648,6 +654,21 @@ export function perform(s: State, a: Actor, c: Action): boolean {
       break;
     }
     case "INTERACT": {
+      if (
+        target?.kind === "crawler" &&
+        target.dead &&
+        distance(a, target) <= 1
+      ) {
+        const item = target.inventory.find((i) => !c.id || i.id === c.id);
+        if (item && canCarry(a, item.id)) {
+          const id = item.id;
+          consume(target, id);
+          give(s, a, id);
+          emit(s, "corpse_recovered", a.id, [target.id], { item: id });
+          ok = true;
+        }
+        break;
+      }
       const o = s.objects.find((o) => o.id === c.id);
       if (!o) {
         const door = tile(s, p);
@@ -677,13 +698,40 @@ export function perform(s: State, a: Actor, c: Action): boolean {
           emit(s, "loot_low_rarity", a.id, [], {}, o);
         ok = true;
       } else if (o.kind === "safe") {
+        if (living(s).some((v) => distance(v, o) > 4)) {
+          reject(
+            s,
+            a,
+            "Bring the living crew within four tiles of the saferoom.",
+          );
+          break;
+        }
         if (
           Object.values(s.actors).some(
-            (v) => v.kind === "enemy" && !v.dead && distance(v, a) <= 8,
+            (v) =>
+              v.kind === "enemy" &&
+              !v.dead &&
+              living(s).some((c) => distance(v, c) <= 8),
           )
         )
           break;
         s.phase = "SAFE_ROOM";
+        if (!s.safeUsed && s.audience >= 25) {
+          const pool = catalog.events.filter(
+            (e) =>
+              e.availableFromFloor <= s.floor &&
+              !s.offers.includes(e.id) &&
+              !s.resolvedOffers.includes(e.id),
+          );
+          for (
+            let i = 0;
+            i < Math.min(3, Math.floor(s.audience / 25)) && pool.length;
+            i++
+          ) {
+            const index = random(s, "director", pool.length);
+            s.offers.push(pool.splice(index, 1)[0].id);
+          }
+        }
         s.safeUsed = true;
         ok = true;
         emit(s, "saferoom", a.id);
@@ -808,6 +856,13 @@ export function perform(s: State, a: Actor, c: Action): boolean {
       if (reward) {
         if (c.choice === "pass") {
           const actors = living(s);
+          (reward.passed ??= []).push(a.id);
+          if (actors.every((v) => reward.passed!.includes(v.id))) {
+            reward.claimed = true;
+            s.overflow.push({ id: reward.item, count: 1, durability: 12 });
+            ok = true;
+            break;
+          }
           reward.turn =
             actors[
               (actors.findIndex((v) => v.id === a.id) + 1) % actors.length
@@ -815,6 +870,8 @@ export function perform(s: State, a: Actor, c: Action): boolean {
           ok = true;
         } else if (give(s, a, reward.item)) {
           reward.claimed = true;
+          s.counters["rewards:" + a.id] =
+            (s.counters["rewards:" + a.id] ?? 0) + 1;
           ok = true;
         }
       } else if (c.id?.startsWith("overflow:")) {
@@ -846,24 +903,18 @@ function descend(s: State, a: Actor): boolean {
     distance(a, s.objects.find((o) => o.kind === "exit")!) > 1
   )
     return false;
+  const voters = living(s).filter((v) => v.online);
+  s.descendVotes ??= [];
+  if (!s.descendVotes.includes(a.id)) s.descendVotes.push(a.id);
+  if (!voters.every((v) => s.descendVotes!.includes(v.id))) {
+    emit(s, "descent_vote", a.id, [], {
+      ready: s.descendVotes.length,
+      required: voters.length,
+    });
+    return true;
+  }
   if (s.floor === 6) {
-    s.phase = "RESULT";
-    s.result = "VICTORY";
-    s.unlocks.push("concourse_survivor");
-    emit(s, "finish_floor_six", a.id);
-    emit(
-      s,
-      living(s).length === 1 ? "solo_win" : "four_player_win",
-      a.id,
-      living(s).map((v) => v.id),
-    );
-    emit(
-      s,
-      Object.values(s.actors).some((v) => v.kind === "crawler" && v.dead)
-        ? "survive_with_casualty"
-        : "all_survive",
-      a.id,
-    );
+    completeVictory(s, a.id);
     return true;
   }
   s.floor++;
@@ -871,6 +922,27 @@ function descend(s: State, a: Actor): boolean {
   s.phase = "EXPLORATION";
   emit(s, "floor_enter", a.id, [], { floor: s.floor });
   return true;
+}
+function completeVictory(s: State, actorId: string) {
+  if (s.phase === "RESULT") return;
+  s.phase = "RESULT";
+  s.result = "VICTORY";
+  if (!s.unlocks.includes("concourse_survivor"))
+    s.unlocks.push("concourse_survivor");
+  emit(s, "finish_floor_six", actorId);
+  const party = Object.values(s.actors).filter((a) => a.kind === "crawler");
+  if (party.length === 1 || party.length === 4)
+    emit(
+      s,
+      party.length === 1 ? "solo_win" : "four_player_win",
+      actorId,
+      living(s).map((a) => a.id),
+    );
+  emit(
+    s,
+    party.some((a) => a.dead) ? "survive_with_casualty" : "all_survive",
+    actorId,
+  );
 }
 function enemyTurn(s: State, a: Actor) {
   const targets = living(s);
@@ -886,7 +958,7 @@ function enemyTurn(s: State, a: Actor) {
         (x, y) =>
           distance(a, x) -
             stat(x, "threat") -
-            (distance(a, y) - stat(y, "threat")) || x.id.localeCompare(y.id),
+            (distance(a, y) - stat(y, "threat")) || compareIds(x.id, y.id),
       )[0];
   if (
     !a.alert &&
@@ -901,11 +973,29 @@ function enemyTurn(s: State, a: Actor) {
   if (a.tags.includes("boss")) {
     if (s.objective.length < catalog.floors[s.floor - 1].requiredObjective.goal)
       return;
+    const phases = [
+      ...record.phases,
+      ...(s.counters.extraBossPhase === s.floor
+        ? [
+            {
+              thresholdPercent: 10,
+              telegraph: "Contract rider: an additional core pulse charges.",
+              effect: {
+                type: "damage",
+                magnitude: 10 + s.floor,
+                element: record.attackElement,
+                target: "area",
+              },
+            },
+          ]
+        : []),
+    ];
     const phase =
-      record.phases.findLast(
-        (p: any) => (a.hp / a.maxHP) * 100 <= p.thresholdPercent,
-      ) ?? record.phases[0];
-    a.bossPhase = record.phases.indexOf(phase);
+      [...phases]
+        .reverse()
+        .find((p: any) => (a.hp / a.maxHP) * 100 <= p.thresholdPercent) ??
+      record.phases[0];
+    a.bossPhase = phases.indexOf(phase);
     if (phase.effect.type === "apply_status") {
       status(a, phase.effect.status, 2, phase.effect.magnitude, a.id);
       // An exposed phase remains dangerous, using the previous combat phase.
@@ -1021,10 +1111,31 @@ function enemyTurn(s: State, a: Actor) {
       a.telegraph = [{ x: target.x, y: target.y }];
       return;
     }
+    const allies = Object.values(s.actors).filter(
+      (v) =>
+        v.kind === "enemy" &&
+        !v.dead &&
+        v.id !== a.id &&
+        distance(v, target) <= 3,
+    );
+    const flank =
+      ai === "flanker"
+        ? neighbors(target)
+            .filter(
+              (p) =>
+                walkable(s, p) &&
+                !Object.values(s.actors).some(
+                  (v) => !v.dead && v.id !== a.id && same(v, p),
+                ),
+            )
+            .sort((p, q) =>
+              allies.reduce((n, v) => n + distance(v, q) - distance(v, p), 0),
+            )[0]
+        : undefined;
     const steps = path(
       s,
       a,
-      target,
+      flank ?? target,
       false,
       Object.values(s.actors).filter(
         (v) => !v.dead && v.id !== a.id && v.id !== target.id,
@@ -1042,10 +1153,22 @@ function enemyTurn(s: State, a: Actor) {
   }
   a.telegraph = [{ x: target.x, y: target.y }];
 }
-function end(s: State, ages: Record<string, string[]> = {}) {
+function end(s: State, ages: Record<string, Record<string, number>> = {}) {
+  for (const object of s.objects)
+    if (
+      object.disabled > 0 &&
+      --object.disabled === 0 &&
+      object.hp > 0 &&
+      !object.jammed
+    )
+      object.powered = true;
   for (const a of Object.values(s.actors)) {
     for (const [key, v] of Object.entries(a.statuses)) {
-      if ((ages[a.id] ?? []).includes(key) && --v.duration <= 0) {
+      if (
+        ages[a.id]?.[key] !== undefined &&
+        ages[a.id][key] === (v.serial ?? 0) &&
+        --v.duration <= 0
+      ) {
         delete a.statuses[key];
         if (key === "lifetime") a.dead = true;
       }
@@ -1092,6 +1215,30 @@ function end(s: State, ages: Record<string, string[]> = {}) {
     s.result = "DEFEAT";
     emit(s, "party_wipe");
   }
+  if (
+    !s.events.some(
+      (e) =>
+        e.round === s.round &&
+        [
+          "enemy_defeated",
+          "objective",
+          "revive_ally",
+          "alternate_boss",
+          "shock_chain",
+          "wall_break",
+          "secret_discovery",
+        ].includes(e.type),
+    )
+  ) {
+    s.counters.boringRounds = (s.counters.boringRounds ?? 0) + 1;
+    if (s.counters.boringRounds >= 5) s.audience = Math.max(0, s.audience - 1);
+  } else s.counters.boringRounds = 0;
+  if (
+    s.floor === 6 &&
+    s.bossDefeated &&
+    s.objective.length >= catalog.floors[5].requiredObjective.goal
+  )
+    completeVictory(s, living(s)[0]?.id ?? "");
   updateVisibility(s);
   phaseCheck(s);
   if (s.bossDefeated && !s.rewards.some((r) => r.id === `boss:${s.floor}`)) {
@@ -1119,16 +1266,22 @@ export function resolveRound(
     return { state: s, events: [] };
   s.round++;
   s.turns++;
+  s.exposures = [];
   const statusAges = Object.fromEntries(
-    Object.values(s.actors).map((a) => [a.id, Object.keys(a.statuses)]),
+    Object.values(s.actors).map((a) => [
+      a.id,
+      Object.fromEntries(
+        Object.entries(a.statuses).map(([k, v]) => [k, v.serial ?? 0]),
+      ),
+    ]),
   );
   const initiative = new Map<string, number>();
   for (const a of Object.values(s.actors).sort((a, b) =>
-    a.id.localeCompare(b.id),
+    compareIds(a.id, b.id),
   )) {
-    a.ap = Math.max(0, 3 - (a.statuses.stunned ? 1 : 0));
-    a.shield = Math.min(12,stat(a,"shield")+(!a.used["openingShield:"+s.floor]?stat(a,"openingShield"):0));
-    a.used["openingShield:"+s.floor]=1;
+    a.ap =
+      a.dead || a.downed ? 0 : Math.max(0, 3 - (a.statuses.stunned ? 1 : 0));
+    a.shield = Math.min(12,stat(a,'shield')+stat(a,'openingShield'));a.shieldSource=a.id;delete a.statuses['stat:openingShield'];
     a.guard = 0;
     for (const [k, v] of Object.entries(a.statuses))
       if (["burning", "poisoned", "bleeding"].includes(k))
@@ -1152,54 +1305,107 @@ export function resolveRound(
     .sort(
       (a, b) =>
         (initiative.get(b.actorId) ?? 0) - (initiative.get(a.actorId) ?? 0) ||
-        a.actorId.localeCompare(b.actorId),
+        compareIds(a.actorId, b.actorId),
     );
-  const swapped = new Set<string>();
-  for (let i = 0; i < 4; i++)
-    for (const plan of ordered) {
-      const c = plan.actions[i],
+  for (let index = 0; index < 4; index++) {
+    const done = new Set<string>(),
+      visiting = new Set<string>();
+    const runMove = (plan: Plan): void => {
+      if (done.has(plan.actorId) || visiting.has(plan.actorId)) return;
+      const c = plan.actions[index],
         a = s.actors[plan.actorId];
-      if (
-        !c ||
-        c.type !== "MOVE" ||
-        !a ||
-        a.dead ||
-        a.downed ||
-        swapped.has(`${a.id}:${i}`)
-      )
-        continue;
+      if (!c || c.type !== "MOVE" || !a || a.dead || a.downed) return;
+      visiting.add(a.id);
+      const p = { x: c.x!, y: c.y! };
       if (c.swap) {
-        const otherPlan = ordered.find((p) => p.actorId === c.swap),
-          other = s.actors[c.swap],
-          oc = otherPlan?.actions[i];
+        const b = s.actors[c.swap],
+          bp = ordered.find((p) => p.actorId === c.swap),
+          bc = bp?.actions[index];
         if (
-          other?.kind === "crawler" &&
-          oc?.swap === a.id &&
-          a.ap > 0 &&
-          other.ap > 0 &&
-          distance(a, other) === 1 &&
+          b &&
+          b.kind === "crawler" &&
+          !b.dead &&
+          !b.downed &&
+          bc?.swap === a.id &&
+          distance(a, b) === 1 &&
           !Object.values(tile(s, a)!.hazards).some((h) => h.damage) &&
-          !Object.values(tile(s, other)!.hazards).some((h) => h.damage)
+          !Object.values(tile(s, b)!.hazards).some((h) => h.damage)
         ) {
-          const p = { x: a.x, y: a.y };
-          a.x = other.x;
-          a.y = other.y;
-          other.x = p.x;
-          other.y = p.y;
-          a.ap--;
-          other.ap--;
-          swapped.add(`${other.id}:${i}`);
-          continue;
+          const ca = actionCost(s, a, { type: "MOVE", x: b.x, y: b.y }),
+            cb = actionCost(s, b, { type: "MOVE", x: a.x, y: a.y });
+          if (a.ap >= ca && b.ap >= cb) {
+            const old = { x: a.x, y: a.y };
+            a.x = b.x;
+            a.y = b.y;
+            b.x = old.x;
+            b.y = old.y;
+            a.ap -= ca;
+            b.ap -= cb;
+            done.add(a.id);
+            done.add(b.id);
+            visiting.delete(a.id);
+            return;
+          }
+        }
+      }
+      const occupant = Object.values(s.actors).find(
+        (b) => !b.dead && b.id !== a.id && same(b, p),
+      );
+      if (occupant) {
+        const bp = ordered.find((plan) => plan.actorId === occupant.id),
+          bc = bp?.actions[index];
+        if (
+          bp &&
+          bc?.type === "MOVE" &&
+          !bc.swap &&
+          distance(occupant, { x: bc.x!, y: bc.y! }) === 1 &&
+          walkable(s, { x: bc.x!, y: bc.y! })
+        ) {
+          const claimant = ordered.find((plan) => {
+            const cc = plan.actions[index],
+              actor = s.actors[plan.actorId];
+            return (
+              actor &&
+              !actor.dead &&
+              !actor.downed &&
+              cc?.type === "MOVE" &&
+              cc.x === bc.x &&
+              cc.y === bc.y &&
+              distance(actor, { x: cc.x!, y: cc.y! }) === 1 &&
+              actor.ap >= actionCost(s, actor, cc)
+            );
+          });
+          if (claimant?.actorId === occupant.id) runMove(bp);
         }
       }
       if (!perform(s, a, c)) reject(s, a, "Move unavailable; AP refunded");
-    }
-  for (const plan of ordered)
+      done.add(a.id);
+      visiting.delete(a.id);
+    };
+    for (const plan of ordered) runMove(plan);
+  }
+  commands: for (const plan of ordered)
     for (const c of plan.actions.filter((c) => c.type !== "MOVE").slice(0, 4)) {
       const a = s.actors[plan.actorId];
       if (a && !perform(s, a, c))
         reject(s, a, "Action unavailable; AP refunded");
+      if (
+        s.floor !== original.floor ||
+        (s.phase as string) === "RESULT" ||
+        (s.phase as string) === "SAFE_ROOM"
+      )
+        break commands;
     }
+  if (
+    s.floor !== original.floor ||
+    (s.phase as string) === "RESULT" ||
+    (s.phase as string) === "SAFE_ROOM"
+  ) {
+    s.revision++;
+    updateVisibility(s);
+    award(s, start);
+    return { state: s, events: s.events.filter((e) => e.eventId >= start) };
+  }
   if (
     ordered.length &&
     ordered.every((p) => p.actions.length === 1) &&
@@ -1237,7 +1443,7 @@ export function resolveRound(
     .sort(
       (a, b) =>
         (initiative.get(b.id) ?? 0) - (initiative.get(a.id) ?? 0) ||
-        a.id.localeCompare(b.id),
+        compareIds(a.id, b.id),
     ))
     enemyTurn(s, a);
   end(s, statusAges);
@@ -1263,8 +1469,14 @@ export function microAction(
   if (s.phase === "SAFE_ROOM" && action.type === "MOVE")
     s.phase = "EXPLORATION";
   const statusAges = Object.fromEntries(
-    Object.values(s.actors).map((a) => [a.id, Object.keys(a.statuses)]),
+    Object.values(s.actors).map((a) => [
+      a.id,
+      Object.fromEntries(
+        Object.entries(a.statuses).map(([k, v]) => [k, v.serial ?? 0]),
+      ),
+    ]),
   );
+  s.exposures = [];
   a.ap = 3;
   if (!perform(s, a, action)) reject(s, a, "Action unavailable");
   else {
@@ -1279,7 +1491,7 @@ export function microAction(
       ))
         for (const [name, v] of Object.entries(actor.statuses))
           if (
-            (statusAges[actor.id] ?? []).includes(name) &&
+            statusAges[actor.id]?.[name] !== undefined &&
             ["burning", "poisoned", "bleeding"].includes(name)
           )
             hurt(

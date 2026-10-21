@@ -1,6 +1,6 @@
 import type { State, Actor, Point, Effect } from "./types";
 import { distance, los, tile, walkable, path, same } from "./grid";
-import { attack, hurt, push, status } from "./combat";
+import { attack, hurt, push, status, applyTileHazards } from "./combat";
 import { emit } from "./events";
 import { enqueue } from "./environment";
 import { entry } from "../../content/src/index";
@@ -43,25 +43,27 @@ export function effect(
             : [];
   const object = s.objects.find((o) => same(o, p));
   switch (e.type) {
-    case "damage":
+    case "damage":{
+      let affected=false;
       for (const v of targets) {
         if (
           e.target === "area" &&
           v.kind === "crawler" &&
           ["blast", "fire", "shock", "acid", "poison"].includes(e.element ?? "")
         )
-          hurt(s, v, e.magnitude, e.element!, a.id, true);
+          {hurt(s, v, e.magnitude, e.element!, a.id, true);affected=true;}
         else
-          attack(
+          affected=attack(
             s,
             a,
             v,
             e.magnitude,
             e.element ?? "physical",
-            Math.max(1, distance(a, p)),
-          );
+            Math.max(1, distance(a, p)+(e.target==='area'?(e.radius??1):0)),
+          )||affected;
       }
-      return targets.length > 0;
+      return affected;
+    }
     case "heal":
       for (const v of targets) {
         if (v.dead || v.downed) continue;
@@ -72,6 +74,7 @@ export function effect(
     case "shield":
       for (const v of targets) {
         v.shield = Math.min(12, Math.max(v.shield, e.magnitude));
+        v.shieldSource = a.id;
         emit(s, "shield", a.id, [v.id], { amount: e.magnitude });
       }
       if (targets.length > 1)
@@ -104,9 +107,7 @@ export function effect(
       for (const n of steps) {
         a.x = n.x;
         a.y = n.y;
-        const h = tile(s, n)!.hazards;
-        for (const [el, v] of Object.entries(h))
-          if (v.damage) hurt(s, a, v.damage, el as any, a.id, true);
+        applyTileHazards(s, a);
       }
       return true;
     }
@@ -120,6 +121,7 @@ export function effect(
         return false;
       a.x = p.x;
       a.y = p.y;
+      applyTileHazards(s, a);
       return true;
     case "apply_status":
       for (const v of targets)
@@ -234,13 +236,20 @@ export function effect(
       return true;
     case "hack":
       if (!object && t?.kind !== "door") return false;
-      if (object?.jammed) return false;
+      if (object?.jammed || t?.jammed) return false;
       {
         const roll = random(s, "combat", 20) + 1;
+        const dc =
+          object?.kind === "objective" ||
+          object?.kind === "alternate" ||
+          t?.locked
+            ? 14
+            : 10;
+        const wasLocked = !!t?.locked;
         const success =
           roll === 20 ||
           (roll !== 1 &&
-            roll + stat(a, "Wit") + stat(a, "hack") + e.magnitude >= 10);
+            roll + stat(a, "Wit") + stat(a, "hack") + e.magnitude >= dc);
         if (success) {
           if (object) {
             object.powered = false;
@@ -256,12 +265,18 @@ export function effect(
             "machine_hacked",
             a.id,
             [],
-            { roll, wasLocked: !!t?.locked },
+            {
+              roll,
+              wasLocked,
+              objective:
+                object?.kind === "objective" || object?.kind === "alternate",
+            },
             p,
           );
-          if (roll >= 18) emit(s, "hard_check_success", a.id, [], { roll }, p);
+          if (dc >= 14) emit(s, "hard_check_success", a.id, [], { roll }, p);
         } else {
           if (object) object.jammed = true;
+          else if (t) t.jammed = true;
           emit(s, "hack_failed", a.id, [], { roll }, p);
         }
         return true;
@@ -275,12 +290,18 @@ export function effect(
         if (distance(p, p2) <= 4)
           for (const [el, h] of Object.entries(s.tiles[i].hazards))
             if (h.persistent && ["shock", "force", "physical"].includes(el))
-              delete s.tiles[i].hazards[el];
+              h.disabled = object.disabled;
       }
       activateObjective(s, a, object, "disable");
       emit(s, "machine_disable", a.id, [], { id: object.id }, p);
       return true;
     case "repair_object":
+      if (!object && t?.kind === "door" && t.jammed) {
+        t.jammed = false;
+        t.hp += e.magnitude;
+        emit(s, "repair", a.id, [], { kind: "door" }, p);
+        return true;
+      }
       if (!object || (object.hp >= object.maxHP && !object.jammed))
         return false;
       object.hp = Math.min(

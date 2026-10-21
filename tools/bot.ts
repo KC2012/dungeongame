@@ -46,10 +46,18 @@ export function playBot(
     }
   begin(s);
   const escapes = new Map<string, Point[]>();
+  const forcedMoves = new Map<string, Action>();
+  let reserved: Point[] = [];
   let iterations = 0,
     stuck = 0,
     last = "";
   function next(a: Actor): Action {
+    if (a.id === "p0") reserved = [];
+    const forced = forcedMoves.get(a.id);
+    if (forced) {
+      forcedMoves.delete(a.id);
+      return forced;
+    }
     const enemies = Object.values(s.actors)
       .filter((v) => v.kind === "enemy" && !v.dead && visible(s, v))
       .sort((x, y) => distance(a, x) - distance(a, y));
@@ -183,13 +191,15 @@ export function playBot(
       return moveToward(a, threat);
     }
     const leader = s.actors.p0;
-    if (
-      a.id !== "p0" &&
-      !leader.dead &&
-      !leader.downed &&
-      distance(a, leader) > 2
-    )
-      return moveToward(a, leader);
+    if (a.id !== "p0" && !leader.dead && !leader.downed) {
+      const exit = s.objects.find((o) => o.kind === "exit")!;
+      if (s.bossDefeated && distance(leader, exit) <= 2) {
+        if (distance(a, exit) <= 1) return { type: "INTERACT", id: exit.id };
+        return moveToward(a, exit);
+      }
+      if (distance(a, leader) > 1) return moveToward(a, leader);
+      return { type: "WAIT" };
+    }
     const floor = catalog.floors[s.floor - 1];
     let target = s.objects.find((o) => o.kind === "objective" && !o.done);
     if (s.objective.length >= floor.requiredObjective.goal) {
@@ -220,6 +230,36 @@ export function playBot(
     for (let i = 0; i < s.tiles.length; i++)
       if (Object.values(s.tiles[i].hazards).some((h) => h.damage > 0))
         occupied.push({ x: i % s.width, y: Math.floor(i / s.width) });
+    if (
+      Object.values(s.actors).some(
+        (v) => v.kind === "crawler" && v.id !== a.id && samePoint(v, p),
+      )
+    ) {
+      const points: Point[] = [];
+      for (let y = p.y - 4; y <= p.y + 4; y++)
+        for (let x = p.x - 4; x <= p.x + 4; x++) {
+          const n = { x, y };
+          if (
+            distance(p, n) > 0 &&
+            distance(p, n) <= 4 &&
+            walkable(s, n) &&
+            !occupied.some((o) => samePoint(o, n)) &&
+            !reserved.some((r) => samePoint(r, n))
+          )
+            points.push(n);
+        }
+      points.sort(
+        (x, y) =>
+          distance(x, p) - distance(y, p) || distance(a, x) - distance(a, y),
+      );
+      for (const n of points) {
+        if (samePoint(a, n)) return { type: "WAIT" };
+        const steps = path(s, a, n, true, occupied);
+        if (steps.length && !reserved.some((r) => samePoint(r, steps[0])))
+          return { type: "MOVE", ...steps[0] };
+      }
+      return { type: "WAIT" };
+    }
     const destinations = [p, ...neighbors(p)].filter(
       (n) => walkable(s, n) && !occupied.some((o) => samePoint(o, n)),
     );
@@ -228,9 +268,38 @@ export function playBot(
       .filter((p) => p.length)
       .sort((a, b) => a.length - b.length);
     const n = options[0]?.[0];
+    if (a.id === "p0") reserved = path(s, a, p, true).slice(0, 3);
+    if (!n && a.id === "p0") {
+      const step = path(s, a, p, true)[0];
+      const friend = step
+        ? Object.values(s.actors).find(
+            (v) => v.kind === "crawler" && v.id !== a.id && samePoint(v, step),
+          )
+        : undefined;
+      if (friend) {
+        const aside = neighbors(friend).find(
+          (n) =>
+            walkable(s, n) &&
+            !Object.values(s.actors).some((v) => !v.dead && samePoint(v, n)) &&
+            !Object.values(tile(s, n)!.hazards).some((h) => h.damage > 0),
+        );
+        if (aside) forcedMoves.set(friend.id, { type: "MOVE", ...aside });
+      }
+    }
     return n ? { type: "MOVE", ...n } : { type: "GUARD" };
   }
   while (s.phase !== "RESULT" && iterations++ < limit) {
+    if (process.env.BOT_VERBOSE && iterations % 250 === 0)
+      console.log({
+        iteration: iterations,
+        floor: s.floor,
+        phase: s.phase,
+        objective: s.objective.length,
+        alternate: s.alternate.length,
+        party: Object.values(s.actors)
+          .filter((a) => a.kind === "crawler")
+          .map((a) => [a.id, a.x, a.y]),
+      });
     const before = s;
     const actors = Object.values(s.actors).filter(
       (v) => v.kind === "crawler" && !v.dead && !v.downed,

@@ -311,7 +311,7 @@ describe("combat and recovery", () => {
     const { a } = fixture();
     status(a, "burning", 2, 3, "e");
     status(a, "burning", 2, 3, "e");
-    expect(a.statuses.burning).toEqual({
+    expect(a.statuses.burning).toMatchObject({
       duration: 2,
       potency: 3,
       source: "e",

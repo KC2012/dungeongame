@@ -187,6 +187,48 @@ it("authoritative four-client round, duplicate/spoof rejection, role migration a
     () => h.error,
     (v) => v.message === "Invalid action list",
   );
+  const exportResponse = await fetch(
+    "http://127.0.0.1:2571/api/runs/" + h.snapshot.game.runId + "/export",
+    {
+      method: "POST",
+      headers: { Authorization: "Bearer " + h.welcome.sessionToken },
+    },
+  );
+  expect(exportResponse.status).toBe(200);
+  const checkpoint = await exportResponse.json();
+  expect(checkpoint.data.game.round).toBe(h.snapshot.game.round);
+  const denied = await fetch(
+    "http://127.0.0.1:2571/api/runs/" + h.snapshot.game.runId + "/export",
+    { method: "POST" },
+  );
+  expect(denied.status).toBe(403);
+  const damaged = structuredClone(checkpoint);
+  damaged.checksum = "broken";
+  const badImport = await fetch(
+    "http://127.0.0.1:2571/api/runs/" + h.snapshot.game.runId + "/import",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + h.welcome.sessionToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ checkpoint: damaged }),
+    },
+  );
+  expect(badImport.status).toBe(400);
+  const imported = await fetch(
+    "http://127.0.0.1:2571/api/runs/" + h.snapshot.game.runId + "/import",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + h.welcome.sessionToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ checkpoint }),
+    },
+  );
+  expect(imported.status, await imported.clone().text()).toBe(201);
+  expect((await imported.json()).runId).not.toBe(h.snapshot.game.runId);
   await host.leave();
   await waitFor(
     () => views[1].snapshot,

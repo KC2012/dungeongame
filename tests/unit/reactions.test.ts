@@ -126,3 +126,24 @@ it("two accepted gifts require consent for the trade-twice hook", () => {
   }
   expect(s.events.filter((e) => e.type === "trade_twice")).toHaveLength(1);
 });
+it("a conductive cast never reaches more than eight unique cells across deferred phases", () => {
+  const { s, a } = setup();
+  for (let x = 10; x < 30; x++) tile(s, { x, y: 15 })!.tags = ["wet"];
+  enqueue(s, { x: 10, y: 15 }, "shock", 2, a.id);
+  const cells = new Set<number>();
+  for (let tick = 0; tick < 5; tick++) {
+    environment(s);
+    s.tiles.forEach((t, i) => {
+      if (t.hazards.shock) cells.add(i);
+    });
+  }
+  expect(cells.size).toBe(8);
+});
+it("cold hazard on a dry tile still applies its slowing status", () => {
+  const { s, a } = setup();
+  enqueue(s, a, "cold", 2, "fixture");
+  environment(s);
+  expect(a.statuses.chilled).toBeDefined();
+});
+it('zero-range party protection covers the whole crew rather than only its caster',()=>{const {s,a,b}=setup();a.profession='broker';b.x=a.x+3;a.focus=50;expect(perform(s,a,{type:'ABILITY',id:'favor_owed'})).toBe(true);expect(s.actors.b.shield).toBe(4);});
+it('a blast at the edge of its area can hit a hostile beyond the center distance',()=>{const {s,a,e}=setup();a.stats.accuracy=1000;a.x=5;a.y=5;e.x=8;e.y=5;e.hp=100;for(let i=0;i<20&&e.hp===100;i++)effect(s,a,undefined,{x:7,y:5},{type:'damage',magnitude:5,element:'blast',target:'area',radius:1});expect(e.hp).toBeLessThan(100);});

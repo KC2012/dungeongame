@@ -20,7 +20,8 @@
     "e2e": "playwright test",
     "coverage:content": "tsx tools/coverage.ts",
     "soak": "tsx tools/soak.ts",
-    "share": "node -e \"console.log('For an explicitly authorized private remote test, see docs/HOSTING.md. No tunnel is started automatically.')\""
+    "share": "node -e \"console.log('For an explicitly authorized private remote test, see docs/HOSTING.md. No tunnel is started automatically.')\"",
+    "soak:browser": "tsx tools/browser-soak.ts"
   },
   "dependencies": {
     "@colyseus/core": "0.16.26",

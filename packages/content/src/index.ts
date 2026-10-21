@@ -162,7 +162,7 @@ export const professionModifiers: Record<string, Record<string, number>> = {
 export function compileEffects(e: Entry): Effect[] {
   return (e.effects ?? []).map((raw: Effect) => {
     const f = { ...raw };
-    if (f.target === "party") f.radius = e.range ?? 99;
+    if (f.target === "party") f.radius = e.range>0?e.range:99;
     if (f.type === "modify_stat" && !f.stat) {
       f.stat = e.id === "adrenal_surge" ? "speed" : "passive";
     }
@@ -170,6 +170,8 @@ export function compileEffects(e: Entry): Effect[] {
       f.status = "stunned";
       f.target = "enemy";
     }
+    if (e.trait === "conceal" && f.type === "spawn_hazard")
+      f.magnitude = Math.max(2, f.magnitude);
     if (f.type === "spawn_hazard" && !f.element) f.element = "poison";
     if (f.type === "gain_resource")
       f.resourceKind =
@@ -184,10 +186,10 @@ export function compileEffects(e: Entry): Effect[] {
     return f;
   });
 }
-export function validateCatalog(): string[] {
+export function validateCatalog(data: Catalog = catalog): string[] {
   const errors: string[] = [];
   const ajv = new Ajv({ strict: false, allErrors: true });
-  for (const [kind, records] of Object.entries(catalog)) {
+  for (const [kind, records] of Object.entries(data)) {
     const type =
       (
         {
@@ -206,6 +208,128 @@ export function validateCatalog(): string[] {
         errors.push(`${kind}: ${ajv.errorsText(validate.errors)}`);
       if (ids.has(r.id)) errors.push(`duplicate ${kind}:${r.id}`);
       ids.add(r.id);
+      if (
+        kind === "monsters" &&
+        ![
+          "seek_melee",
+          "seek_ranged",
+          "guard_post",
+          "flanker",
+          "hazard_placer",
+          "summoner",
+          "support",
+          "charger",
+          "skirmisher",
+          "boss_script",
+        ].includes(r.ai)
+      )
+        errors.push(`unknown AI ${r.id}`);
+      if (
+        kind === "hazards" &&
+        r.materialTags.some(
+          (t: string) =>
+            ![
+              "solid",
+              "flammable",
+              "conductive",
+              "wet",
+              "liquid",
+              "fragile",
+              "corrodible",
+              "metal",
+              "organic",
+              "opaque",
+              "powered",
+              "gas",
+              "ice",
+              "structural",
+              "volatile",
+            ].includes(t),
+        )
+      )
+        errors.push(`unknown material ${r.id}`);
+      if (
+        kind === "backgrounds" &&
+        (!backgroundModifiers[r.trait] ||
+          Object.values(r.attributeMods).reduce(
+            (n: number, v) => n + Number(v),
+            0,
+          ) !== 2)
+      )
+        errors.push(`background ${r.id}`);
+      if (kind === "professions" && !professionModifiers[r.passive])
+        errors.push(`passive ${r.id}`);
+      if (kind === "rooms") {
+        const layout = r.layout;
+        const seen = new Set<string>(["4,0"]),
+          queue = [[4, 0]];
+        for (let i = 0; i < queue.length; i++) {
+          const [x, y] = queue[i];
+          for (const [xx, yy] of [
+            [x, y - 1],
+            [x + 1, y],
+            [x, y + 1],
+            [x - 1, y],
+          ])
+            if (
+              xx >= 0 &&
+              yy >= 0 &&
+              xx < 9 &&
+              yy < 9 &&
+              layout[yy][xx] !== "#" &&
+              !seen.has(xx + "," + yy)
+            ) {
+              seen.add(xx + "," + yy);
+              queue.push([xx, yy]);
+            }
+        }
+        if (
+          ![
+            [4, 8],
+            [0, 4],
+            [8, 4],
+            [4, 4],
+          ].every(([x, y]) => seen.has(x + "," + y)) ||
+          layout.some((row: string) => /[^#.+~^oc]/.test(row))
+        )
+          errors.push(`room connectivity ${r.id}`);
+      }
+      for (const f of compileEffects(r)) {
+        if (
+          f.status &&
+          ![
+            "burning",
+            "corroded",
+            "chilled",
+            "stunned",
+            "poisoned",
+            "confused",
+            "aimed",
+            "exposed",
+            "hidden",
+            "bleeding",
+          ].includes(f.status)
+        )
+          errors.push(`status ${r.id}`);
+        if (
+          f.element &&
+          ![
+            "physical",
+            "fire",
+            "shock",
+            "acid",
+            "cold",
+            "poison",
+            "psychic",
+            "water",
+            "blast",
+            "smoke",
+            "force",
+          ].includes(f.element)
+        )
+          errors.push(`element ${r.id}`);
+      }
+
       if (r.trait && kind === "items" && !traitModifiers[r.trait])
         errors.push(`unknown trait ${r.trait}`);
       for (const f of compileEffects(r))
@@ -215,24 +339,36 @@ export function validateCatalog(): string[] {
     if ((manifest.catalogs as Record<string, number>)[kind] !== records.length)
       errors.push(`count ${kind}`);
   }
-  const has = (kind: string, id: string) =>
-    catalog[kind].some((e) => e.id === id);
-  for (const b of backgrounds)
+  const has = (kind: string, id: string) => data[kind].some((e) => e.id === id);
+  for (const b of data.backgrounds)
     if (!has("items", b.starterItem)) errors.push(`starter ${b.id}`);
-  for (const a of abilities)
+  for (const a of data.abilities)
     if (a.profession !== "general" && !has("professions", a.profession))
       errors.push(`profession ${a.id}`);
-  for (const r of recipes)
+  for (const r of data.recipes)
     for (const id of [r.outputItem, ...Object.keys(r.ingredients)])
       if (!has("items", id)) errors.push(`recipe ${r.id}:${id}`);
-  for (const s of sponsors)
+  for (const s of data.sponsors)
     if (!has("items", s.signatureItem)) errors.push(`sponsor ${s.id}`);
-  for (const f of floors) {
+  for (const f of data.floors) {
     if (!has("bosses", f.boss)) errors.push(`boss ${f.id}`);
+    if (
+      f.requiredObjective.goal > f.requiredObjective.sources.length ||
+      f.alternateBoss.goal > f.alternateBoss.operations.length
+    )
+      errors.push(`impossible objective ${f.id}`);
+    if (
+      !f.requiredRoomTags.every((tag: string) =>
+        data.rooms.some(
+          (r) => r.floor === f.number && r.features.includes(tag),
+        ),
+      )
+    )
+      errors.push(`room features ${f.id}`);
     for (const id of f.environment)
       if (!has("hazards", id)) errors.push(`hazard ${id}`);
   }
-  for (const a of achievements)
+  for (const a of data.achievements)
     if (!has("achievement_events", a.condition.eventType))
       errors.push(`event ${a.id}`);
   return errors;

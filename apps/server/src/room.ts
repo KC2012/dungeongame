@@ -1,4 +1,4 @@
-import { Room, Client } from "@colyseus/core";
+import { Room, Client, ServerError } from "@colyseus/core";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import {
   newGame,
@@ -9,7 +9,12 @@ import {
   projection,
   hash,
   living,
+  distance,
+  neighbors,
+  walkable,
+  same,
 } from "../../../packages/engine/src/index";
+import { emit } from "../../../packages/engine/src/events";
 import type { State, Action } from "../../../packages/engine/src/types";
 import { SaveStore, digest, type Session } from "./persistence";
 export const roomCodes = new Map<string, string>();
@@ -73,7 +78,8 @@ export function validateAction(a: any): a is Action {
   );
 }
 export class CrawlRoom extends Room {
-  maxClients = 4;
+  // Reconnect reservations may briefly overlap an old socket; logical slots remain four.
+  maxClients = 8;
   autoDispose = false;
   game!: State;
   invite = "";
@@ -89,6 +95,8 @@ export class CrawlRoom extends Room {
     this.setPrivate(true);
     if (options?.resume) {
       const loaded = store.load(String(options.resume));
+      if (roomCodes.has(loaded.data.code))
+        throw Error("Run already active; reconnect to its existing room");
       if (!valid(options.invite, loaded.data.inviteHash))
         throw Error("Invalid resume secret");
       Object.assign(this, {
@@ -112,6 +120,7 @@ export class CrawlRoom extends Room {
           : randomBytes(4).readUInt32LE(),
         randomBytes(8).toString("hex"),
       );
+      this.game.unlocks = store.unlocked();
       this.invite = token();
       this.inviteHash = digest(this.invite);
       this.code = randomBytes(4).toString("hex").slice(0, 6).toUpperCase();
@@ -130,19 +139,37 @@ export class CrawlRoom extends Room {
   }
   onAuth(_client: Client, options: any) {
     if (options?.protocolVersion !== undefined && options.protocolVersion !== 1)
-      throw Error("Version mismatch; refresh the client");
+      throw new ServerError(403, "Version mismatch; refresh the client");
+    if (
+      options?.palette === 6 &&
+      !this.game.unlocks.includes("concourse_survivor")
+    )
+      throw new ServerError(403, "Complete a run to unlock the Broadcast suit");
+    if (
+      options?.palette === 7 &&
+      !this.game.unlocks.includes("producer_favorite")
+    )
+      throw new ServerError(403, "Earn the Producer favor to unlock this suit");
     if (this.sessions.length === 0) return true;
     if (!valid(options?.invite, this.inviteHash))
-      throw Error("Invalid invitation");
+      throw new ServerError(403, "Invalid invitation");
     if (options?.sessionToken) {
       const session = this.sessions.find((s) =>
         valid(options.sessionToken, s.tokenHash),
       );
-      if (!session) throw Error("Invalid session token");
+      if (!session) throw new ServerError(403, "Invalid session token");
       return true;
     }
+    if (this.sessions.length >= 4)
+      throw new ServerError(
+        409,
+        "Room is full; reconnect with an existing session",
+      );
     if (this.game.phase !== "LOBBY")
-      throw Error("Run started; reconnect with your saved session");
+      throw new ServerError(
+        403,
+        "Run started; reconnect with your saved session",
+      );
     return true;
   }
   onJoin(client: Client, options: any) {
@@ -187,6 +214,12 @@ export class CrawlRoom extends Room {
       this.sessions.push(session);
       if (!this.hostId) this.hostId = id;
     }
+    if (
+      Number.isInteger(options?.palette) &&
+      options.palette >= 0 &&
+      options.palette < 8
+    )
+      this.game.actors[session.actorId].palette = options.palette;
     this.bindings.set(client.sessionId, session);
     client.send("welcome", {
       actorId: session.actorId,
@@ -233,6 +266,57 @@ export class CrawlRoom extends Room {
     session.lastSeen = Date.now();
     if (m.type === "PING") return;
     const a = this.game.actors[session.actorId];
+    if (m.type === "PARK") {
+      if (session.actorId !== this.hostId) throw Error("Host only");
+      const offline = this.sessions.find(
+        (s) =>
+          s.actorId === m.target &&
+          s.offlineSince &&
+          Date.now() - s.offlineSince >= 300000,
+      );
+      const safe = this.game.objects.find((o) => o.kind === "safe");
+      if (!offline || !safe || distance(a, safe) > 4)
+        throw Error(
+          "Parking requires the host near the saferoom and a crawler offline for five minutes",
+        );
+      const actor = this.game.actors[offline.actorId];
+      const position = neighbors(safe).find(
+        (p) =>
+          walkable(this.game, p) &&
+          !Object.values(this.game.actors).some((v) => !v.dead && same(v, p)),
+      );
+      if (!position || actor.dead || actor.downed)
+        throw Error("No safe parking position");
+      actor.x = position.x;
+      actor.y = position.y;
+      emit(this.game, "parked", a.id, [actor.id], {}, position);
+      this.persist();
+      this.sync();
+      return;
+    }
+    if (m.type === "PING_TILE") {
+      if (
+        !Number.isInteger(m.x) ||
+        !Number.isInteger(m.y) ||
+        m.x < 0 ||
+        m.y < 0 ||
+        m.x >= this.game.width ||
+        m.y >= this.game.height ||
+        !this.game.tiles[m.y * this.game.width + m.x].explored
+      )
+        throw Error("Cannot ping an unseen tile");
+      emit(
+        this.game,
+        "party_ping",
+        session.actorId,
+        [],
+        {},
+        { x: m.x, y: m.y },
+      );
+      this.persist();
+      this.sync();
+      return;
+    }
     if (m.type === "START") {
       if (session.actorId !== this.hostId) throw Error("Host only");
       begin(this.game);
@@ -339,11 +423,15 @@ export class CrawlRoom extends Room {
       game,
       checksum: hash(game),
       hostId: this.hostId,
-      sessions: this.sessions.map(({ actorId, ready, offlineSince }) => ({
-        actorId,
-        ready,
-        online: !offlineSince,
-      })),
+      sessions: this.sessions.map(
+        ({ actorId, ready, offlineSince, nonce }) => ({
+          actorId,
+          ready,
+          nonce,
+          offlineSince,
+          online: !offlineSince,
+        }),
+      ),
       startedAt: this.startedAt,
     });
   }

@@ -48,3 +48,6 @@ export function hash(value: unknown): string {
   );
 }
 export const clone = <T>(x: T): T => structuredClone(x);
+
+export const compareIds = (a: string, b: string): number =>
+  a < b ? -1 : a > b ? 1 : 0;

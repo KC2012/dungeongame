@@ -1,41 +1,34 @@
-# Current state — 2026-10-20
+# Current state — 2026-10-21 UTC
 
-Version: 0.1.0 local alpha in active implementation. **Not PLAYABLE_RC.**
+Version **0.1.0 LOCAL_ALPHA**. Full six-floor gameplay is implemented. **Not PLAYABLE_RC:** separate-network acceptance, a desktop performance baseline and human balance/accessibility review are outstanding. No public deployment, tunnel, paid account or purchase was made.
 
-## Implemented checkpoint
-- Pinned TypeScript workspaces; Phaser 3.90 client, Colyseus 0.16 authoritative server, Vite build, Ajv content loader, Vitest and Playwright.
-- Server-backed 1–4 player private lobby; invitation secret, per-player session token, server-only command execution, AP action queues and readiness.
-- Headless seeded engine: movement, LOS/pathfinding, basic combat, inventory, effects, environmental queue, progression, floor objectives, boss telegraphs, saferoom actions and run endings. These systems still require full integration/balance verification.
-- Authored JSON content loaded; named trait/compiler tables. Compilation coverage is not proof every behavior is complete.
-- Six-floor room-template generator and connectivity checks; functional canvas map and DOM controls.
-- Atomic checksummed checkpoints with three backups, corrupt-file preservation and recovery; session plans/nonces retained.
+| Milestone | Actual implementation and evidence |
+| --- | --- |
+| M0 | Pinned npm workspaces, Phaser 3.90, Colyseus 0.16, Vite, Ajv, Vitest and Playwright. Python and TS validators pass all 448 entries; real two-browser lobby. |
+| M1 | UI-independent deterministic reducer, named PRNG streams, canonical hashing, AP, movement/LOS, combat, statuses, inventory and event log. Independent-process replay and tactical rule tests. |
+| M2 | Six 45×45 authored-prefab floor grammars, required/optional routes, fog, four safe spawns, retry/fallback. Final 60,000-layout sweep passes. Bounded environmental queue and gold interactions execute. |
+| M3 | All 15 catalogs consumed. All 58 skills and active item paths exercised; eight professions, six adaptations, equipment/passives, talents, recipes, shop, traits and AI. Sixty achievement-hook fixtures, sponsors, 25 bargains, actual risks/rewards and replay-safe drafts. |
+| M4 | Six unique objectives, bosses, telegraphs/health phases and alternate device routes, safe services, consent descent and final uplink/victory/defeat. Twelve boss-route fixtures; 100 assisted six-floor solo campaigns (10 alternate/90 combat), one assisted four-crawler campaign. No teleports, save resets or free objective flags in those bots. |
+| M5 | Authenticated private Colyseus authority, four logical slots, plan/readiness validation, action nonces, role transfer, offline guard/parking, spectator, trading consent. Atomic versioned saves/backups/corruption recovery, actual server restart, host checkpoint export/validated fork. Four browsers agree after a tactical round. Live transport loss and unacknowledged-action recovery pass. |
+| M6 | Original procedural pixel map with floor motifs, DOM HUD/log/inspector, inventory/equipment/tools, character/choices, safe services, shop/craft, offers/drafts, settings/sound, recap. Keyboard cursor/actions/focus and resolution checks; camera resize visibility regression fixed. Full human accessibility review is pending. |
+| M7 | 527 tests pass, including 10k randomized rounds. 60k generation checks, 100 assisted campaign seeds, 30k load rounds. p95 43.76ms but max 16.23s on shared virtual cloud hardware; long-tail/desktop gate unresolved. Thirty-minute four-browser repeat endurance run is currently finishing; do not count a partial file as passed. Human balance/run length unmeasured. |
+| M8 | Local host guide, acceptance comparison, content coverage, dependency notices, CI configuration and issue list authored. Final artifact/tag and endurance outcome are the remaining packaging steps at this checkpoint. No remote/published release is claimed. |
 
-## Evidence at this checkpoint
-- `npm run validate:content`: 448 entries validated with Ajv and reference checks.
-- `npm test`: 244 tests passed (includes 600 floor-generation seeds). Initial save/hash regression corrected.
-- `npm run build`: TypeScript check and production client/server build passed.
-- `npm run e2e`: 2 tests passed using system Chromium, including two independent browser contexts in one real Colyseus lobby and confirmed movement; settings tested at 1280×720 and 1920×1080.
-- Python content validator passed before implementation.
+## Latest completed checks
 
-## Remaining milestone work
-- M0 lobby gate demonstrated. M1/M2 core and generator exist; extend deterministic replay, system scenarios and validation.
-- M3: verify actual effect/trait behaviors and event emitters, not only compiler coverage.
-- M4: demonstrate complete runs, both victory routes per boss, solo/team balance.
-- M5: four-browser tactical round, malformed/duplicate packets, reconnect and actual host process restart.
-- M6: full keyboard and gameplay flows; currently pass only title/settings and basic map/inventory smoke.
-- M7: seed fuzz, 30k-round soak, performance measurements and defect remediation.
-- M8: hosting docs, coverage report, actual acceptance comparison and local release artifact.
-- Separate-internet testing requires actual separate networks and remains unverified. No public deployment or tunnel started.
+- Python schema/reference/connectivity validation: **448 records passed**; original unittest suite **11 passed**.
+- `npm run validate:content`: **448 records passed**; coverage reports zero missing achievement source mentions and explicitly separates structural from behavioral evidence.
+- `npm test -- --reporter=default --reporter=json --outputFile=/tmp/crawl-final-tests.json`: **9 files, 527 passed, 0 failed/skipped**, 56.05 seconds. Includes 10,000 randomized rounds/80,000 submitted commands and independent-process deterministic replay.
+- `npm run build`: **passed**, typecheck plus client/server bundles. Vite warns about the approximately 1.93MB client bundle (459KB gzip).
+- `npm run e2e`: **6 passed, 59.3 seconds** on system Chromium, after the camera fix. Two/four real browser contexts, tactical checksum agreement, reload/session identity, keyboard/resolution/crawler visibility, active-tool targeting, dropped pending action reconnect, original-nonce retry without duplicate turn. Fresh owned production host and isolated saves.
+- `npx tsx tools/seed-sweep.ts`: **60,000 passed**, 10,000 per floor, 78.26 seconds; required reachability, optional locks and safe spawns.
+- `npx tsx tools/campaign.ts`: **100/100 debug-assisted solo seeds reached VICTORY**, 10 alternate and 90 combat; two concurrent 50-seed partitions with the same recorded source hash. One four-crawler assisted run also reached VICTORY. Those runs precede later defensive unknown-ID/target-normalization regressions; they are not mislabeled as exact release-hash balance tests.
+- `npm run soak`: **30,000 invariant/load rounds passed**, four crawlers plus 50 enemies, debug HP/armor. Median 18.92ms, p95 43.76ms, max 16,227ms; maximum observed heap 64.20MiB, no deferred events. See docs/soak-report.json and docs/performance-replay.json.
 
-Continue implementation autonomously. Do not claim completion from this checkpoint.
+## Important limits and continuation
 
-## M3–M5 checkpoint update
+The first browser soak stalled after approximately 23 minutes and is preserved as docs/browser-soak-initial.json, not a pass. The repeat currently has advancing revisions and stable renderer heaps; only `complete:true` establishes its final result. The harness now waits for confirmed revisions between inputs and supports separate output paths.
 
-- All 58 authored skills and all non-material items now pass an actual reducer action path, with profession/adaptation selection tests. Added explicit bargain rewards/risks, Director hooks, quest-item device use, consent-based trading, persistent fixtures, cooldown correction, elemental weaknesses and summoned-unit limits.
-- Real hacking/disabling operates objective devices; alternate and physical device routes share one implementation. Bosses expose telegraphed health phases, two victory routes, and final stage ordering.
-- `npm test`: **420 passed**, including 12 boss-route cases, independent-process replay, last-round revive, electric-water incident, real trade refusal/consent, atomic save corruption recovery, and actual server-process restart.
-- `npm run e2e`: **3 passed** at the last browser checkpoint, including four independent browser contexts committing a tactical round with matching hashes and reconnecting to the same character. UI changes since that run are queued for a fresh build/browser check.
-- Both six-floor debug-assisted campaigns (combat and alternate, seed 42) reached VICTORY through ordinary actions. A 100-seed assisted sweep is running; do not describe it as passed until its result file is complete.
-- 60,000 generation checks passed before the last optional-door addition; rerun after that addition.
-- 30k-round load/invariant test in progress. Short benchmark of the typed-array path search produced the same final checksum as the earlier search; observed median ~20ms and p95 ~26ms over 200 rounds under concurrent load. Full report remains pending.
-- Ordinary bots have reached floor 6 but do not yet establish a reliable normal-play win rate. Balance and broad gameplay UX still need review. `PLAYABLE_RC` remains unachieved; remote separate-network acceptance is untested.
+Ordinary solo bots won one alternate seed and lost three combat seeds on floors 2–3. This tiny sample cannot establish human difficulty. Remote internet, degraded WAN, desktop timing, full accessibility and friends rubric remain external acceptance work. See docs/ACCEPTANCE_REPORT.md and docs/ISSUES.md.
+
+Next autonomous steps: finish endurance evidence, run a short final-harness check with a separate output, update this checkpoint, commit M6–M8, create a local version tag and source/compiled artifact with checksum, and save the updated reusable cloud setup/start instructions. No public deployment or push.

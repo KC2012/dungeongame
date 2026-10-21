@@ -1,4 +1,9 @@
 import Phaser from "phaser";
+import {
+  compileEffects,
+  traitModifiers,
+  professionModifiers,
+} from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
 import "./style.css";
@@ -11,7 +16,14 @@ import type {
   Entry,
 } from "../../../packages/engine/src/types";
 import { actionCost, stat, weight } from "../../../packages/engine/src/index";
-import { distance, path, tile, same } from "../../../packages/engine/src/grid";
+import { accuracy } from "../../../packages/engine/src/combat";
+import {
+  distance,
+  path,
+  tile,
+  same,
+  los,
+} from "../../../packages/engine/src/grid";
 const root = document.querySelector<HTMLDivElement>("#app")!;
 const escape = (v: unknown) =>
   String(v ?? "").replace(
@@ -49,6 +61,18 @@ const saved = () => {
     return null;
   }
 };
+let intentionalLeave = false;
+let profileUnlocks: string[] = [];
+let inFlight:
+  | {
+      action: Action;
+      nonce: number;
+      sentAt: number;
+      round: number;
+      runId: string;
+    }
+  | undefined;
+const bufferedActions: Action[] = [];
 let settings = {
   sound: false,
   reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -61,6 +85,64 @@ function find(kind: string, id: string): Entry {
   return (
     catalog[kind]?.find((v) => v.id === id) ?? { id, name: id, description: "" }
   );
+}
+function modifierText(values: Record<string, number>): string {
+  const names: Record<string, string> = {
+    armor: "armor",
+    fireResist: "fire resistance",
+    poisonResist: "poison resistance",
+    shockResist: "shock resistance",
+    coldResist: "cold resistance",
+    speed: "initiative",
+    dodge: "evasion",
+    waterCost: "water movement AP",
+    deviceRange: "device reach",
+    interactionAPDiscount: "interaction AP discount",
+    carrySlots: "inventory slots",
+    maxFocus: "maximum Focus",
+    capacity: "carry weight",
+    sight: "sight",
+    guard: "guard armor",
+    accuracy: "accuracy",
+    heal: "healing",
+    hack: "device checks",
+    structural: "structural damage",
+    reach: "melee reach",
+    pierce: "armor ignored",
+    regeneration: "HP every third round",
+    knockbackResist: "forced-move resistance",
+    shield: "barrier each round",
+    discount: "shop discount (%)",
+    trap: "trap power",
+    hazard: "hazard intensity",
+    stealth: "enemy sight reduction",
+    light: "sight in darkness",
+  };
+  return Object.entries(values)
+    .map(
+      ([k, n]) =>
+        `${n > 0 ? "+" : ""}${n} ${names[k] ?? k.replaceAll("_", " ")}`,
+    )
+    .join(" · ");
+}
+function itemMechanics(e: Entry): string {
+  if (e.kind === "material")
+    return e.trait === "quest"
+      ? "Consumed to operate a matching floor device from up to 3 tiles away."
+      : "Consumed by matching crafting recipes.";
+  if (e.kind === "armor" || e.kind === "trinket")
+    return (
+      (e.kind === "armor" ? `Armor ${e.power}. ` : "") +
+      modifierText(traitModifiers[e.trait] ?? {})
+    );
+  if (e.kind === "weapon")
+    return `Damage ${e.power} ${e.effects[0].element ?? "physical"} · range ${e.range + (e.trait === "reach" ? 1 : 0)} · ${e.accuracy ?? 0} accuracy · ${e.trait.replaceAll("_", " ")}`;
+  return e.effects
+    .map(
+      (f: any) =>
+        `${f.type.replaceAll("_", " ")} ${f.magnitude}${f.element ? " " + f.element : ""}`,
+    )
+    .join(" · ");
 }
 function button(label: string, act: string, extra = "") {
   return `<button data-act="${act}" ${extra}>${label}</button>`;
@@ -78,7 +160,7 @@ function title() {
   phaser?.destroy(true);
   phaser = undefined;
   scene = undefined;
-  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE LOCAL ALPHA</span>${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
+  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE LOCAL ALPHA</span>${button("Credits", "credits")}${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Suit palette<select id="palette"><option value="0">Ochre</option><option value="1">Moss</option><option value="2">Lilac</option><option value="3">Slate</option><option value="4">Clay</option><option value="5">Linen</option>${profileUnlocks.includes("concourse_survivor") ? '<option value="6">Broadcast gold · survivor</option>' : ""}${profileUnlocks.includes("producer_favorite") ? '<option value="7">Producer seal · earned favor</option>' : ""}</select></label><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") + '<label>Restore a host backup<input type="file" id="backup-file" accept="application/json"></label>' : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
   backgroundHelp();
 }
 function backgroundHelp() {
@@ -95,6 +177,9 @@ async function connect(which: string) {
   try {
     const name =
       (document.querySelector("#name") as HTMLInputElement)?.value ?? "Crawler";
+    const palette = Number(
+      (document.querySelector("#palette") as HTMLSelectElement)?.value ?? 0,
+    );
     const background =
       (document.querySelector("#background") as HTMLSelectElement)?.value ??
       "night_custodian";
@@ -103,6 +188,7 @@ async function connect(which: string) {
       room = await client.create("crawl", {
         name,
         background,
+        palette,
         ...(seed ? { seed: Number(seed) } : {}),
       });
     } else if (which === "join") {
@@ -112,7 +198,12 @@ async function connect(which: string) {
       const response = await fetch("/api/rooms/" + encodeURIComponent(code));
       if (!response.ok) throw Error("Room not active; ask host to resume");
       const { roomId } = await response.json();
-      room = await client.joinById(roomId, { name, background, invite });
+      room = await client.joinById(roomId, {
+        name,
+        background,
+        palette,
+        invite,
+      });
     } else {
       const s = saved();
       if (!s) throw Error("No session saved");
@@ -140,12 +231,38 @@ async function connect(which: string) {
 }
 function bindRoom() {
   if (!room) return;
+  const current = room;
   connected = true;
+  inFlight = undefined;
+  bufferedActions.length = 0;
   const heartbeat = setInterval(() => {
-    if (connected && room) room.send("command", { type: "PING" });
+    if (connected && room === current)
+      current.send("command", { type: "PING" });
   }, 15000);
-  room.onLeave(() => clearInterval(heartbeat));
+  const recovery = setInterval(() => {
+    if (
+      connected &&
+      room === current &&
+      inFlight &&
+      Date.now() - inFlight.sentAt > 5000
+    ) {
+      inFlight.sentAt = Date.now();
+      current.send("command", { type: "SNAPSHOT" });
+      current.send("command", {
+        type: "ACTION",
+        action: inFlight.action,
+        nonce: inFlight.nonce,
+        round: inFlight.round,
+        runId: inFlight.runId,
+      });
+    }
+  }, 5000);
+  room.onLeave(() => {
+    clearInterval(heartbeat);
+    clearInterval(recovery);
+  });
   room.onMessage("welcome", (m: any) => {
+    if (room !== current) return;
     actorId = m.actorId;
     session = { ...m, nonce };
     localStorage.setItem("concourse.session", JSON.stringify(session));
@@ -153,25 +270,67 @@ function bindRoom() {
     if (m.warning) toast(m.warning);
   });
   room.onMessage("snapshot", (m: any) => {
+    if (room !== current) return;
     game = m.game;
     root.dataset.checksum = m.checksum;
     root.dataset.revision = String(m.game.revision);
     hostId = m.hostId;
     sessions = m.sessions;
+    if (
+      inFlight &&
+      (sessions.find((s) => s.actorId === actorId)?.nonce ?? -1) >=
+        inFlight.nonce
+    )
+      inFlight = undefined;
     startedAt = m.startedAt;
     if (game!.round !== lastRound) {
       queue = [];
       lastRound = game!.round;
     }
     render();
+    if (!inFlight && bufferedActions.length)
+      enqueueAction(bufferedActions.shift()!);
   });
-  room.onMessage("error", (m: any) => toast(m.message));
+  room.onMessage("error", (m: any) => {
+    if (room !== current) return;
+    inFlight = undefined;
+    bufferedActions.length = 0;
+    toast(m.message);
+    send({ type: "SNAPSHOT" });
+  });
+  room.onMessage("ack", (m: any) => {
+    if (room !== current) return;
+    if (inFlight && m.nonce === inFlight.nonce) {
+      inFlight = undefined;
+      send({ type: "SNAPSHOT" });
+    }
+  });
   room.onError((_code, message) => toast(message ?? "Connection error"));
-  room.onLeave(() => {
+  room.onLeave((code: number) => {
+    if (room !== current) return;
     connected = false;
-    toast("Disconnected. The server owns the run. Reconnect to continue.");
+    inFlight = undefined;
+    bufferedActions.length = 0;
+    if (!intentionalLeave)
+      toast("Disconnected. The server owns the run. Reconnect to continue.");
     render();
+    if (!intentionalLeave && code !== 4001 && game?.phase !== "RESULT")
+      retryConnection(current, 0);
   });
+}
+function retryConnection(previous: Room, attempt: number) {
+  if (attempt >= 6) return;
+  setTimeout(
+    () => {
+      if (connected || room !== previous || intentionalLeave) return;
+      void (async () => {
+        await connect("resume");
+        if (!connected && room === previous)
+          retryConnection(previous, attempt + 1);
+      })();
+    },
+    Math.min(10000, 1500 * 2 ** attempt),
+  );
 }
 function send(m: any) {
   if (!connected || !room) {
@@ -198,6 +357,9 @@ function me(): Actor | undefined {
 }
 function render() {
   if (!game || !actorId) return;
+  root.dataset.connection = connected ? "connected" : "offline";
+  root.dataset.pending = String(inFlight?.nonce ?? 0);
+  root.dataset.buffered = String(bufferedActions.length);
   if (game.phase === "LOBBY") {
     root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>PRIVATE ROOM ${escape(session?.code)}</span>${button("Settings", "settings")}</header><main class="title stack"><div class="eyebrow">Arrival / waiting for your crew</div><h1>The next shift is yours.</h1><p class="intro">One to four crawlers. Solo uses the same authoritative server. Share the invitation privately before starting.</p><div class="columns"><section class="card"><h2>Your crew · ${sessions.length}/4</h2>${Object.values(
       game.actors,
@@ -228,10 +390,20 @@ function render() {
     return;
   }
   const a = me()!;
+  const focused = document.activeElement as HTMLElement | null,
+    focusId = focused?.id,
+    focusAction = focused?.dataset.act;
+  const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.choose = pick;
+    scene.hover = (p) => {
+      if (mode === "MOVE" || !game || (selected && same(selected, p))) return;
+      selected = p;
+      inspector();
+      scene?.setState(game, actorId, selected, scene.queued);
+    };
     phaser = new Phaser.Game({
       type: Phaser.CANVAS,
       parent: "map",
@@ -247,6 +419,10 @@ function render() {
       audio: { noAudio: true },
     });
   }
+  const reconnect = document.querySelector<HTMLButtonElement>(
+    '[data-act="reconnect"]',
+  );
+  if (reconnect) reconnect.disabled = connected;
   document.querySelector("#header-info")!.textContent =
     `${connected ? "CONNECTED" : "OFFLINE"} · Round ${game.round} · Seed ${game.seed}`;
   document.querySelector("#floor-name")!.textContent =
@@ -279,11 +455,18 @@ function render() {
     (e) => e.profession === "general" || e.profession === a.profession,
   );
   document.querySelector("#actions")!.innerHTML =
-    `<div class="row"><h3 class="grow">${a.dead ? "Spectating" : a.downed ? "Downed · ask your crew for a revive" : "Action plan"}</h3><b>${queue.length ? queue.length + " queued · " + queue.reduce((n, c) => n + actionCost(game!, a, c), 0) + "/" + (a.statuses.stunned ? 2 : 3) + " AP" : "No actions queued"}</b></div><div class="queue">${verbs || "<small>Choose an action, then a target. Invalid actions refund AP.</small>"}</div><div class="tabs">${button("Move [1]", "mode:MOVE", `class="${mode === "MOVE" ? "selected" : ""}"`)}${button("Attack [2]", "mode:ATTACK", `class="${mode === "ATTACK" ? "selected" : ""}"`)}${button("Guard [3]", "guard")}${button("Dodge", "dodge")}${button("Overwatch", "overwatch")}${button("Inventory [I]", "inventory")}${button("Character [C]", "character")}</div><div class="row"><select id="skill" aria-label="Ability"><option value="">Choose ability</option>${skills.map((e) => `<option value="${e.id}" ${skillId === e.id ? "selected" : ""}>${escape(e.name)} · ${e.apCost} AP / ${e.focusCost} focus / range ${e.range}</option>`).join("")}</select>${button("Use ability", "ability")}${button("Undo", "undo", queue.length ? "" : "disabled")}${button(sessions.find((s) => s.actorId === actorId)?.ready ? "Unready [R]" : "Ready [R]", "ready", `class="primary" ${game.phase === "PLANNING" && !a.dead && !a.downed ? "" : "disabled"}`)}</div><small>${escape(mode === "ABILITY" ? find("abilities", skillId).description : mode === "INSPECT" ? "Inspect tiles, actors, and devices. No AP cost." : mode === "ATTACK" ? "Select an enemy in range and line of sight." : "Click a tile or use arrow keys to move.")}</small>`;
+    `<div class="row"><h3 class="grow">${a.dead ? "Spectating" : a.downed ? "Downed · ask your crew for a revive" : "Action plan"}</h3><b>${queue.length ? queue.length + " queued · " + queue.reduce((n, c) => n + actionCost(game!, a, c), 0) + "/" + (a.statuses.stunned ? 2 : 3) + " AP" : "No actions queued"}</b></div><div class="queue">${verbs || "<small>Choose an action, then a target. Invalid actions refund AP.</small>"}</div><div class="tabs">${button("Move [1]", "mode:MOVE", `class="${mode === "MOVE" ? "selected" : ""}"`)}${button("Attack [2]", "mode:ATTACK", `class="${mode === "ATTACK" ? "selected" : ""}"`)}${button("Guard [3]", "guard")}${button("Dodge", "dodge")}${button("Overwatch", "overwatch")}${button("Inventory [I]", "inventory")}${button("Character [C]", "character")}</div><div class="row"><select id="skill" aria-label="Ability"><option value="">Choose ability</option>${skills.map((e) => `<option value="${e.id}" ${skillId === e.id ? "selected" : ""}>${escape(e.name)} · ${e.apCost} AP / ${e.focusCost} focus / range ${e.range}</option>`).join("")}</select>${button("Use ability", "ability")}${button("Undo", "undo", queue.length ? "" : "disabled")}${button(sessions.find((s) => s.actorId === actorId)?.ready ? "Unready [R]" : "Ready [R]", "ready", `class="primary" ${game.phase === "PLANNING" && !a.dead && !a.downed ? "" : "disabled"}`)}</div><small>${escape(mode === "ABILITY" ? find("abilities", skillId).description : mode === "USE" ? "Choose a target for " + find("items", skillId).name + "." : mode === "INSPECT" ? "Inspect tiles, actors, and devices. No AP cost." : mode === "ATTACK" ? "Select an enemy in range and line of sight." : "Click a tile or use arrow keys to move.")}</small>`;
   const nearby = game.objects.filter((o) => !o.done && distance(a, o) <= 1);
-  document.querySelector("#context")!.innerHTML = `<h3>Nearby actions</h3>${(
-    game.tradeRequests ?? []
-  )
+  document.querySelector("#context")!.innerHTML = `<h3>Nearby actions</h3>${
+    actorId === hostId
+      ? sessions
+          .filter(
+            (s) => s.offlineSince && Date.now() - s.offlineSince >= 300000,
+          )
+          .map((s) => button("Park offline crawler", "park:" + s.actorId))
+          .join("")
+      : ""
+  }${(game.tradeRequests ?? [])
     .filter((r) => r.to === actorId && !r.resolved)
     .map(
       (r) =>
@@ -299,6 +482,17 @@ function render() {
     .join(
       "",
     )}${game.phase === "SAFE_ROOM" ? button("Saferoom services", "safe", 'class="primary"') : ""}${actorId === hostId && game.phase === "PLANNING" ? button("Force ready after 45s idle", "force") : ""}<p class="muted">${game.bossDefeated ? "Exit unlocked when floor objectives are complete." : "Boss attacks mark tiles one round ahead. Move out of ! tiles."}</p>`;
+  if (a.dead || a.downed) {
+    document.querySelector("#actions")!.innerHTML =
+      `<h2>${a.dead ? "Your crawler has died. Spectating the crew." : "Downed · " + a.downed + " rounds to receive help."}</h2><p class="muted">${a.dead ? "Death is permanent for this run. You can inspect, ping and watch allies." : "An adjacent ally needs 2 AP and a medkit to revive you."}</p><div class="row">${button("Inventory", "inventory")}${button("Character", "character")}${Object.values(
+        game.actors,
+      )
+        .filter((v) => v.kind === "crawler" && !v.dead && v.id !== a.id)
+        .map((v) => button("Watch " + escape(v.name), "spectate:" + v.id))
+        .join("")}</div>`;
+    document.querySelector("#context")!.innerHTML =
+      '<p class="muted">Inspect a visible tile to ping your crew.</p>';
+  }
   inspector();
   const log = document.querySelector("#log")!;
   log.innerHTML = game.events
@@ -306,13 +500,35 @@ function render() {
     .reverse()
     .map((e) => `<p><small>${e.round}</small> ${escape(eventText(e))}</p>`)
     .join("");
+  if (scene) {
+    const effects =
+      mode === "ABILITY" || mode === "USE"
+        ? compileEffects(
+            find(mode === "ABILITY" ? "abilities" : "items", skillId),
+          )
+        : [];
+    scene.previewRadius = Math.max(
+      0,
+      ...effects.filter((f) => f.target === "area").map((f) => f.radius ?? 1),
+    );
+  }
   scene?.setState(
     game,
     actorId,
     selected,
     queue.filter((c) => c.type === "MOVE").map((c) => ({ x: c.x!, y: c.y! })),
   );
-  if (drawer) showDrawer(drawer);
+  if (drawer) {
+    showDrawer(drawer);
+    document.querySelector("#drawer")!.scrollTop = drawerScroll;
+  }
+  if (focusId) document.getElementById(focusId)?.focus({ preventScroll: true });
+  else if (focusAction)
+    document
+      .querySelector<HTMLElement>(
+        '[data-act="' + CSS.escape(focusAction) + '"]',
+      )
+      ?.focus({ preventScroll: true });
 }
 function eventText(e: State["events"][number]): string {
   const source =
@@ -332,6 +548,53 @@ function eventText(e: State["events"][number]): string {
   if (e.payload.reason) return e.payload.reason;
   return `${e.type.replaceAll("_", " ")}${targets ? " · " + targets : ""}`;
 }
+function targetPreview(p: Point, target?: Actor): string {
+  const actor = me();
+  if (!game || !actor || !["ATTACK", "ABILITY", "USE"].includes(mode))
+    return "";
+  const weapon = find("items", actor.equipment.weapon ?? "");
+  const entry =
+    mode === "ATTACK"
+      ? weapon
+      : find(mode === "ABILITY" ? "abilities" : "items", skillId);
+  const effects = mode === "ATTACK" ? [] : compileEffects(entry);
+  const moving = effects.find(
+    (f) => f.type === "dash" || f.type === "teleport",
+  );
+  const range =
+    mode === "ATTACK"
+      ? (weapon.range ?? 1) +
+        ((weapon.range ?? 1) === 1 ? stat(actor, "reach") : 0)
+      : moving
+        ? moving.magnitude
+        : Math.max(
+            entry.range ?? 4,
+            effects.some((f) => f.target === "ally" || f.target === "tile")
+              ? 1
+              : 0,
+          );
+  const d = distance(actor, p),
+    clear = los(game, actor, p);
+  const ap = actionCost(game, actor, {
+    type: mode as "ATTACK" | "ABILITY" | "USE",
+    id: skillId,
+    ...p,
+  });
+  const hit =
+    mode === "ATTACK" && target?.kind === "enemy" && d <= range && clear
+      ? ` · ${accuracy(actor, target, weapon.accuracy ?? 0, tile(game, p)?.cover ?? 0, Math.max(0, d - Math.max(1, range - 2)))}% hit`
+      : "";
+  const radius = Math.max(
+    0,
+    ...effects.filter((f) => f.target === "area").map((f) => f.radius ?? 1),
+  );
+  const allyRisk =
+    radius > 0 &&
+    Object.values(game.actors).some(
+      (a) => a.kind === "crawler" && !a.dead && distance(a, p) <= radius,
+    );
+  return `<p class="note">Current position: ${ap} AP · max range ${range} · distance ${d} · ${clear ? "clear LOS" : "blocked LOS"}${d > range ? " · out of range" : ""}${hit}${entry.focusCost ? " · " + entry.focusCost + " Focus" : ""}${radius ? " · area radius " + radius : ""}${allyRisk ? " · WARNING: crawler in area" : ""}. Resolution can change after queued movement.</p>`;
+}
 function inspector() {
   if (!game) return;
   const el = document.querySelector("#inspector");
@@ -350,7 +613,7 @@ function inspector() {
     (a) => !a.dead && same(a, selected!),
   );
   const o = game.objects.find((o) => same(o, selected!));
-  el.innerHTML = `<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
+  el.innerHTML = `${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
     t.hazards,
   )
     .map(
@@ -359,10 +622,14 @@ function inspector() {
     )
     .join(
       "",
-    )}${t.kind === "door" ? button(t.open ? "Close door" : "Open door", "door:" + selected!.x + ":" + selected!.y) : ""}${a?.kind === "enemy" ? button("Attack target", "target-attack") : ""}${o && !o.done ? button("Approach / interact", "approach:" + o.id) : ""}`;
+    )}${t.kind === "door" ? button(t.open ? "Close door" : "Open door", "door:" + selected!.x + ":" + selected!.y) : ""}${button("Ping tile", "ping")}${a?.kind === "enemy" ? button("Attack target", "target-attack") : ""}${o && !o.done ? button("Approach / interact", "approach:" + o.id) : ""}`;
 }
 function enqueueAction(c: Action) {
   if (!game || !me() || me()!.dead || me()!.downed) return;
+  if (!connected) {
+    toast("Waiting for the authority server. Reconnect to act.");
+    return;
+  }
   if (game.phase === "PLANNING") {
     if (queue.length >= 4) {
       toast("At most four actions; total AP must fit within 3.");
@@ -379,7 +646,19 @@ function enqueueAction(c: Action) {
     queue.push(c);
     render();
   } else {
-    send({ type: "ACTION", action: c, nonce: nextNonce() });
+    if (inFlight) {
+      if (bufferedActions.length < 6) bufferedActions.push(c);
+      return;
+    }
+    inFlight = {
+      action: c,
+      nonce: nextNonce(),
+      sentAt: Date.now(),
+      round: game.round,
+      runId: game.runId,
+    };
+    root.dataset.pending = String(inFlight.nonce);
+    send({ type: "ACTION", action: c, nonce: inFlight.nonce });
   }
   if (settings.sound) {
     try {
@@ -491,8 +770,11 @@ function showDrawer(kind: string) {
   el.classList.add("open");
   let html = "";
   const a = me();
-  if (kind === "settings") {
-    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
+  if (kind === "credits") {
+    html =
+      '<p class="intro">The Concourse · The Crawl. Original playable characters, dialogue, content and procedural pixel geometry. Phaser, Colyseus and other open-source dependencies retain their own licenses. An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl; not affiliated with or licensed by the author or publisher. No book text, novel cast, logos or licensed sprites are included.</p>';
+  } else if (kind === "settings") {
+    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><p class="muted">Reduced motion is always enabled: the game uses no camera shake, flicker, or animated attacks.</p><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
   } else if (a && game) {
     if (kind === "inventory") {
       const total = a.inventory.reduce(
@@ -507,7 +789,7 @@ function showDrawer(kind: string) {
         .map((s) => {
           const e = find("items", s.id),
             equip = ["weapon", "armor", "trinket", "tool"].includes(e.kind);
-          return `<article class="item"><h2>${escape(e.name)} ×${s.count}</h2><p>${escape(e.description)}</p><small>${escape(e.trait)} · ${e.weight} weight · ${escape(e.effects.map((f: any) => f.type + " " + f.magnitude).join(", "))}</small><div class="row">${equip ? button("Equip", "equip:" + e.id) : e.kind !== "material" || e.trait === "quest" ? button("Use / target", "use:" + e.id) : "<small>Recipe / objective material</small>"}${button("Drop at cache", "drop:" + e.id)}</div>${Object.values(
+          return `<article class="item"><h2>${escape(e.name)} ×${s.count}</h2><p>${escape(e.description)}</p><small>${escape(e.trait)} · ${e.weight} weight · ${escape(itemMechanics(e))}</small><div class="row">${equip ? button("Equip", "equip:" + e.id) : ""}${e.kind === "consumable" || (e.kind === "tool" && e.effects.some((f: any) => f.type !== "modify_stat")) || e.trait === "quest" ? button("Use / target", "use:" + e.id) : e.kind === "material" ? "<small>Recipe material</small>" : ""}${button("Drop at cache", "drop:" + e.id)}</div>${Object.values(
             game!.actors,
           )
             .filter(
@@ -530,16 +812,27 @@ function showDrawer(kind: string) {
         .map(([k, v]) => escape(k) + ": " + v)
         .join(
           " · ",
-        )}<br>Profession ${escape(a.profession ?? "unselected")} · Adaptation ${escape(a.adaptation ?? "unselected")} · Wounds ${a.wounds}</p>${a.offers.length ? `<h2>Choose a talent</h2><div class="row">${a.offers.map((id) => button(id + " +1", "talent:" + id)).join("")}</div>` : ""}<h2>Floor 3 · identity choices</h2><p class="intro">Choose once in a saferoom on floor 3 or later. Your choice persists for this run.</p><div class="grid">${["professions", "adaptations"].flatMap((k) => catalog[k].map((e) => `<article class="item"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p><p>${escape(e.passive ?? JSON.stringify({ bonus: e.bonus, drawback: e.drawback }))}</p>${button("Choose " + escape(e.name), "choose:" + k + ":" + e.id, game!.floor >= 3 && game!.phase === "SAFE_ROOM" && !(k === "professions" ? a.profession : a.adaptation) ? "" : "disabled")}</article>`)).join("")}</div>`;
+        )}<br>${escape(modifierText(Object.fromEntries(["armor", "fireResist", "shockResist", "poisonResist", "coldResist", "speed", "dodge", "sight", "capacity"].map((k) => [k, stat(a, k)]).filter(([k, v]) => v !== 0)) as Record<string, number>))}<br>Profession ${escape(a.profession ?? "unselected")} · Adaptation ${escape(a.adaptation ?? "unselected")} · Wounds ${a.wounds}</p>${a.offers.length ? `<h2>Choose a talent</h2><div class="row">${a.offers.map((id) => button(id + " +1", "talent:" + id)).join("")}</div>` : ""}<h2>Current statuses</h2>${
+        Object.entries(a.statuses)
+          .map(
+            ([id, v]) =>
+              `<p>${escape(id)} · ${v.duration} rounds · potency ${v.potency} · ${escape(({ burning: "Fire damage each round", poisoned: "Poison damage each round", bleeding: "Physical damage each round", corroded: "Armor reduced by 2", chilled: "Movement costs 1 extra AP", stunned: "Next tactical budget reduced to 2 AP", confused: "Accuracy reduced by 15", exposed: "Incoming accuracy increased by 15", aimed: "Accuracy increased by 15" } as Record<string, string>)[id] ?? "Temporary modifier")}</p>`,
+          )
+          .join("") || "<p class=muted>No active statuses.</p>"
+      }<h2>Floor 3 · identity choices</h2><p class="intro">Choose once in a saferoom on floor 3 or later. Your choice persists for this run.</p><div class="grid">${["professions", "adaptations"].flatMap((k) => catalog[k].map((e) => `<article class="item"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p><p>${escape(e.passive ? modifierText(professionModifiers[e.passive] ?? {}) : modifierText({ ...e.bonus, ...e.drawback }))}</p>${button("Choose " + escape(e.name), "choose:" + k + ":" + e.id, game!.floor >= 3 && game!.phase === "SAFE_ROOM" && !(k === "professions" ? a.profession : a.adaptation) ? "" : "disabled")}</article>`)).join("")}</div>`;
     } else if (kind === "safe") {
-      html = `<div class="row">${button("Rest · once this floor", "rest", a.restFloor === game.floor ? "disabled" : "")}${button("Treat wound · " + 5 * game.floor + " credits", "medic", a.wounds ? "" : "disabled")}${button("Leave saferoom", "leave-safe")}${button(game.floor === 6 ? "End the broadcast" : "Descend to next floor", "descend", game.bossDefeated && game.objective.length >= catalog.floors[game.floor - 1].requiredObjective.goal ? 'class="primary"' : "disabled")}</div><p class="intro">Credits ${game.credits}. Rest heals 35% HP and restores Focus. Complete floor objectives and resolve the boss to descend. Crafting consumes the listed materials.</p><h2>Rewards & overflow</h2><div class="row">${game.rewards
+      html = `<div class="row">${button("Rest · once this floor", "rest", a.restFloor === game.floor ? "disabled" : "")}${button("Treat wound · " + 5 * game.floor + " credits", "medic", a.wounds ? "" : "disabled")}${button("Leave saferoom", "leave-safe")}${button(game.floor === 6 ? "End the broadcast" : game.descendVotes?.includes(actorId) ? "Waiting for crew" : "Vote to descend", "descend", game.bossDefeated && game.objective.length >= catalog.floors[game.floor - 1].requiredObjective.goal ? 'class="primary"' : "disabled")}</div><p class="intro">Credits ${game.credits}. Rest heals 35% HP and restores Focus. Complete floor objectives and resolve the boss to descend. Crafting consumes the listed materials.</p><h2>Rewards & overflow</h2><div class="row">${game.rewards
         .filter((r) => !r.claimed)
-        .map((r) =>
-          button(
-            "Claim " + escape(find("items", r.item).name),
-            "reward:" + r.id,
-            r.turn === a.id ? "" : "disabled",
-          ),
+        .map(
+          (r) =>
+            button(
+              "Claim " + escape(find("items", r.item).name),
+              "reward:" + r.id,
+              r.turn === a.id ? "" : "disabled",
+            ) +
+            (r.turn === a.id
+              ? button("Pass reward", "passreward:" + r.id)
+              : ""),
         )
         .join(
           "",
@@ -556,7 +849,7 @@ function showDrawer(kind: string) {
           .filter((id) => !game!.resolvedOffers.includes(id))
           .map((id) => {
             const e = find("events", id);
-            return `<article class="item"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p>${e.choices.map((c: any) => button(escape(c.label) + " · risk: " + escape(c.risk), "offer:" + id + ":" + c.id)).join("")}</article>`;
+            return `<article class="item"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p>${e.choices.map((c: any) => button(escape(c.label) + " · risk: " + escape(c.risk.replaceAll("_", " ")), "offer:" + id + ":" + c.id)).join("")}</article>`;
           })
           .join("") ||
         '<p class="muted">Earn audience interest through unusual outcomes to receive optional bargains.</p>'
@@ -577,6 +870,24 @@ async function act(value: string) {
     case "resume":
       await connect(key);
       break;
+    case "export": {
+      if (!session) return;
+      const response = await fetch("/api/runs/" + session.runId + "/export", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + session.sessionToken },
+      });
+      if (!response.ok) {
+        toast("Only the current host can export this run.");
+        break;
+      }
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "concourse-" + session.runId + ".json";
+      link.click();
+      URL.revokeObjectURL(url);
+      break;
+    }
     case "reconnect":
       await connect("resume");
       break;
@@ -648,8 +959,20 @@ async function act(value: string) {
     case "door":
       enqueueAction({ type: "INTERACT", x: Number(id), y: Number(extra) });
       break;
+    case "ping":
+      if (selected) send({ type: "PING_TILE", ...selected });
+      break;
+    case "spectate":
+      if (scene) {
+        scene.spectateId = id;
+        scene.paint();
+      }
+      break;
     case "object":
       enqueueAction({ type: "INTERACT", id });
+      break;
+    case "recover":
+      enqueueAction({ type: "INTERACT", target: id });
       break;
     case "revive":
       enqueueAction({ type: "REVIVE", target: id });
@@ -723,6 +1046,12 @@ async function act(value: string) {
     case "craft":
       enqueueAction({ type: "CRAFT", id });
       break;
+    case "park":
+      send({ type: "PARK", target: id });
+      break;
+    case "passreward":
+      enqueueAction({ type: "REWARD", id: value.slice(11), choice: "pass" });
+      break;
     case "reward":
       enqueueAction({ type: "REWARD", id: value.slice(7) });
       break;
@@ -759,6 +1088,7 @@ async function act(value: string) {
     case "inventory":
     case "character":
     case "settings":
+    case "credits":
     case "safe":
       showDrawer(key);
       break;
@@ -776,7 +1106,9 @@ async function act(value: string) {
       }
       break;
     case "new":
+      intentionalLeave = true;
       await room?.leave();
+      intentionalLeave = false;
       room = undefined;
       game = undefined;
       queue = [];
@@ -798,6 +1130,47 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("change", (e) => {
   const t = e.target as HTMLInputElement;
+  if (t.id === "backup-file") {
+    const file = t.files?.[0];
+    const previous = saved();
+    if (file && previous) {
+      if (file.size > 8 * 1024 * 1024) {
+        toast("Backup exceeds 8 MiB");
+        return;
+      }
+      showConfirm(
+        "Restore this backup as a new private run? The original checkpoint is preserved.",
+        () => {
+          void (async () => {
+            try {
+              const checkpoint = JSON.parse(await file.text());
+              const response = await fetch(
+                "/api/runs/" + previous.runId + "/import",
+                {
+                  method: "POST",
+                  headers: {
+                    Authorization: "Bearer " + previous.sessionToken,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ checkpoint }),
+                },
+              );
+              const result = await response.json();
+              if (!response.ok) throw Error(result.error);
+              localStorage.setItem(
+                "concourse.session",
+                JSON.stringify({ ...previous, ...result }),
+              );
+              await connect("resume");
+            } catch (error) {
+              toast(String(error));
+            }
+          })();
+        },
+      );
+    }
+  }
+  if (t.id === "skill") skillId = t.value;
   if (t.id === "background") backgroundHelp();
   if (["font", "sound", "motion"].includes(t.id)) {
     settings = {
@@ -855,7 +1228,10 @@ document.addEventListener("keydown", (e) => {
   };
   if (moves[key] && me()) {
     e.preventDefault();
-    const base = queue.filter((c) => c.type === "MOVE").at(-1) ?? me()!;
+    const base =
+      [...queue, ...(inFlight ? [inFlight.action] : []), ...bufferedActions]
+        .filter((c) => c.type === "MOVE")
+        .at(-1) ?? me()!;
     const p = { x: base.x! + moves[key].x, y: base.y! + moves[key].y };
     if (mode !== "MOVE") {
       selected = {
@@ -869,6 +1245,8 @@ document.addEventListener("keydown", (e) => {
 try {
   const response = await fetch("/api/catalog");
   catalog = await response.json();
+  const profile = await fetch("/api/profile");
+  profileUnlocks = (await profile.json()).unlocks ?? [];
   title();
 } catch {
   root.innerHTML =

@@ -1,11 +1,25 @@
 import { playBot } from "./bot";
-import { writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 const count = Number(process.env.CAMPAIGN_SEEDS ?? 100);
 const assisted = process.env.CAMPAIGN_ASSISTED !== "0";
 const players = Number(process.env.CAMPAIGN_PLAYERS ?? 1);
 const rows: any[] = [];
+const sourceHash = createHash("sha256")
+  .update(
+    ["packages/engine/src", "packages/content/src"]
+      .flatMap((dir) =>
+        readdirSync(dir)
+          .filter((f) => f.endsWith(".ts"))
+          .sort()
+          .map((f) => readFileSync(dir + "/" + f)),
+      )
+      .join("\n"),
+  )
+  .digest("hex");
 const start = Date.now();
-for (let seed = 0; seed < count; seed++) {
+const first = Number(process.env.CAMPAIGN_START ?? 0);
+for (let seed = first; seed < first + count; seed++) {
   const route = seed % 10 === 0 ? "alternate" : "combat";
   const r = playBot(seed, players, route, 2500, assisted);
   rows.push({
@@ -19,13 +33,15 @@ for (let seed = 0; seed < count; seed++) {
   });
   if (seed % 5 === 0)
     console.log(
-      `Campaign ${seed + 1}/${count}: ${r.result}, floor ${r.floor}, ${r.turns} turns`,
+      `Campaign ${seed - first + 1}/${count}: ${r.result}, floor ${r.floor}, ${r.turns} turns`,
     );
   writeFileSync(
-    `docs/campaign-${assisted ? "assisted" : "normal"}-${players}.json`,
+    process.env.CAMPAIGN_OUTPUT ??
+      `docs/campaign-${assisted ? "assisted" : "normal"}-${players}.json`,
     JSON.stringify(
       {
         assisted,
+        sourceHash,
         assistance: assisted
           ? "Starting 500 HP, +8 armor and rail driver; no teleporting, save resets, free objective flags or in-run stat modifications."
           : "None",

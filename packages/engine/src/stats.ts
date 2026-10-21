@@ -90,6 +90,7 @@ export function consume(a: Actor, id: string, count = 1): boolean {
   if (!st || st.count < count) return false;
   st.count -= count;
   if (st.count === 0) {
+    if (id === "portable_bench") a.bench = false;
     a.inventory.splice(a.inventory.indexOf(st), 1);
     for (const k of Object.keys(a.equipment))
       if (a.equipment[k] === id) delete a.equipment[k];

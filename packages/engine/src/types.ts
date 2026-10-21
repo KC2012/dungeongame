@@ -38,13 +38,19 @@ export type Entry = {
   [key: string]: any;
 };
 export type Catalog = Record<string, Entry[]>;
-export type Status = { duration: number; potency: number; source: string };
+export type Status = {
+  duration: number;
+  potency: number;
+  source: string;
+  serial?: number;
+};
 export type Stack = { id: string; count: number; durability: number };
 export type Actor = Point & {
   id: string;
   name: string;
   kind: "crawler" | "enemy" | "minion";
   catalogId: string;
+  palette?: number;
   owner?: string;
   hp: number;
   maxHP: number;
@@ -54,6 +60,7 @@ export type Actor = Point & {
   level: number;
   stats: Record<string, number>;
   statuses: Record<string, Status>;
+  statusSerial?: number;
   inventory: Stack[];
   equipment: Record<string, string>;
   profession?: string;
@@ -69,6 +76,7 @@ export type Actor = Point & {
   revivedFloor: number;
   wounds: number;
   shield: number;
+  shieldSource?: string;
   guard: number;
   reaction: string;
   tags: string[];
@@ -95,11 +103,13 @@ export type Tile = {
       damage: number;
       source: string;
       persistent?: boolean;
+      disabled?: number;
     }
   >;
   explored: boolean;
   room: number;
   locked?: boolean;
+  jammed?: boolean;
   open?: boolean;
   trap?: { owner: string; damage: number };
 };
@@ -142,6 +152,7 @@ export type HazardIntent = Point & {
   duration: number;
   damage: number;
   step: number;
+  expanded?: boolean;
 };
 export type State = {
   schemaVersion: 1;
@@ -170,9 +181,16 @@ export type State = {
   events: GameEvent[];
   nextEventId: number;
   deferredEvents: HazardIntent[];
+  exposures?: string[];
   shop: Stack[];
   overflow: Stack[];
-  rewards: { id: string; item: string; turn: string; claimed: boolean }[];
+  rewards: {
+    id: string;
+    item: string;
+    turn: string;
+    claimed: boolean;
+    passed?: string[];
+  }[];
   offers: string[];
   resolvedOffers: string[];
   risks: string[];
@@ -189,6 +207,7 @@ export type State = {
   floorRoutes: string[];
   visited: number[];
   safeUsed: boolean;
+  descendVotes?: string[];
   turns: number;
 };
 export type Action = {

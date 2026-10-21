@@ -1,4 +1,5 @@
 import {
+  readdirSync,
   mkdirSync,
   existsSync,
   readFileSync,
@@ -37,6 +38,23 @@ export const digest = (value: string) =>
 export class SaveStore {
   constructor(public directory: string) {
     mkdirSync(directory, { recursive: true });
+  }
+  unlocked(): string[] {
+    const ids = new Set<string>();
+    for (const file of readdirSync(this.directory).filter((f) =>
+      /^[A-Za-z0-9_-]+\.json$/.test(f),
+    )) {
+      try {
+        const saved = this.decode(
+          readFileSync(join(this.directory, file), "utf8"),
+        );
+        if (saved.game.result === "VICTORY")
+          for (const id of saved.game.unlocks) ids.add(id);
+      } catch {
+        /* Corrupt checkpoints are preserved for explicit recovery. */
+      }
+    }
+    return [...ids].sort();
   }
   file(id: string) {
     if (!/^[a-zA-Z0-9_-]{1,64}$/.test(id)) throw Error("Invalid run id");

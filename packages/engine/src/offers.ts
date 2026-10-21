@@ -117,9 +117,28 @@ export function applyOffer(s: State, a: Actor, reward: string, risk: string) {
         s.xp += 5;
         break;
       case "shortcut": {
-        const destination = s.objects.find((o) => o.kind === "exit")!;
-        for (const p of path(s, a, destination)) tile(s, p)!.explored = true;
-        emit(s, "locked_path_bypass", a.id, [], {}, a);
+        const door = s.tiles.findIndex((t) => t.kind === "door" && t.locked);
+        if (door >= 0) {
+          const t = s.tiles[door];
+          t.locked = false;
+          t.open = true;
+          t.explored = true;
+          emit(
+            s,
+            "locked_path_bypass",
+            a.id,
+            [],
+            { reward },
+            { x: door % s.width, y: Math.floor(door / s.width) },
+          );
+        } else {
+          s.xp += 5;
+          emit(s, "intel", a.id, [], {
+            reward,
+            message:
+              "All maintenance links are open; route knowledge grants 5 XP.",
+          });
+        }
         break;
       }
     }
@@ -154,8 +173,9 @@ export function applyOffer(s: State, a: Actor, reward: string, risk: string) {
         (v) => v.tags.includes("boss") && !v.dead,
       );
       if (boss) {
-        boss.hp += Math.ceil(boss.maxHP * 0.2);
-        boss.maxHP = boss.hp;
+        const extra = Math.ceil(boss.maxHP * 0.2);
+        boss.hp += extra;
+        boss.maxHP += extra;
       }
       break;
     }

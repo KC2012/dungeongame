@@ -13,11 +13,13 @@ const sources = readdirSync("packages/engine/src")
   .join("\n");
 const hooks = catalog.achievement_events.map((e) => ({
   id: e.id,
+  fixtureFile: "tests/unit/achievement-hooks.test.ts",
   sourceMention: sources.includes(`'${e.id}'`) || sources.includes(`"${e.id}"`),
 }));
 const rows = Object.entries(catalog).map(([kind, records]) => ({
   kind,
   count: records.length,
+  ids: records.map((r) => r.id),
   route: (
     {
       items:
@@ -33,7 +35,8 @@ const rows = Object.entries(catalog).map(([kind, records]) => ({
       bosses: "combat phases and alternate devices",
       recipes: "ingredient-consuming craft transaction",
       achievements: "confirmed server event matcher",
-      achievement_events: "emitter contract; see missing source hooks below",
+      achievement_events:
+        "60 confirmed-outcome source fixtures and authored achievement/reward matching tests",
       events: "audience-threshold saferoom bargains",
       sponsors: "qualified event gift transaction",
     } as Record<string, string>

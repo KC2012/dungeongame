@@ -144,3 +144,182 @@ it("new stun survives into next planning AP budget", () => {
   const second = resolveRound(first, []).state;
   expect(second.actors.a.ap).toBe(2);
 });
+it("safe room cannot freeze combat while another crawler is elsewhere", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian"),
+    b = addCrawler(s, "b", "B", "street_mechanic");
+  begin(s);
+  for (const id of Object.keys(s.actors))
+    if (s.actors[id].kind === "enemy") delete s.actors[id];
+  const safe = s.objects.find((o) => o.kind === "safe")!;
+  a.x = safe.x;
+  a.y = safe.y - 1;
+  expect(perform(s, a, { type: "INTERACT", id: safe.id })).toBe(false);
+  expect(s.phase).not.toBe("SAFE_ROOM");
+  b.x = safe.x;
+  b.y = safe.y + 1;
+  expect(perform(s, a, { type: "INTERACT", id: safe.id })).toBe(true);
+});
+it("crew descent requires every connected living crawler to vote", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian"),
+    b = addCrawler(s, "b", "B", "street_mechanic");
+  begin(s);
+  s.phase = "SAFE_ROOM";
+  s.bossDefeated = true;
+  s.objective = ["a", "b", "c"];
+  expect(perform(s, a, { type: "DESCEND" })).toBe(true);
+  expect(s.floor).toBe(1);
+  expect(perform(s, b, { type: "DESCEND" })).toBe(true);
+  expect(s.floor).toBe(2);
+});
+it("a deferred fluid wave terminates instead of circulating forever", () => {
+  const s = newGame(1);
+  addCrawler(s, "a", "A", "night_custodian");
+  begin(s);
+  for (const t of s.tiles) {
+    t.kind = "floor";
+    t.hazards = {};
+  }
+  s.deferredEvents = [
+    {
+      x: 20,
+      y: 20,
+      element: "water",
+      intensity: 2,
+      source: "test",
+      duration: 2,
+      damage: 0,
+      step: 0,
+    },
+  ];
+  let current = s;
+  for (let i = 0; i < 10; i++) {
+    current = resolveRound(current, []).state;
+  }
+  expect(current.deferredEvents).toHaveLength(0);
+});
+it("a follower may enter an ally tile when that ally clears its endpoint", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian"),
+    b = addCrawler(s, "b", "B", "street_mechanic");
+  begin(s);
+  for (const t of s.tiles) {
+    t.kind = "floor";
+    t.hazards = {};
+  }
+  for (const [id, v] of Object.entries(s.actors))
+    if (v.kind === "enemy") delete s.actors[id];
+  a.x = 5;
+  a.y = 5;
+  b.x = 6;
+  b.y = 5;
+  a.stats.Finesse = 100;
+  b.stats.Finesse = 1;
+  s.phase = "PLANNING";
+  const out = resolveRound(s, [
+    { actorId: a.id, actions: [{ type: "MOVE", x: 6, y: 5 }] },
+    { actorId: b.id, actions: [{ type: "MOVE", x: 7, y: 5 }] },
+  ]).state;
+  expect(out.actors.a.x).toBe(6);
+  expect(out.actors.b.x).toBe(7);
+});
+it("crossing a fire tile deals one exposure even after leaving it", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian");
+  begin(s);
+  for (const t of s.tiles) {
+    t.kind = "floor";
+    t.hazards = {};
+  }
+  for (const [id, v] of Object.entries(s.actors))
+    if (v.kind === "enemy") delete s.actors[id];
+  a.x = 5;
+  a.y = 5;
+  a.maxHP = a.hp = 100;
+  s.phase = "PLANNING";
+  tile(s, { x: 6, y: 5 })!.hazards.fire = {
+    damage: 4,
+    intensity: 1,
+    duration: 2,
+    source: "fixture",
+  };
+  const out = resolveRound(s, [
+    {
+      actorId: a.id,
+      actions: [
+        { type: "MOVE", x: 6, y: 5 },
+        { type: "MOVE", x: 7, y: 5 },
+      ],
+    },
+  ]).state;
+  expect(out.actors.a.hp).toBe(96);
+  expect(out.actors.a.statuses.burning).toBeDefined();
+});
+it("arrival plus standing on the same hazard never double-damages a round", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian");
+  begin(s);
+  for (const t of s.tiles) {
+    t.kind = "floor";
+    t.hazards = {};
+  }
+  for (const [id, v] of Object.entries(s.actors))
+    if (v.kind === "enemy") delete s.actors[id];
+  a.x = 5;
+  a.y = 5;
+  a.maxHP = a.hp = 100;
+  s.phase = "PLANNING";
+  tile(s, { x: 6, y: 5 })!.hazards.fire = {
+    damage: 4,
+    intensity: 1,
+    duration: 2,
+    source: "fixture",
+  };
+  const out = resolveRound(s, [
+    { actorId: a.id, actions: [{ type: "MOVE", x: 6, y: 5 }] },
+  ]).state;
+  expect(out.actors.a.hp).toBe(96);
+});
+it("a refreshed stun still reduces AP in the next round", () => {
+  const s = newGame(1);
+  const a = addCrawler(s, "a", "A", "night_custodian");
+  begin(s);
+  for (const t of s.tiles) {
+    t.kind = "floor";
+    t.hazards = {};
+  }
+  for (const [id, v] of Object.entries(s.actors))
+    if (v.kind === "enemy") delete s.actors[id];
+  a.hp = a.maxHP = 100;
+  s.phase = "PLANNING";
+  tile(s, a)!.tags = ["wet"];
+  tile(s, a)!.hazards.shock = {
+    intensity: 2,
+    duration: 3,
+    damage: 1,
+    source: "fixture",
+  };
+  let current = resolveRound(s, []).state;
+  current = resolveRound(current, []).state;
+  expect(current.actors.a.statuses.stunned).toBeDefined();
+  current = resolveRound(current, []).state;
+  expect(current.actors.a.ap).toBe(2);
+});
+it("the hand-authored fallback preserves connected objectives and four safe spawns", async () => {
+  const { fallbackFloor, validateFloor } = await import(
+    "../../packages/engine/src/generation"
+  );
+  const s = newGame(9);
+  for (let i = 0; i < 4; i++)
+    addCrawler(s, "p" + i, "P" + i, "night_custodian");
+  s.floor = 4;
+  begin(s);
+  fallbackFloor(s, "forced validation fixture");
+  expect(validateFloor(s)).toEqual([]);
+  expect(
+    s.events.some(
+      (e) => e.type === "generation_fallback" && e.payload.seed === 9,
+    ),
+  ).toBe(true);
+});

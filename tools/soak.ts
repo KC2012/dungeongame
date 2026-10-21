@@ -48,6 +48,13 @@ const rng = { rng: { fuzz: 972 } };
 let rejected = 0;
 const start = performance.now();
 let maxHeap = 0;
+let maxDeferred = 0;
+const slowest: {
+  round: number;
+  ms: number;
+  deferred: number;
+  actors: number;
+}[] = [];
 for (let round = 0; round < count; round++) {
   s.phase = "PLANNING";
   const plans = ["p0", "p1", "p2", "p3"].map((actorId) => {
@@ -66,10 +73,25 @@ for (let round = 0; round < count; round++) {
     return { actorId, actions: [action] };
   });
   if (round % 50 === 0) enqueue(s, { x: 20, y: 20 }, "water", 2, "fuzz");
+  if (process.env.SOAK_CAPTURE && round === 20814)
+    writeFileSync(
+      process.env.SOAK_CAPTURE,
+      JSON.stringify({ state: s, plans }),
+    );
   const at = performance.now();
   const result = resolveRound(s, plans);
-  times.push(performance.now() - at);
+  const ms = performance.now() - at;
+  times.push(ms);
   s = result.state;
+  maxDeferred = Math.max(maxDeferred, s.deferredEvents.length);
+  slowest.push({
+    round,
+    ms,
+    deferred: s.deferredEvents.length,
+    actors: Object.keys(s.actors).length,
+  });
+  slowest.sort((a, b) => b.ms - a.ms);
+  if (slowest.length > 8) slowest.pop();
   rejected += result.events.filter((e) => e.type === "action_rejected").length;
   for (const a of Object.values(s.actors)) {
     if (
@@ -99,6 +121,8 @@ const report = {
   medianMs: times[Math.floor(times.length * 0.5)],
   p95Ms: times[Math.floor(times.length * 0.95)],
   maxMs: times.at(-1),
+  maxDeferred,
+  slowest,
   maxObservedHeapMiB: maxHeap / 1048576,
   rejectedActions: rejected,
   node: process.version,

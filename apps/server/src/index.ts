@@ -1,9 +1,10 @@
 import express from "express";
+import { registerCheckpoints } from "./checkpoint-api";
 import { createServer } from "node:http";
 import { resolve } from "node:path";
 import { Server } from "@colyseus/core";
 import { WebSocketTransport } from "@colyseus/ws-transport";
-import { CrawlRoom, roomCodes } from "./room";
+import { CrawlRoom, roomCodes, store } from "./room";
 import {
   catalog,
   validateCatalog,
@@ -13,9 +14,11 @@ const errors = validateCatalog();
 if (errors.length) throw Error(errors.join("\n"));
 const app = express();
 app.disable("x-powered-by");
+registerCheckpoints(app, store);
 app.get("/api/health", (_q, r) =>
   r.json({ ok: true, version: "0.1.0", contentHash }),
 );
+app.get("/api/profile", (_q, r) => r.json({ unlocks: store.unlocked() }));
 app.get("/api/catalog", (_q, r) => r.json(catalog));
 app.get("/api/rooms/:code", (q, r) => {
   const id = roomCodes.get(q.params.code.toUpperCase());
@@ -36,7 +39,12 @@ if (process.argv.includes("--dev")) {
 } else app.use(express.static(resolve("dist/client")));
 const http = createServer(app);
 const server = new Server({
-  transport: new WebSocketTransport({ server: http, maxPayload: 32768 }),
+  transport: new WebSocketTransport({
+    server: http,
+    maxPayload: 32768,
+    pingInterval: 15000,
+    pingMaxRetries: 4,
+  }),
   greet: false,
 });
 server.define("crawl", CrawlRoom);

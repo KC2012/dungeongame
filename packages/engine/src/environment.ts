@@ -1,7 +1,8 @@
+import { compareIds } from "./random";
 import type { State, HazardIntent, Element, Point } from "./types";
-import { tile, neighbors, distance,walkable,same } from "./grid";
+import { tile, neighbors, distance, walkable, same } from "./grid";
 import { emit } from "./events";
-import { hurt, status } from "./combat";
+import { hurt, status, applyTileHazards } from "./combat";
 const order: Record<string, number> = {
   blast: 0,
   water: 1,
@@ -39,15 +40,15 @@ export function environment(s: State): void {
   s.deferredEvents = [];
   let processed = 0;
   const seen = new Set<string>(),
-    exposed = new Set<string>(),
+    exposed = new Set<string>(s.exposures ?? []),
     conducted = new Map<string, Set<number>>();
-  for (let step = 0; step < 4 && queue.length; step++) {
+  substeps: for (let step = 0; step < 4 && queue.length; step++) {
     const next: HazardIntent[] = [];
     queue.sort(
       (a, b) =>
         a.y * s.width + a.x - (b.y * s.width + b.x) ||
         order[a.element] - order[b.element] ||
-        a.source.localeCompare(b.source),
+        compareIds(a.source, b.source),
     );
     for (let qi = 0; qi < queue.length; qi++) {
       const e = queue[qi];
@@ -57,7 +58,8 @@ export function environment(s: State): void {
           processed,
           deferred: s.deferredEvents.length,
         });
-        return;
+        queue = [];
+        break substeps;
       }
       const index = e.y * s.width + e.x,
         key = `${index}:${e.element}:${e.source}`;
@@ -69,7 +71,12 @@ export function environment(s: State): void {
       if (t.kind === "wall" && e.element !== "blast") continue;
       if (e.element === "blast") {
         t.hp -= Math.max(4, e.damage);
-        for(const object of s.objects.filter(o=>o.kind==='machine'&&distance(o,e)<=1)){object.hp=Math.max(0,object.hp-(e.damage||6));if(!object.hp)object.powered=false;}
+        for (const object of s.objects.filter(
+          (o) => o.kind === "machine" && distance(o, e) <= 1,
+        )) {
+          object.hp = Math.max(0, object.hp - (e.damage || 6));
+          if (!object.hp) object.powered = false;
+        }
         if (t.kind === "wall" && t.hp <= 0) {
           t.kind = "rubble";
           t.tags = [];
@@ -141,23 +148,40 @@ export function environment(s: State): void {
       }
       if (
         e.element === "shock" &&
-        (t.tags.includes("wet") || t.tags.includes("conductive"))
+        (t.tags.includes("wet") || t.tags.includes("conductive")) &&
+        !e.expanded
       ) {
-        const network = conducted.get(e.source) ?? new Set<number>();
-        conducted.set(e.source, network);
-        if (network.size >= 8 && !network.has(index)) continue;
-        network.add(index);
-        if (network.size === 2)
-          emit(s, "shock_chain", e.source, [], { tiles: 2 }, e);
-        if (network.size < 8)
-          for (const n of neighbors(e)) {
-            const nt = tile(s, n);
-            if (
-              nt &&
-              (nt.tags.includes("wet") || nt.tags.includes("conductive"))
-            )
-              next.push({ ...e, ...n });
-          }
+        let network = conducted.get(e.source);
+        if (!network) {
+          network = new Set<number>([index]);
+          const todo = [{ x: e.x, y: e.y }];
+          for (let i = 0; i < todo.length && network.size < 8; i++)
+            for (const n of neighbors(todo[i])) {
+              const nt = tile(s, n),
+                idx = n.y * s.width + n.x;
+              if (
+                nt &&
+                nt.kind !== "wall" &&
+                (nt.tags.includes("wet") || nt.tags.includes("conductive")) &&
+                !network.has(idx) &&
+                network.size < 8
+              ) {
+                network.add(idx);
+                todo.push(n);
+              }
+            }
+          conducted.set(e.source, network);
+          if (network.size > 1)
+            emit(s, "shock_chain", e.source, [], { tiles: network.size }, e);
+          for (const idx of network)
+            if (idx !== index)
+              next.push({
+                ...e,
+                x: idx % s.width,
+                y: Math.floor(idx / s.width),
+                expanded: true,
+              });
+        }
       }
       const h = t.hazards[e.element];
       t.hazards[e.element] = {
@@ -190,7 +214,10 @@ export function environment(s: State): void {
             nt &&
             nt.kind !== "wall" &&
             (e.element !== "fire" || nt.tags.includes("flammable")) &&
-            (e.element !== "water" || nt.elevation <= t.elevation)
+            (e.element !== "water" ||
+              (nt.elevation <= t.elevation &&
+                (!nt.hazards.water ||
+                  nt.hazards.water.intensity < e.intensity)))
           )
             next.push({ ...e, ...n });
         }
@@ -199,51 +226,22 @@ export function environment(s: State): void {
     queue = next;
   }
   if (queue.length) {
-    s.deferredEvents.push(...queue);
+    s.deferredEvents.push(
+      ...queue
+        .filter((e) => e.duration > 1)
+        .map((e) => ({ ...e, duration: e.duration - 1 })),
+    );
     emit(s, "environment_deferred", "", [], { count: queue.length });
   }
-  for (const a of Object.values(s.actors).filter((a) => !a.dead)) {
-    const t = tile(s, a);
-    if (!t) continue;
-    for (const [element, h] of Object.entries(t.hazards)) {
-      const key = `${a.id}:${element}`;
-      if (exposed.has(key)) continue;
-      exposed.add(key);
-      if (
-        h.damage &&
-        a.kind === "crawler" &&
-        ["glue_trap", "crusher_plate", "spiked_grate", "trapdoor_pit"].includes(
-          h.source,
-        )
-      )
-        emit(s, "trap_trigger_self", a.id, [], { hazard: h.source }, a);
-      if(h.source==='conveyor_belt'||h.source==='magnetic_pulse'&&(a.tags.includes('metal')||a.equipment.armor==='steel_wrap')){const next={x:a.x+1,y:a.y};if(walkable(s,next)&&!Object.values(s.actors).some(v=>!v.dead&&same(v,next))){a.x=next.x;a.y=next.y;emit(s,'conveyor',h.source,[a.id],{},next);}}
-      if(h.source==='glue_trap')status(a,'chilled',2,1,h.source);
-      if(h.source==='crusher_plate'&&s.round%2===1)continue;
-      if (h.damage) {
-        hurt(s, a, h.damage, element as Element, h.source, true);
-        if (element === "fire") status(a, "burning", 2, 3, h.source);
-        if (element === "poison") status(a, "poisoned", 3, 2, h.source);
-        if (element === "acid" && h.intensity >= 2)
-          status(a, "corroded", 2, 2, h.source);
-        if (element === "cold" && h.intensity >= 2)
-          status(a, "chilled", 1, 1, h.source);
-        if (element === "shock" && (t.tags.includes("wet") || h.intensity >= 2))
-          status(a, "stunned", 1, 1, h.source);
-      }
-    }
-    if (t.trap && a.kind === "enemy") {
-      hurt(s, a, t.trap.damage, "physical", t.trap.owner, true);
-      if (a.dead && t.kind === "door")
-        emit(s, "door_trap_kill", t.trap.owner, [a.id], {}, a);
-      status(a, "chilled", 1, 1, t.trap.owner);
-      delete t.trap;
-    }
-  }
+  s.exposures = [...exposed];
+  for (const a of Object.values(s.actors).filter((a) => !a.dead))
+    applyTileHazards(s, a);
   for (const t of s.tiles)
-    for (const [el, h] of Object.entries(t.hazards))
+    for (const [el, h] of Object.entries(t.hazards)) {
+      if (h.disabled && h.disabled > 0) h.disabled--;
       if (!h.persistent && --h.duration <= 0) {
         delete t.hazards[el];
         if (el === "cold") t.tags = t.tags.filter((x) => x !== "ice");
       }
+    }
 }

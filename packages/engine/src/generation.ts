@@ -1,3 +1,4 @@
+import { compareIds } from "./random";
 import { catalog, entry } from "../../content/src/index";
 import { random } from "./random";
 import { path, neighbors, traversable } from "./grid";
@@ -63,7 +64,7 @@ export function emptyTile(kind: Tile["kind"] = "wall", room = -1): Tile {
     room,
   };
 }
-export function generateFloor(s: State): void {
+function buildFloor(s: State): void {
   s.width = 45;
   s.height = 45;
   s.tiles = Array.from({ length: 2025 }, () => emptyTile());
@@ -72,6 +73,7 @@ export function generateFloor(s: State): void {
   s.alternate = [];
   s.bossDefeated = false;
   s.safeUsed = false;
+  s.descendVotes = [];
   s.visited = [];
   s.deferredEvents = [];
   const templates = catalog.rooms.filter((r) => r.floor === s.floor);
@@ -134,13 +136,19 @@ export function generateFloor(s: State): void {
         y = a.y;
       while (x !== b.x) {
         x += Math.sign(b.x - x);
-        s.tiles[y * s.width + x] = emptyTile("floor");
+        s.tiles[y * s.width + x] = emptyTile(
+          "floor",
+          s.tiles[y * s.width + x].room,
+        );
         if (s.tiles[(y + 1) * s.width + x]?.room === -1)
           s.tiles[(y + 1) * s.width + x] = emptyTile("floor");
       }
       while (y !== b.y) {
         y += Math.sign(b.y - y);
-        s.tiles[y * s.width + x] = emptyTile("floor");
+        s.tiles[y * s.width + x] = emptyTile(
+          "floor",
+          s.tiles[y * s.width + x].room,
+        );
       }
     }
     if (room > 0 && room < 6) {
@@ -188,8 +196,11 @@ export function generateFloor(s: State): void {
     [22, 26, 32],
   ]) {
     for (let y = from; y < to; y++)
-      s.tiles[y * s.width + x] = emptyTile("floor");
-    const door = emptyTile("door");
+      s.tiles[y * s.width + x] = emptyTile(
+        "floor",
+        s.tiles[y * s.width + x].room,
+      );
+    const door = emptyTile("door", s.tiles[to * s.width + x].room);
     door.hp = 6;
     door.locked = true;
     door.open = false;
@@ -292,7 +303,7 @@ export function generateFloor(s: State): void {
   s.actors[boss.id] = boss;
   s.shop = catalog.items
     .filter((e) => e.tier <= Math.min(4, s.floor + 1) && e.kind !== "material")
-    .sort((a, b) => a.id.localeCompare(b.id))
+    .sort((a, b) => compareIds(a.id, b.id))
     .filter((_, i) => i % 3 === s.floor % 3)
     .slice(0, 12)
     .map((e) => ({ id: e.id, count: 1, durability: 12 }));
@@ -330,4 +341,66 @@ export function validateFloor(s: State): string[] {
       errors.push("unsafe spawn");
   if (!path(s, start, { x: 36, y: 38 }).length) errors.push("no exit");
   return errors;
+}
+
+/** Hand-authored connected fallback used only after twenty invalid assemblies. */
+export function fallbackFloor(s: State, reason: string): void {
+  const bases = [
+    { x: 4, y: 4 },
+    { x: 18, y: 4 },
+    { x: 32, y: 4 },
+    { x: 32, y: 18 },
+    { x: 18, y: 18 },
+    { x: 4, y: 18 },
+    { x: 4, y: 32 },
+    { x: 18, y: 32 },
+    { x: 32, y: 32 },
+  ];
+  s.tiles = Array.from({ length: s.width * s.height }, () => emptyTile());
+  for (let r = 0; r < bases.length; r++)
+    for (let y = bases[r].y; y < bases[r].y + 9; y++)
+      for (let x = bases[r].x; x < bases[r].x + 9; x++)
+        s.tiles[y * s.width + x] = emptyTile("floor", r);
+  const carve = (p: Point) => {
+    let x = 8,
+      y = 8;
+    while (x !== p.x) {
+      x += Math.sign(p.x - x);
+      const i = y * s.width + x;
+      s.tiles[i] = emptyTile("floor", s.tiles[i].room);
+    }
+    while (y !== p.y) {
+      y += Math.sign(p.y - y);
+      const i = y * s.width + x;
+      s.tiles[i] = emptyTile("floor", s.tiles[i].room);
+    }
+  };
+  for (const p of [...s.objects, ...Object.values(s.actors)]) carve(p);
+  s.deferredEvents = [];
+  s.events.push({
+    eventId: s.nextEventId++,
+    runId: s.runId,
+    round: s.round,
+    actorId: "",
+    targetIds: [],
+    type: "generation_fallback",
+    tags: [],
+    encounterId: String(s.floor),
+    payload: { seed: s.seed, floor: s.floor, reason },
+  });
+  const failures = validateFloor(s);
+  if (failures.length) throw Error("Fallback invalid: " + failures.join(", "));
+}
+export function generateFloor(s: State): void {
+  let reason = "";
+  for (let attempt = 0; attempt < 20; attempt++) {
+    try {
+      buildFloor(s);
+      return;
+    } catch (error) {
+      reason = String(error);
+      if (!reason.includes("Invalid generation")) throw error;
+    }
+  }
+  fallbackFloor(s, reason);
 }
