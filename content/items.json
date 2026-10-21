@@ -1,0 +1,2044 @@
+[
+  {
+    "id": "mop_pole",
+    "name": "Mop Pole",
+    "description": "Mop Pole is a weapon whose key behavior is reach.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 1,
+    "weight": 2,
+    "basePrice": 3,
+    "range": 1,
+    "power": 4,
+    "trait": "reach",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 4,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "cleaver",
+    "name": "Cleaver",
+    "description": "Cleaver is a weapon whose key behavior is bleed.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 2,
+    "weight": 2,
+    "basePrice": 4,
+    "range": 1,
+    "power": 6,
+    "trait": "bleed",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 6,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "crowbar",
+    "name": "Crowbar",
+    "description": "Crowbar is a weapon whose key behavior is breach.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 3,
+    "weight": 2,
+    "basePrice": 5,
+    "range": 1,
+    "power": 5,
+    "trait": "breach",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "wrench",
+    "name": "Wrench",
+    "description": "Wrench is a weapon whose key behavior is machine.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 4,
+    "weight": 2,
+    "basePrice": 6,
+    "range": 1,
+    "power": 5,
+    "trait": "machine",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "pipe_spear",
+    "name": "Pipe Spear",
+    "description": "Pipe Spear is a weapon whose key behavior is reach.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 5,
+    "weight": 2,
+    "basePrice": 7,
+    "range": 2,
+    "power": 6,
+    "trait": "reach",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 6,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "staple_gun",
+    "name": "Staple Gun",
+    "description": "Staple Gun is a weapon whose key behavior is pin.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 6,
+    "weight": 2,
+    "basePrice": 8,
+    "range": 5,
+    "power": 4,
+    "trait": "pin",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 4,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "nailgun",
+    "name": "Nailgun",
+    "description": "Nailgun is a weapon whose key behavior is pin.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 1,
+    "weight": 2,
+    "basePrice": 9,
+    "range": 4,
+    "power": 6,
+    "trait": "pin",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 6,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "slug_thrower",
+    "name": "Slug Thrower",
+    "description": "Slug Thrower is a weapon whose key behavior is loud.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 2,
+    "weight": 2,
+    "basePrice": 10,
+    "range": 6,
+    "power": 8,
+    "trait": "loud",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 8,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "ceramic_knife",
+    "name": "Ceramic Knife",
+    "description": "Ceramic Knife is a weapon whose key behavior is armor pierce.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 3,
+    "weight": 2,
+    "basePrice": 11,
+    "range": 1,
+    "power": 5,
+    "trait": "armor_pierce",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "forklift_hook",
+    "name": "Forklift Hook",
+    "description": "Forklift Hook is a weapon whose key behavior is pull.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 4,
+    "weight": 2,
+    "basePrice": 12,
+    "range": 2,
+    "power": 7,
+    "trait": "pull",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 7,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "arc_rod",
+    "name": "Arc Rod",
+    "description": "Arc Rod is a weapon whose key behavior is conductive.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 5,
+    "weight": 2,
+    "basePrice": 13,
+    "range": 2,
+    "power": 5,
+    "trait": "conductive",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "shock"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "coil_pistol",
+    "name": "Coil Pistol",
+    "description": "Coil Pistol is a weapon whose key behavior is battery.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 6,
+    "weight": 2,
+    "basePrice": 14,
+    "range": 5,
+    "power": 7,
+    "trait": "battery",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 7,
+        "target": "enemy",
+        "element": "shock"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "acid_projector",
+    "name": "Acid Projector",
+    "description": "Acid Projector is a weapon whose key behavior is corrode.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 1,
+    "weight": 2,
+    "basePrice": 15,
+    "range": 4,
+    "power": 5,
+    "trait": "corrode",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "acid"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "flare_spitter",
+    "name": "Flare Spitter",
+    "description": "Flare Spitter is a weapon whose key behavior is ignite.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 2,
+    "weight": 2,
+    "basePrice": 16,
+    "range": 4,
+    "power": 5,
+    "trait": "ignite",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "fire"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "cryo_sprayer",
+    "name": "Cryo Sprayer",
+    "description": "Cryo Sprayer is a weapon whose key behavior is freeze.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 3,
+    "weight": 2,
+    "basePrice": 17,
+    "range": 3,
+    "power": 4,
+    "trait": "freeze",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 4,
+        "target": "enemy",
+        "element": "cold"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "glass_hammer",
+    "name": "Glass Hammer",
+    "description": "Glass Hammer is a weapon whose key behavior is fragile.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 4,
+    "weight": 2,
+    "basePrice": 18,
+    "range": 1,
+    "power": 10,
+    "trait": "fragile",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 10,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": -5
+  },
+  {
+    "id": "saw_disk",
+    "name": "Saw Disk",
+    "description": "Saw Disk is a weapon whose key behavior is ricochet.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 5,
+    "weight": 2,
+    "basePrice": 19,
+    "range": 5,
+    "power": 7,
+    "trait": "ricochet",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 7,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "smoke_cannon",
+    "name": "Smoke Cannon",
+    "description": "Smoke Cannon is a weapon whose key behavior is cloud.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 6,
+    "weight": 2,
+    "basePrice": 20,
+    "range": 4,
+    "power": 3,
+    "trait": "cloud",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 3,
+        "target": "enemy",
+        "element": "poison"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "rail_driver",
+    "name": "Rail Driver",
+    "description": "Rail Driver is a weapon whose key behavior is line.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 1,
+    "weight": 2,
+    "basePrice": 21,
+    "range": 7,
+    "power": 11,
+    "trait": "line",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 11,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": -5
+  },
+  {
+    "id": "magnetic_harpoon",
+    "name": "Magnetic Harpoon",
+    "description": "Magnetic Harpoon is a weapon whose key behavior is pull.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 2,
+    "weight": 2,
+    "basePrice": 22,
+    "range": 5,
+    "power": 5,
+    "trait": "pull",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 5
+  },
+  {
+    "id": "thermal_drill",
+    "name": "Thermal Drill",
+    "description": "Thermal Drill is a weapon whose key behavior is breach.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 3,
+    "weight": 2,
+    "basePrice": 23,
+    "range": 1,
+    "power": 9,
+    "trait": "breach",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 9,
+        "target": "enemy",
+        "element": "fire"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "pulse_carbine",
+    "name": "Pulse Carbine",
+    "description": "Pulse Carbine is a weapon whose key behavior is stun.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 4,
+    "weight": 2,
+    "basePrice": 24,
+    "range": 6,
+    "power": 8,
+    "trait": "stun",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 8,
+        "target": "enemy",
+        "element": "shock"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "corrosive_injector",
+    "name": "Corrosive Injector",
+    "description": "Corrosive Injector is a weapon whose key behavior is corrode.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 5,
+    "weight": 2,
+    "basePrice": 25,
+    "range": 1,
+    "power": 8,
+    "trait": "corrode",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 8,
+        "target": "enemy",
+        "element": "acid"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "compressor_fist",
+    "name": "Compressor Fist",
+    "description": "Compressor Fist is a weapon whose key behavior is push.",
+    "kind": "weapon",
+    "slot": "weapon",
+    "tier": 6,
+    "weight": 2,
+    "basePrice": 26,
+    "range": 1,
+    "power": 7,
+    "trait": "push",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 7,
+        "target": "enemy",
+        "element": "physical"
+      }
+    ],
+    "accuracy": 0
+  },
+  {
+    "id": "work_apron",
+    "name": "Work Apron",
+    "description": "Work Apron is a armor whose key behavior is fire ward.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 1,
+    "weight": 3,
+    "basePrice": 27,
+    "range": 0,
+    "power": 1,
+    "trait": "fire_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 1,
+    "passiveTag": "fire_ward"
+  },
+  {
+    "id": "reflective_vest",
+    "name": "Reflective Vest",
+    "description": "Reflective Vest is a armor whose key behavior is visibility.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 2,
+    "weight": 3,
+    "basePrice": 28,
+    "range": 0,
+    "power": 1,
+    "trait": "visibility",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 1,
+    "passiveTag": "visibility"
+  },
+  {
+    "id": "padded_coveralls",
+    "name": "Padded Coveralls",
+    "description": "Padded Coveralls is a armor whose key behavior is poison ward.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 3,
+    "weight": 3,
+    "basePrice": 29,
+    "range": 0,
+    "power": 2,
+    "trait": "poison_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 2,
+    "passiveTag": "poison_ward"
+  },
+  {
+    "id": "rubber_suit",
+    "name": "Rubber Suit",
+    "description": "Rubber Suit is a armor whose key behavior is insulating.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 4,
+    "weight": 3,
+    "basePrice": 30,
+    "range": 0,
+    "power": 2,
+    "trait": "insulating",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self",
+        "element": "shock"
+      }
+    ],
+    "statModifier": 2,
+    "passiveTag": "insulating"
+  },
+  {
+    "id": "ceramic_plate",
+    "name": "Ceramic Plate",
+    "description": "Ceramic Plate is a armor whose key behavior is heavy.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 5,
+    "weight": 3,
+    "basePrice": 3,
+    "range": 0,
+    "power": 4,
+    "trait": "heavy",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 4,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 4,
+    "passiveTag": "heavy"
+  },
+  {
+    "id": "steel_wrap",
+    "name": "Steel Wrap",
+    "description": "Steel Wrap is a armor whose key behavior is metal.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 6,
+    "weight": 3,
+    "basePrice": 4,
+    "range": 0,
+    "power": 3,
+    "trait": "metal",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 3,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 3,
+    "passiveTag": "metal"
+  },
+  {
+    "id": "spore_jacket",
+    "name": "Spore Jacket",
+    "description": "Spore Jacket is a armor whose key behavior is regrowth.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 1,
+    "weight": 3,
+    "basePrice": 5,
+    "range": 0,
+    "power": 2,
+    "trait": "regrowth",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self",
+        "element": "poison"
+      }
+    ],
+    "statModifier": 2,
+    "passiveTag": "regrowth"
+  },
+  {
+    "id": "insulated_carapace",
+    "name": "Insulated Carapace",
+    "description": "Insulated Carapace is a armor whose key behavior is insulating.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 2,
+    "weight": 3,
+    "basePrice": 6,
+    "range": 0,
+    "power": 3,
+    "trait": "insulating",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 3,
+        "target": "self",
+        "element": "shock"
+      }
+    ],
+    "statModifier": 3,
+    "passiveTag": "insulating"
+  },
+  {
+    "id": "fire_blanket_armor",
+    "name": "Fire Blanket Armor",
+    "description": "Fire Blanket Armor is a armor whose key behavior is fire ward.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 3,
+    "weight": 3,
+    "basePrice": 7,
+    "range": 0,
+    "power": 2,
+    "trait": "fire_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self",
+        "element": "fire"
+      }
+    ],
+    "statModifier": 2,
+    "passiveTag": "fire_ward"
+  },
+  {
+    "id": "cold_cell_shell",
+    "name": "Cold Cell Shell",
+    "description": "Cold Cell Shell is a armor whose key behavior is cold ward.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 4,
+    "weight": 3,
+    "basePrice": 8,
+    "range": 0,
+    "power": 3,
+    "trait": "cold_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 3,
+        "target": "self",
+        "element": "cold"
+      }
+    ],
+    "statModifier": 3,
+    "passiveTag": "cold_ward"
+  },
+  {
+    "id": "magnetic_harness",
+    "name": "Magnetic Harness",
+    "description": "Magnetic Harness is a armor whose key behavior is knockback resist.",
+    "kind": "armor",
+    "slot": "armor",
+    "tier": 5,
+    "weight": 3,
+    "basePrice": 9,
+    "range": 0,
+    "power": 2,
+    "trait": "knockback_resist",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 2,
+    "passiveTag": "knockback_resist"
+  },
+  {
+    "id": "riot_shield",
+    "name": "Riot Shield",
+    "description": "Riot Shield is a armor whose key behavior is offhand.",
+    "kind": "armor",
+    "slot": "offhand",
+    "tier": 6,
+    "weight": 3,
+    "basePrice": 10,
+    "range": 0,
+    "power": 3,
+    "trait": "offhand",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 3,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 3,
+    "passiveTag": "offhand"
+  },
+  {
+    "id": "copper_coin",
+    "name": "Copper Coin",
+    "description": "Copper Coin is a trinket whose key behavior is conductive.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 11,
+    "range": 0,
+    "power": 0,
+    "trait": "conductive",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "shock"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "conductive"
+  },
+  {
+    "id": "lucky_pencil",
+    "name": "Lucky Pencil",
+    "description": "Lucky Pencil is a trinket whose key behavior is accuracy.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 12,
+    "range": 0,
+    "power": 0,
+    "trait": "accuracy",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "accuracy"
+  },
+  {
+    "id": "blink_timer",
+    "name": "Blink Timer",
+    "description": "Blink Timer is a trinket whose key behavior is dodge.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 13,
+    "range": 0,
+    "power": 0,
+    "trait": "dodge",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "dodge"
+  },
+  {
+    "id": "siren_pin",
+    "name": "Siren Pin",
+    "description": "Siren Pin is a trinket whose key behavior is taunt.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 14,
+    "range": 0,
+    "power": 0,
+    "trait": "taunt",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "taunt"
+  },
+  {
+    "id": "anchor_bracelet",
+    "name": "Anchor Bracelet",
+    "description": "Anchor Bracelet is a trinket whose key behavior is braced.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 15,
+    "range": 0,
+    "power": 0,
+    "trait": "braced",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "braced"
+  },
+  {
+    "id": "receipt_charm",
+    "name": "Receipt Charm",
+    "description": "Receipt Charm is a trinket whose key behavior is discount.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 16,
+    "range": 0,
+    "power": 0,
+    "trait": "discount",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "discount"
+  },
+  {
+    "id": "heat_sink",
+    "name": "Heat Sink",
+    "description": "Heat Sink is a trinket whose key behavior is fire ward.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 17,
+    "range": 0,
+    "power": 0,
+    "trait": "fire_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "fire"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "fire_ward"
+  },
+  {
+    "id": "toxin_filter",
+    "name": "Toxin Filter",
+    "description": "Toxin Filter is a trinket whose key behavior is poison ward.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 18,
+    "range": 0,
+    "power": 0,
+    "trait": "poison_ward",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "poison"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "poison_ward"
+  },
+  {
+    "id": "pocket_relay",
+    "name": "Pocket Relay",
+    "description": "Pocket Relay is a trinket whose key behavior is machine.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 19,
+    "range": 0,
+    "power": 0,
+    "trait": "machine",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "shock"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "machine"
+  },
+  {
+    "id": "audience_lens",
+    "name": "Audience Lens",
+    "description": "Audience Lens is a trinket whose key behavior is spotlight.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 20,
+    "range": 0,
+    "power": 0,
+    "trait": "spotlight",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "spotlight"
+  },
+  {
+    "id": "thief_knot",
+    "name": "Thief Knot",
+    "description": "Thief Knot is a trinket whose key behavior is stealth.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 21,
+    "range": 0,
+    "power": 0,
+    "trait": "stealth",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "stealth"
+  },
+  {
+    "id": "rescue_whistle",
+    "name": "Rescue Whistle",
+    "description": "Rescue Whistle is a trinket whose key behavior is revival.",
+    "kind": "trinket",
+    "slot": "trinket",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 22,
+    "range": 0,
+    "power": 0,
+    "trait": "revival",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "statModifier": 0,
+    "passiveTag": "revival"
+  },
+  {
+    "id": "first_aid_pack",
+    "name": "First Aid Pack",
+    "description": "First Aid Pack is a consumable whose key behavior is healing.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 23,
+    "range": 0,
+    "power": 9,
+    "trait": "healing",
+    "effects": [
+      {
+        "type": "heal",
+        "magnitude": 9,
+        "target": "self"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "shock_cell",
+    "name": "Shock Cell",
+    "description": "Shock Cell is a consumable whose key behavior is wet chain.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 24,
+    "range": 3,
+    "power": 6,
+    "trait": "wet_chain",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 6,
+        "target": "tile",
+        "element": "shock"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "acid_ampoule",
+    "name": "Acid Ampoule",
+    "description": "Acid Ampoule is a consumable whose key behavior is corrode.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 25,
+    "range": 3,
+    "power": 6,
+    "trait": "corrode",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 6,
+        "target": "tile",
+        "element": "acid"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "fire_flask",
+    "name": "Fire Flask",
+    "description": "Fire Flask is a consumable whose key behavior is ignite.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 26,
+    "range": 3,
+    "power": 6,
+    "trait": "ignite",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 6,
+        "target": "tile",
+        "element": "fire"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "cold_ampoule",
+    "name": "Cold Ampoule",
+    "description": "Cold Ampoule is a consumable whose key behavior is freeze.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 27,
+    "range": 3,
+    "power": 5,
+    "trait": "freeze",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 5,
+        "target": "tile",
+        "element": "cold"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "smoke_pellet",
+    "name": "Smoke Pellet",
+    "description": "Smoke Pellet is a consumable whose key behavior is conceal.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 28,
+    "range": 3,
+    "power": 0,
+    "trait": "conceal",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "smoke"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "flash_pellet",
+    "name": "Flash Pellet",
+    "description": "Flash Pellet is a consumable whose key behavior is stun.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 29,
+    "range": 3,
+    "power": 0,
+    "trait": "stun",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "self",
+        "element": "psychic"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "foam_canister",
+    "name": "Foam Canister",
+    "description": "Foam Canister is a consumable whose key behavior is cover.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 30,
+    "range": 3,
+    "power": 0,
+    "trait": "cover",
+    "effects": [
+      {
+        "type": "create_cover",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "physical"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "stamina_ration",
+    "name": "Stamina Ration",
+    "description": "Stamina Ration is a consumable whose key behavior is focus.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 3,
+    "range": 0,
+    "power": 4,
+    "trait": "focus",
+    "effects": [
+      {
+        "type": "gain_resource",
+        "magnitude": 4,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "wound_seal",
+    "name": "Wound Seal",
+    "description": "Wound Seal is a consumable whose key behavior is wound.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 4,
+    "range": 0,
+    "power": 7,
+    "trait": "wound",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 7,
+        "target": "self",
+        "element": "physical"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "antidote",
+    "name": "Antidote",
+    "description": "Antidote is a consumable whose key behavior is cleanse.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 5,
+    "range": 0,
+    "power": 0,
+    "trait": "cleanse",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 1,
+        "target": "ally",
+        "element": "poison"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "battery_bundle",
+    "name": "Battery Bundle",
+    "description": "Battery Bundle is a consumable whose key behavior is resource.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 6,
+    "range": 0,
+    "power": 0,
+    "trait": "resource",
+    "effects": [
+      {
+        "type": "gain_resource",
+        "magnitude": 1,
+        "target": "self",
+        "element": "shock"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "blast_brick",
+    "name": "Blast Brick",
+    "description": "Blast Brick is a consumable whose key behavior is breach.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 7,
+    "range": 3,
+    "power": 9,
+    "trait": "breach",
+    "effects": [
+      {
+        "type": "destroy_tile",
+        "magnitude": 9,
+        "target": "tile",
+        "element": "blast"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "distress_beacon",
+    "name": "Distress Beacon",
+    "description": "Distress Beacon is a consumable whose key behavior is revival.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 8,
+    "range": 0,
+    "power": 0,
+    "trait": "revival",
+    "effects": [
+      {
+        "type": "revive",
+        "magnitude": 1,
+        "target": "ally",
+        "element": "psychic"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "neutralizer_salts",
+    "name": "Neutralizer Salts",
+    "description": "Neutralizer Salts is a consumable whose key behavior is cleanse.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 9,
+    "range": 0,
+    "power": 0,
+    "trait": "cleanse",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 1,
+        "target": "ally",
+        "element": "acid"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "oil_flask",
+    "name": "Oil Flask",
+    "description": "Oil Flask is a consumable whose key behavior is flammable.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 10,
+    "range": 3,
+    "power": 0,
+    "trait": "flammable",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "fire"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "water_bladder",
+    "name": "Water Bladder",
+    "description": "Water Bladder is a consumable whose key behavior is wet.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 11,
+    "range": 3,
+    "power": 0,
+    "trait": "wet",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "water"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "glue_charge",
+    "name": "Glue Charge",
+    "description": "Glue Charge is a consumable whose key behavior is slow.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 12,
+    "range": 3,
+    "power": 0,
+    "trait": "slow",
+    "effects": [
+      {
+        "type": "set_trap",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "physical"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "signal_jammer",
+    "name": "Signal Jammer",
+    "description": "Signal Jammer is a consumable whose key behavior is hack.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 13,
+    "range": 3,
+    "power": 0,
+    "trait": "hack",
+    "effects": [
+      {
+        "type": "hack",
+        "magnitude": 1,
+        "target": "tile",
+        "element": "psychic"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "bandage_roll",
+    "name": "Bandage Roll",
+    "description": "Bandage Roll is a consumable whose key behavior is healing.",
+    "kind": "consumable",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 14,
+    "range": 0,
+    "power": 4,
+    "trait": "healing",
+    "effects": [
+      {
+        "type": "heal",
+        "magnitude": 4,
+        "target": "self"
+      }
+    ],
+    "stack": 3,
+    "consumedOnUse": true
+  },
+  {
+    "id": "courier_satchel",
+    "name": "Courier Satchel",
+    "description": "Courier Satchel is a tool whose key behavior is capacity.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 15,
+    "range": 0,
+    "power": 0,
+    "trait": "capacity",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "self"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "ink_stamp",
+    "name": "Ink Stamp",
+    "description": "Ink Stamp is a tool whose key behavior is document.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 16,
+    "range": 0,
+    "power": 0,
+    "trait": "document",
+    "effects": [
+      {
+        "type": "hack",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "index_cards",
+    "name": "Index Cards",
+    "description": "Index Cards is a tool whose key behavior is reveal.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 17,
+    "range": 0,
+    "power": 0,
+    "trait": "reveal",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 3,
+        "target": "self"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "spore_pouch",
+    "name": "Spore Pouch",
+    "description": "Spore Pouch is a tool whose key behavior is cloud.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 18,
+    "range": 3,
+    "power": 0,
+    "trait": "cloud",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "repair_tape",
+    "name": "Repair Tape",
+    "description": "Repair Tape is a tool whose key behavior is repair.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 19,
+    "range": 1,
+    "power": 0,
+    "trait": "repair",
+    "effects": [
+      {
+        "type": "repair_object",
+        "magnitude": 3,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "portable_bench",
+    "name": "Portable Bench",
+    "description": "Portable Bench is a tool whose key behavior is craft.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 20,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "enable_crafting",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "wire_cutter",
+    "name": "Wire Cutter",
+    "description": "Wire Cutter is a tool whose key behavior is disarm.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 21,
+    "range": 1,
+    "power": 0,
+    "trait": "disarm",
+    "effects": [
+      {
+        "type": "disable_machine",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "lock_pick",
+    "name": "Lock Pick",
+    "description": "Lock Pick is a tool whose key behavior is unlock.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 22,
+    "range": 1,
+    "power": 0,
+    "trait": "unlock",
+    "effects": [
+      {
+        "type": "hack",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "pressure_gauge",
+    "name": "Pressure Gauge",
+    "description": "Pressure Gauge is a tool whose key behavior is inspect.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 23,
+    "range": 1,
+    "power": 0,
+    "trait": "inspect",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 4,
+        "target": "self"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "circuit_tester",
+    "name": "Circuit Tester",
+    "description": "Circuit Tester is a tool whose key behavior is inspect.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 24,
+    "range": 1,
+    "power": 0,
+    "trait": "inspect",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 4,
+        "target": "self"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "thermal_lantern",
+    "name": "Thermal Lantern",
+    "description": "Thermal Lantern is a tool whose key behavior is light.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 25,
+    "range": 0,
+    "power": 0,
+    "trait": "light",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 5,
+        "target": "self"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "foldable_ladder",
+    "name": "Foldable Ladder",
+    "description": "Foldable Ladder is a tool whose key behavior is shortcut.",
+    "kind": "tool",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 26,
+    "range": 1,
+    "power": 0,
+    "trait": "shortcut",
+    "effects": [
+      {
+        "type": "create_cover",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ],
+    "useCost": 1
+  },
+  {
+    "id": "scrap_metal",
+    "name": "Scrap Metal",
+    "description": "Scrap Metal is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 27,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "circuit_shard",
+    "name": "Circuit Shard",
+    "description": "Circuit Shard is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 28,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "catalyst_paste",
+    "name": "Catalyst Paste",
+    "description": "Catalyst Paste is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 29,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "sterile_cloth",
+    "name": "Sterile Cloth",
+    "description": "Sterile Cloth is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 30,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "fuel_gel",
+    "name": "Fuel Gel",
+    "description": "Fuel Gel is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 3,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "glacial_salt",
+    "name": "Glacial Salt",
+    "description": "Glacial Salt is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 4,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "conductive_wire",
+    "name": "Conductive Wire",
+    "description": "Conductive Wire is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 3,
+    "weight": 1,
+    "basePrice": 5,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "filter_membrane",
+    "name": "Filter Membrane",
+    "description": "Filter Membrane is a material whose key behavior is craft.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 4,
+    "weight": 1,
+    "basePrice": 6,
+    "range": 0,
+    "power": 0,
+    "trait": "craft",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "badge_fragment",
+    "name": "Badge Fragment",
+    "description": "Badge Fragment is a material whose key behavior is quest.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 5,
+    "weight": 1,
+    "basePrice": 7,
+    "range": 0,
+    "power": 0,
+    "trait": "quest",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "transit_pass",
+    "name": "Transit Pass",
+    "description": "Transit Pass is a material whose key behavior is quest.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 6,
+    "weight": 1,
+    "basePrice": 8,
+    "range": 0,
+    "power": 0,
+    "trait": "quest",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "debt_ledger",
+    "name": "Debt Ledger",
+    "description": "Debt Ledger is a material whose key behavior is quest.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 1,
+    "weight": 1,
+    "basePrice": 9,
+    "range": 0,
+    "power": 0,
+    "trait": "quest",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  },
+  {
+    "id": "signal_coil",
+    "name": "Signal Coil",
+    "description": "Signal Coil is a material whose key behavior is quest.",
+    "kind": "material",
+    "slot": "inventory",
+    "tier": 2,
+    "weight": 1,
+    "basePrice": 10,
+    "range": 0,
+    "power": 0,
+    "trait": "quest",
+    "effects": [
+      {
+        "type": "craft_component",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ],
+    "effectOnUse": "crafting_component_only"
+  }
+]

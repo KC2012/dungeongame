@@ -1,0 +1,352 @@
+[
+  {
+    "id": "open_flame",
+    "name": "Open Flame",
+    "description": "Open Flame: fire hazard with flammable interaction.",
+    "element": "fire",
+    "materialTags": [
+      "flammable"
+    ],
+    "tickDamage": 2,
+    "duration": 2,
+    "intensity": 1,
+    "propagation": "connected",
+    "telegraph": "Open Flame clearly marks affected tile(s)."
+  },
+  {
+    "id": "oil_slick",
+    "name": "Oil Slick",
+    "description": "Oil Slick: fire hazard with flammable interaction.",
+    "element": "fire",
+    "materialTags": [
+      "flammable"
+    ],
+    "tickDamage": 0,
+    "duration": 3,
+    "intensity": 1,
+    "propagation": "connected",
+    "telegraph": "Oil Slick clearly marks affected tile(s)."
+  },
+  {
+    "id": "steam_vent",
+    "name": "Steam Vent",
+    "description": "Steam Vent: fire hazard with opaque interaction.",
+    "element": "fire",
+    "materialTags": [
+      "opaque"
+    ],
+    "tickDamage": 2,
+    "duration": 1,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Steam Vent clearly marks affected tile(s)."
+  },
+  {
+    "id": "live_wire",
+    "name": "Live Wire",
+    "description": "Live Wire: shock hazard with conductive interaction.",
+    "element": "shock",
+    "materialTags": [
+      "conductive"
+    ],
+    "tickDamage": 5,
+    "duration": 2,
+    "intensity": 2,
+    "propagation": "connected",
+    "telegraph": "Live Wire clearly marks affected tile(s)."
+  },
+  {
+    "id": "pooled_water",
+    "name": "Pooled Water",
+    "description": "Pooled Water: water hazard with wet interaction.",
+    "element": "water",
+    "materialTags": [
+      "wet"
+    ],
+    "tickDamage": 0,
+    "duration": 4,
+    "intensity": 1,
+    "propagation": "connected",
+    "telegraph": "Pooled Water clearly marks affected tile(s)."
+  },
+  {
+    "id": "battery_puddle",
+    "name": "Battery Puddle",
+    "description": "Battery Puddle: shock hazard with wet interaction.",
+    "element": "shock",
+    "materialTags": [
+      "wet"
+    ],
+    "tickDamage": 4,
+    "duration": 2,
+    "intensity": 2,
+    "propagation": "connected",
+    "telegraph": "Battery Puddle clearly marks affected tile(s)."
+  },
+  {
+    "id": "acid_spill",
+    "name": "Acid Spill",
+    "description": "Acid Spill: acid hazard with corrodible interaction.",
+    "element": "acid",
+    "materialTags": [
+      "corrodible"
+    ],
+    "tickDamage": 3,
+    "duration": 3,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Acid Spill clearly marks affected tile(s)."
+  },
+  {
+    "id": "corrosive_fog",
+    "name": "Corrosive Fog",
+    "description": "Corrosive Fog: acid hazard with gas interaction.",
+    "element": "acid",
+    "materialTags": [
+      "gas"
+    ],
+    "tickDamage": 2,
+    "duration": 2,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Corrosive Fog clearly marks affected tile(s)."
+  },
+  {
+    "id": "freeze_tile",
+    "name": "Freeze Tile",
+    "description": "Freeze Tile: cold hazard with ice interaction.",
+    "element": "cold",
+    "materialTags": [
+      "ice"
+    ],
+    "tickDamage": 2,
+    "duration": 3,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Freeze Tile clearly marks affected tile(s)."
+  },
+  {
+    "id": "frost_spray",
+    "name": "Frost Spray",
+    "description": "Frost Spray: cold hazard with wet interaction.",
+    "element": "cold",
+    "materialTags": [
+      "wet"
+    ],
+    "tickDamage": 2,
+    "duration": 2,
+    "intensity": 1,
+    "propagation": "connected",
+    "telegraph": "Frost Spray clearly marks affected tile(s)."
+  },
+  {
+    "id": "poison_mushroom",
+    "name": "Poison Mushroom",
+    "description": "Poison Mushroom: poison hazard with organic interaction.",
+    "element": "poison",
+    "materialTags": [
+      "organic"
+    ],
+    "tickDamage": 2,
+    "duration": 3,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Poison Mushroom clearly marks affected tile(s)."
+  },
+  {
+    "id": "toxic_canister",
+    "name": "Toxic Canister",
+    "description": "Toxic Canister: poison hazard with volatile interaction.",
+    "element": "poison",
+    "materialTags": [
+      "volatile"
+    ],
+    "tickDamage": 4,
+    "duration": 1,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Toxic Canister clearly marks affected tile(s)."
+  },
+  {
+    "id": "explosive_barrel",
+    "name": "Explosive Barrel",
+    "description": "Explosive Barrel: blast hazard with volatile interaction.",
+    "element": "blast",
+    "materialTags": [
+      "volatile"
+    ],
+    "tickDamage": 8,
+    "duration": 1,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Explosive Barrel clearly marks affected tile(s)."
+  },
+  {
+    "id": "crusher_plate",
+    "name": "Crusher Plate",
+    "description": "Crusher Plate: physical hazard with structural interaction.",
+    "element": "physical",
+    "materialTags": [
+      "structural"
+    ],
+    "tickDamage": 7,
+    "duration": 1,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Crusher Plate clearly marks affected tile(s)."
+  },
+  {
+    "id": "spiked_grate",
+    "name": "Spiked Grate",
+    "description": "Spiked Grate: physical hazard with solid interaction.",
+    "element": "physical",
+    "materialTags": [
+      "solid"
+    ],
+    "tickDamage": 4,
+    "duration": 0,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Spiked Grate clearly marks affected tile(s)."
+  },
+  {
+    "id": "conveyor_belt",
+    "name": "Conveyor Belt",
+    "description": "Conveyor Belt: force hazard with powered interaction.",
+    "element": "force",
+    "materialTags": [
+      "powered"
+    ],
+    "tickDamage": 0,
+    "duration": 4,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Conveyor Belt clearly marks affected tile(s)."
+  },
+  {
+    "id": "rotating_saw",
+    "name": "Rotating Saw",
+    "description": "Rotating Saw: physical hazard with powered interaction.",
+    "element": "physical",
+    "materialTags": [
+      "powered"
+    ],
+    "tickDamage": 6,
+    "duration": 1,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Rotating Saw clearly marks affected tile(s)."
+  },
+  {
+    "id": "electrical_door",
+    "name": "Electrical Door",
+    "description": "Electrical Door: shock hazard with powered interaction.",
+    "element": "shock",
+    "materialTags": [
+      "powered"
+    ],
+    "tickDamage": 5,
+    "duration": 2,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Electrical Door clearly marks affected tile(s)."
+  },
+  {
+    "id": "smoke_screen",
+    "name": "Smoke Screen",
+    "description": "Smoke Screen: smoke hazard with opaque interaction.",
+    "element": "smoke",
+    "materialTags": [
+      "opaque"
+    ],
+    "tickDamage": 0,
+    "duration": 2,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Smoke Screen clearly marks affected tile(s)."
+  },
+  {
+    "id": "static_cloud",
+    "name": "Static Cloud",
+    "description": "Static Cloud: shock hazard with gas interaction.",
+    "element": "shock",
+    "materialTags": [
+      "gas"
+    ],
+    "tickDamage": 2,
+    "duration": 2,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Static Cloud clearly marks affected tile(s)."
+  },
+  {
+    "id": "crumbling_ceiling",
+    "name": "Crumbling Ceiling",
+    "description": "Crumbling Ceiling: physical hazard with structural interaction.",
+    "element": "physical",
+    "materialTags": [
+      "structural"
+    ],
+    "tickDamage": 7,
+    "duration": 1,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Crumbling Ceiling clearly marks affected tile(s)."
+  },
+  {
+    "id": "magnetic_pulse",
+    "name": "Magnetic Pulse",
+    "description": "Magnetic Pulse: force hazard with metal interaction.",
+    "element": "force",
+    "materialTags": [
+      "metal"
+    ],
+    "tickDamage": 2,
+    "duration": 1,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Magnetic Pulse clearly marks affected tile(s)."
+  },
+  {
+    "id": "trapdoor_pit",
+    "name": "Trapdoor Pit",
+    "description": "Trapdoor Pit: physical hazard with structural interaction.",
+    "element": "physical",
+    "materialTags": [
+      "structural"
+    ],
+    "tickDamage": 9,
+    "duration": 0,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Trapdoor Pit clearly marks affected tile(s)."
+  },
+  {
+    "id": "glue_trap",
+    "name": "Glue Trap",
+    "description": "Glue Trap: physical hazard with fragile interaction.",
+    "element": "physical",
+    "materialTags": [
+      "fragile"
+    ],
+    "tickDamage": 0,
+    "duration": 3,
+    "intensity": 1,
+    "propagation": "local",
+    "telegraph": "Glue Trap clearly marks affected tile(s)."
+  },
+  {
+    "id": "shock_coil",
+    "name": "Shock Coil",
+    "description": "Shock Coil: shock hazard with powered interaction.",
+    "element": "shock",
+    "materialTags": [
+      "powered"
+    ],
+    "tickDamage": 4,
+    "duration": 3,
+    "intensity": 2,
+    "propagation": "local",
+    "telegraph": "Shock Coil clearly marks affected tile(s)."
+  }
+]

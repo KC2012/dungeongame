@@ -1,0 +1,122 @@
+[
+  {
+    "id": "patch_kit",
+    "name": "Patch Kit",
+    "description": "Combine sterile_cloth + scrap_metal into first_aid_pack.",
+    "ingredients": {
+      "sterile_cloth": 1,
+      "scrap_metal": 1
+    },
+    "outputItem": "first_aid_pack",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "charge_pack",
+    "name": "Charge Pack",
+    "description": "Combine circuit_shard + conductive_wire into shock_cell.",
+    "ingredients": {
+      "circuit_shard": 1,
+      "conductive_wire": 1
+    },
+    "outputItem": "shock_cell",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "solvent_flask",
+    "name": "Solvent Flask",
+    "description": "Combine catalyst_paste + filter_membrane into acid_ampoule.",
+    "ingredients": {
+      "catalyst_paste": 1,
+      "filter_membrane": 1
+    },
+    "outputItem": "acid_ampoule",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "flare_mix",
+    "name": "Flare Mix",
+    "description": "Combine fuel_gel + sterile_cloth into fire_flask.",
+    "ingredients": {
+      "fuel_gel": 1,
+      "sterile_cloth": 1
+    },
+    "outputItem": "fire_flask",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "freeze_flask",
+    "name": "Freeze Flask",
+    "description": "Combine glacial_salt + water_bladder into cold_ampoule.",
+    "ingredients": {
+      "glacial_salt": 1,
+      "water_bladder": 1
+    },
+    "outputItem": "cold_ampoule",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "blast_charge",
+    "name": "Blast Charge",
+    "description": "Combine fuel_gel + circuit_shard into blast_brick.",
+    "ingredients": {
+      "fuel_gel": 1,
+      "circuit_shard": 1
+    },
+    "outputItem": "blast_brick",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "quick_seal",
+    "name": "Quick Seal",
+    "description": "Combine sterile_cloth + catalyst_paste into wound_seal.",
+    "ingredients": {
+      "sterile_cloth": 1,
+      "catalyst_paste": 1
+    },
+    "outputItem": "wound_seal",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "improvised_cover",
+    "name": "Improvised Cover",
+    "description": "Combine scrap_metal + repair_tape into foam_canister.",
+    "ingredients": {
+      "scrap_metal": 1,
+      "repair_tape": 1
+    },
+    "outputItem": "foam_canister",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "smoke_blend",
+    "name": "Smoke Blend",
+    "description": "Combine filter_membrane + fuel_gel into smoke_pellet.",
+    "ingredients": {
+      "filter_membrane": 1,
+      "fuel_gel": 1
+    },
+    "outputItem": "smoke_pellet",
+    "outputCount": 1,
+    "craftAP": 2
+  },
+  {
+    "id": "cleanser",
+    "name": "Cleanser",
+    "description": "Combine glacial_salt + filter_membrane into neutralizer_salts.",
+    "ingredients": {
+      "glacial_salt": 1,
+      "filter_membrane": 1
+    },
+    "outputItem": "neutralizer_salts",
+    "outputCount": 1,
+    "craftAP": 2
+  }
+]

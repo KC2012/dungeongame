@@ -1,0 +1,1118 @@
+[
+  {
+    "id": "basic_guard",
+    "name": "Basic Guard",
+    "description": "Reduce next incoming hit by shielding.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 0,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 2,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "snap_strike",
+    "name": "Snap Strike",
+    "description": "An inexpensive light attack.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 1,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 4,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "hard_shove",
+    "name": "Hard Shove",
+    "description": "Move target one tile toward hazards.",
+    "profession": "general",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "push",
+        "magnitude": 1,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "inspect_weakness",
+    "name": "Inspect Weakness",
+    "description": "Reveal target resistances and armor.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 5,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 1,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "emergency_bandage",
+    "name": "Emergency Bandage",
+    "description": "Patch up an adjacent fighter.",
+    "profession": "general",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "heal",
+        "magnitude": 6,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "careful_aim",
+    "name": "Careful Aim",
+    "description": "Grant aimed status for one attack.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 0,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "self",
+        "status": "aimed"
+      }
+    ]
+  },
+  {
+    "id": "sprint_burst",
+    "name": "Sprint Burst",
+    "description": "Move quickly to reachable tile.",
+    "profession": "general",
+    "apCost": 2,
+    "range": 0,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "dash",
+        "magnitude": 2,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "throw_debris",
+    "name": "Throw Debris",
+    "description": "A cheap ranged improvised attack.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 4,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 3,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "mark_target",
+    "name": "Mark Target",
+    "description": "Expose a foe to allied attacks.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 5,
+    "focusCost": 0,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "enemy",
+        "status": "exposed"
+      }
+    ]
+  },
+  {
+    "id": "wipe_corrosion",
+    "name": "Wipe Corrosion",
+    "description": "Remove one detrimental status.",
+    "profession": "general",
+    "apCost": 1,
+    "range": 1,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 1,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "shield_wall",
+    "name": "Shield Wall",
+    "description": "Breaker technique that applies shield to change the encounter.",
+    "profession": "breaker",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 4,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "crack_masonry",
+    "name": "Crack Masonry",
+    "description": "Breaker technique that applies destroy tile to change the encounter.",
+    "profession": "breaker",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "destroy_tile",
+        "magnitude": 3,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "anchor_stance",
+    "name": "Anchor Stance",
+    "description": "Breaker technique that applies guard to change the encounter.",
+    "profession": "breaker",
+    "apCost": 1,
+    "range": 0,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "guard",
+        "magnitude": 3,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "hammer_fall",
+    "name": "Hammer Fall",
+    "description": "Breaker technique that applies damage to change the encounter.",
+    "profession": "breaker",
+    "apCost": 3,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 1,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 10,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "bodyguard",
+    "name": "Bodyguard",
+    "description": "Breaker technique that applies shield to change the encounter.",
+    "profession": "breaker",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 6,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "breach_line",
+    "name": "Breach Line",
+    "description": "Breaker technique that applies push to change the encounter.",
+    "profession": "breaker",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "push",
+        "magnitude": 2,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "arc_tap",
+    "name": "Arc Tap",
+    "description": "Circuiter technique that applies damage to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 2,
+    "range": 5,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 6,
+        "target": "enemy",
+        "element": "shock"
+      }
+    ]
+  },
+  {
+    "id": "bridge_contact",
+    "name": "Bridge Contact",
+    "description": "Circuiter technique that applies spawn hazard to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 2,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile",
+        "element": "shock"
+      }
+    ]
+  },
+  {
+    "id": "breaker_trip",
+    "name": "Breaker Trip",
+    "description": "Circuiter technique that applies disable machine to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 1,
+    "range": 4,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "disable_machine",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "chain_spark",
+    "name": "Chain Spark",
+    "description": "Circuiter technique that applies damage to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 3,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 5,
+        "target": "area",
+        "element": "shock"
+      }
+    ]
+  },
+  {
+    "id": "remote_switch",
+    "name": "Remote Switch",
+    "description": "Circuiter technique that applies hack to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 2,
+    "range": 5,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "hack",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "insulate_crew",
+    "name": "Insulate Crew",
+    "description": "Circuiter technique that applies shield to change the encounter.",
+    "profession": "circuiter",
+    "apCost": 3,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 4,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "stabilize",
+    "name": "Stabilize",
+    "description": "Field Surgeon technique that applies revive to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "revive",
+        "magnitude": 1,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "medic_kit",
+    "name": "Medic Kit",
+    "description": "Field Surgeon technique that applies heal to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 1,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "heal",
+        "magnitude": 10,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "clear_toxin",
+    "name": "Clear Toxin",
+    "description": "Field Surgeon technique that applies cleanse to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 1,
+    "range": 2,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 2,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "rapid_triage",
+    "name": "Rapid Triage",
+    "description": "Field Surgeon technique that applies heal to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 3,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "heal",
+        "magnitude": 6,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "adrenal_surge",
+    "name": "Adrenal Surge",
+    "description": "Field Surgeon technique that applies modify stat to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "modify_stat",
+        "magnitude": 2,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "last_reserves",
+    "name": "Last Reserves",
+    "description": "Field Surgeon technique that applies shield to change the encounter.",
+    "profession": "field_surgeon",
+    "apCost": 3,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 8,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "wire_snare",
+    "name": "Wire Snare",
+    "description": "Saboteur technique that applies set trap to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 2,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "set_trap",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "bolt_charge",
+    "name": "Bolt Charge",
+    "description": "Saboteur technique that applies spawn hazard to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 2,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile",
+        "element": "blast"
+      }
+    ]
+  },
+  {
+    "id": "rig_explosive",
+    "name": "Rig Explosive",
+    "description": "Saboteur technique that applies spawn hazard to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 3,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 3,
+        "target": "tile",
+        "element": "blast"
+      }
+    ]
+  },
+  {
+    "id": "disarm_fast",
+    "name": "Disarm Fast",
+    "description": "Saboteur technique that applies disable machine to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 1,
+    "range": 1,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "disable_machine",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "jury_rig_cover",
+    "name": "Jury Rig Cover",
+    "description": "Saboteur technique that applies create cover to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "create_cover",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "minefield",
+    "name": "Minefield",
+    "description": "Saboteur technique that applies set trap to change the encounter.",
+    "profession": "saboteur",
+    "apCost": 3,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "set_trap",
+        "magnitude": 3,
+        "target": "area"
+      }
+    ]
+  },
+  {
+    "id": "demand_discount",
+    "name": "Demand Discount",
+    "description": "Broker technique that applies trade to change the encounter.",
+    "profession": "broker",
+    "apCost": 1,
+    "range": 0,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "once_per_floor",
+    "context": "safe_room",
+    "effects": [
+      {
+        "type": "trade",
+        "magnitude": 1,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "counteroffer",
+    "name": "Counteroffer",
+    "description": "Broker technique that applies modify audience to change the encounter.",
+    "profession": "broker",
+    "apCost": 2,
+    "range": 0,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "once_per_floor",
+    "context": "safe_room",
+    "effects": [
+      {
+        "type": "modify_audience",
+        "magnitude": 3,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "claim_credit",
+    "name": "Claim Credit",
+    "description": "Broker technique that applies gain resource to change the encounter.",
+    "profession": "broker",
+    "apCost": 2,
+    "range": 0,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "once_per_floor",
+    "context": "safe_room",
+    "effects": [
+      {
+        "type": "gain_resource",
+        "magnitude": 4,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "favor_owed",
+    "name": "Favor Owed",
+    "description": "Broker technique that applies shield to change the encounter.",
+    "profession": "broker",
+    "apCost": 2,
+    "range": 0,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "once_per_floor",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 4,
+        "target": "party"
+      }
+    ]
+  },
+  {
+    "id": "paper_shield",
+    "name": "Paper Shield",
+    "description": "Broker technique that applies apply status to change the encounter.",
+    "profession": "broker",
+    "apCost": 2,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "enemy",
+        "status": "exposed"
+      }
+    ]
+  },
+  {
+    "id": "audit_trail",
+    "name": "Audit Trail",
+    "description": "Broker technique that applies reveal to change the encounter.",
+    "profession": "broker",
+    "apCost": 1,
+    "range": 6,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 3,
+        "target": "area"
+      }
+    ]
+  },
+  {
+    "id": "forward_rush",
+    "name": "Forward Rush",
+    "description": "Vanguard technique that applies dash to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 2,
+    "range": 0,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "dash",
+        "magnitude": 3,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "shield_push",
+    "name": "Shield Push",
+    "description": "Vanguard technique that applies push to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "push",
+        "magnitude": 2,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "intercept",
+    "name": "Intercept",
+    "description": "Vanguard technique that applies shield to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "shield",
+        "magnitude": 5,
+        "target": "ally"
+      }
+    ]
+  },
+  {
+    "id": "momentum_hit",
+    "name": "Momentum Hit",
+    "description": "Vanguard technique that applies damage to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 2,
+    "range": 1,
+    "focusCost": 2,
+    "cooldown": 1,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "damage",
+        "magnitude": 9,
+        "target": "enemy"
+      }
+    ]
+  },
+  {
+    "id": "hold_passage",
+    "name": "Hold Passage",
+    "description": "Vanguard technique that applies taunt to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 1,
+    "range": 2,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "taunt",
+        "magnitude": 2,
+        "target": "area"
+      }
+    ]
+  },
+  {
+    "id": "rapid_retreat",
+    "name": "Rapid Retreat",
+    "description": "Vanguard technique that applies teleport to change the encounter.",
+    "profession": "vanguard",
+    "apCost": 3,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "teleport",
+        "magnitude": 3,
+        "target": "self"
+      }
+    ]
+  },
+  {
+    "id": "acid_vial",
+    "name": "Acid Vial",
+    "description": "Synthesist technique that applies spawn hazard to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 2,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile",
+        "element": "acid"
+      }
+    ]
+  },
+  {
+    "id": "frost_flask",
+    "name": "Frost Flask",
+    "description": "Synthesist technique that applies spawn hazard to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 2,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile",
+        "element": "cold"
+      }
+    ]
+  },
+  {
+    "id": "cinder_mist",
+    "name": "Cinder Mist",
+    "description": "Synthesist technique that applies spawn hazard to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 2,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 2,
+        "target": "tile",
+        "element": "fire"
+      }
+    ]
+  },
+  {
+    "id": "foam_barrier",
+    "name": "Foam Barrier",
+    "description": "Synthesist technique that applies create cover to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 2,
+    "range": 3,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "create_cover",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "neutralize",
+    "name": "Neutralize",
+    "description": "Synthesist technique that applies cleanse to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 2,
+    "range": 2,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "cleanse",
+        "magnitude": 2,
+        "target": "area"
+      }
+    ]
+  },
+  {
+    "id": "compound_bloom",
+    "name": "Compound Bloom",
+    "description": "Synthesist technique that applies spawn hazard to change the encounter.",
+    "profession": "synthesist",
+    "apCost": 3,
+    "range": 4,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "spawn_hazard",
+        "magnitude": 3,
+        "target": "area",
+        "element": "acid"
+      }
+    ]
+  },
+  {
+    "id": "false_reading",
+    "name": "False Reading",
+    "description": "Signal Thief technique that applies apply status to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 1,
+    "range": 4,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "enemy",
+        "status": "confused"
+      }
+    ]
+  },
+  {
+    "id": "hack_door",
+    "name": "Hack Door",
+    "description": "Signal Thief technique that applies hack to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 1,
+    "range": 3,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "hack",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "silent_step",
+    "name": "Silent Step",
+    "description": "Signal Thief technique that applies apply status to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 1,
+    "range": 0,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "apply_status",
+        "magnitude": 1,
+        "target": "self",
+        "status": "hidden"
+      }
+    ]
+  },
+  {
+    "id": "ghost_ping",
+    "name": "Ghost Ping",
+    "description": "Signal Thief technique that applies taunt to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 1,
+    "range": 5,
+    "focusCost": 1,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "taunt",
+        "magnitude": 1,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "rewire_feed",
+    "name": "Rewire Feed",
+    "description": "Signal Thief technique that applies disable machine to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 2,
+    "range": 5,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "disable_machine",
+        "magnitude": 2,
+        "target": "tile"
+      }
+    ]
+  },
+  {
+    "id": "signal_eclipse",
+    "name": "Signal Eclipse",
+    "description": "Signal Thief technique that applies reveal to change the encounter.",
+    "profession": "signal_thief",
+    "apCost": 2,
+    "range": 5,
+    "focusCost": 2,
+    "cooldown": 0,
+    "usageLimit": "none",
+    "context": "dungeon",
+    "effects": [
+      {
+        "type": "reveal",
+        "magnitude": 3,
+        "target": "area"
+      }
+    ]
+  }
+]

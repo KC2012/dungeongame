@@ -1,0 +1,512 @@
+[
+  {
+    "id": "turnstile_rat",
+    "name": "Turnstile Rat",
+    "description": "A floor 1 seek melee threat; reacts notably to poison.",
+    "floor": 1,
+    "ai": "seek_melee",
+    "hp": 8,
+    "armor": 0,
+    "sight": 6,
+    "attackPower": 5,
+    "attackElement": "physical",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next seek melee action is outlined before resolution."
+  },
+  {
+    "id": "ticket_louse",
+    "name": "Ticket Louse",
+    "description": "A floor 1 skirmisher threat; reacts notably to poison.",
+    "floor": 1,
+    "ai": "skirmisher",
+    "hp": 7,
+    "armor": 0,
+    "sight": 6,
+    "attackPower": 5,
+    "attackElement": "physical",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next skirmisher action is outlined before resolution."
+  },
+  {
+    "id": "queue_warden",
+    "name": "Queue Warden",
+    "description": "A floor 1 guard post threat; reacts notably to acid.",
+    "floor": 1,
+    "ai": "guard_post",
+    "hp": 15,
+    "armor": 2,
+    "sight": 6,
+    "attackPower": 5,
+    "attackElement": "physical",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next guard post action is outlined before resolution."
+  },
+  {
+    "id": "ink_drone",
+    "name": "Ink Drone",
+    "description": "A floor 1 seek ranged threat; reacts notably to shock.",
+    "floor": 1,
+    "ai": "seek_ranged",
+    "hp": 9,
+    "armor": 1,
+    "sight": 6,
+    "attackPower": 5,
+    "attackElement": "physical",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next seek ranged action is outlined before resolution."
+  },
+  {
+    "id": "mop_mimic",
+    "name": "Mop Mimic",
+    "description": "A floor 1 charger threat; reacts notably to cold.",
+    "floor": 1,
+    "ai": "charger",
+    "hp": 13,
+    "armor": 0,
+    "sight": 6,
+    "attackPower": 5,
+    "attackElement": "physical",
+    "tags": [
+      "wet"
+    ],
+    "weakness": "cold",
+    "telegraph": "Its next charger action is outlined before resolution."
+  },
+  {
+    "id": "sorting_spider",
+    "name": "Sorting Spider",
+    "description": "A floor 2 hazard placer threat; reacts notably to acid.",
+    "floor": 2,
+    "ai": "hazard_placer",
+    "hp": 12,
+    "armor": 1,
+    "sight": 7,
+    "attackPower": 7,
+    "attackElement": "physical",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next hazard placer action is outlined before resolution."
+  },
+  {
+    "id": "bottle_golem",
+    "name": "Bottle Golem",
+    "description": "A floor 2 seek melee threat; reacts notably to physical.",
+    "floor": 2,
+    "ai": "seek_melee",
+    "hp": 20,
+    "armor": 2,
+    "sight": 7,
+    "attackPower": 7,
+    "attackElement": "physical",
+    "tags": [
+      "fragile"
+    ],
+    "weakness": "physical",
+    "telegraph": "Its next seek melee action is outlined before resolution."
+  },
+  {
+    "id": "belt_runner",
+    "name": "Belt Runner",
+    "description": "A floor 2 flanker threat; reacts notably to shock.",
+    "floor": 2,
+    "ai": "flanker",
+    "hp": 11,
+    "armor": 0,
+    "sight": 7,
+    "attackPower": 7,
+    "attackElement": "physical",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next flanker action is outlined before resolution."
+  },
+  {
+    "id": "acid_mote",
+    "name": "Acid Mote",
+    "description": "A floor 2 skirmisher threat; reacts notably to acid.",
+    "floor": 2,
+    "ai": "skirmisher",
+    "hp": 8,
+    "armor": 0,
+    "sight": 7,
+    "attackPower": 7,
+    "attackElement": "physical",
+    "tags": [
+      "corrodible"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next skirmisher action is outlined before resolution."
+  },
+  {
+    "id": "forklift_shade",
+    "name": "Forklift Shade",
+    "description": "A floor 2 charger threat; reacts notably to acid.",
+    "floor": 2,
+    "ai": "charger",
+    "hp": 18,
+    "armor": 1,
+    "sight": 7,
+    "attackPower": 7,
+    "attackElement": "physical",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next charger action is outlined before resolution."
+  },
+  {
+    "id": "catalog_leech",
+    "name": "Catalog Leech",
+    "description": "A floor 3 support threat; reacts notably to poison.",
+    "floor": 3,
+    "ai": "support",
+    "hp": 14,
+    "armor": 1,
+    "sight": 7,
+    "attackPower": 9,
+    "attackElement": "acid",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next support action is outlined before resolution."
+  },
+  {
+    "id": "lab_assistant",
+    "name": "Lab Assistant",
+    "description": "A floor 3 seek ranged threat; reacts notably to poison.",
+    "floor": 3,
+    "ai": "seek_ranged",
+    "hp": 14,
+    "armor": 1,
+    "sight": 7,
+    "attackPower": 9,
+    "attackElement": "acid",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next seek ranged action is outlined before resolution."
+  },
+  {
+    "id": "glass_strider",
+    "name": "Glass Strider",
+    "description": "A floor 3 flanker threat; reacts notably to physical.",
+    "floor": 3,
+    "ai": "flanker",
+    "hp": 14,
+    "armor": 0,
+    "sight": 7,
+    "attackPower": 9,
+    "attackElement": "acid",
+    "tags": [
+      "fragile"
+    ],
+    "weakness": "physical",
+    "telegraph": "Its next flanker action is outlined before resolution."
+  },
+  {
+    "id": "molt_stalker",
+    "name": "Molt Stalker",
+    "description": "A floor 3 charger threat; reacts notably to poison.",
+    "floor": 3,
+    "ai": "charger",
+    "hp": 19,
+    "armor": 1,
+    "sight": 7,
+    "attackPower": 9,
+    "attackElement": "acid",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next charger action is outlined before resolution."
+  },
+  {
+    "id": "reagent_blob",
+    "name": "Reagent Blob",
+    "description": "A floor 3 hazard placer threat; reacts notably to cold.",
+    "floor": 3,
+    "ai": "hazard_placer",
+    "hp": 16,
+    "armor": 0,
+    "sight": 7,
+    "attackPower": 9,
+    "attackElement": "acid",
+    "tags": [
+      "acidic"
+    ],
+    "weakness": "cold",
+    "telegraph": "Its next hazard placer action is outlined before resolution."
+  },
+  {
+    "id": "track_skimmer",
+    "name": "Track Skimmer",
+    "description": "A floor 4 flanker threat; reacts notably to shock.",
+    "floor": 4,
+    "ai": "flanker",
+    "hp": 18,
+    "armor": 1,
+    "sight": 8,
+    "attackPower": 11,
+    "attackElement": "cold",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next flanker action is outlined before resolution."
+  },
+  {
+    "id": "signal_sentry",
+    "name": "Signal Sentry",
+    "description": "A floor 4 seek ranged threat; reacts notably to acid.",
+    "floor": 4,
+    "ai": "seek_ranged",
+    "hp": 16,
+    "armor": 2,
+    "sight": 8,
+    "attackPower": 11,
+    "attackElement": "cold",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next seek ranged action is outlined before resolution."
+  },
+  {
+    "id": "platform_crawler",
+    "name": "Platform Crawler",
+    "description": "A floor 4 seek melee threat; reacts notably to acid.",
+    "floor": 4,
+    "ai": "seek_melee",
+    "hp": 24,
+    "armor": 2,
+    "sight": 8,
+    "attackPower": 11,
+    "attackElement": "cold",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next seek melee action is outlined before resolution."
+  },
+  {
+    "id": "conductor_swarm",
+    "name": "Conductor Swarm",
+    "description": "A floor 4 summoner threat; reacts notably to shock.",
+    "floor": 4,
+    "ai": "summoner",
+    "hp": 13,
+    "armor": 0,
+    "sight": 8,
+    "attackPower": 11,
+    "attackElement": "cold",
+    "tags": [
+      "conductive"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next summoner action is outlined before resolution."
+  },
+  {
+    "id": "switchback_hound",
+    "name": "Switchback Hound",
+    "description": "A floor 4 charger threat; reacts notably to poison.",
+    "floor": 4,
+    "ai": "charger",
+    "hp": 17,
+    "armor": 1,
+    "sight": 8,
+    "attackPower": 11,
+    "attackElement": "cold",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next charger action is outlined before resolution."
+  },
+  {
+    "id": "debt_wisp",
+    "name": "Debt Wisp",
+    "description": "A floor 5 support threat; reacts notably to psychic.",
+    "floor": 5,
+    "ai": "support",
+    "hp": 20,
+    "armor": 0,
+    "sight": 8,
+    "attackPower": 13,
+    "attackElement": "poison",
+    "tags": [
+      "psychic"
+    ],
+    "weakness": "psychic",
+    "telegraph": "Its next support action is outlined before resolution."
+  },
+  {
+    "id": "ledger_butcher",
+    "name": "Ledger Butcher",
+    "description": "A floor 5 seek melee threat; reacts notably to poison.",
+    "floor": 5,
+    "ai": "seek_melee",
+    "hp": 27,
+    "armor": 3,
+    "sight": 8,
+    "attackPower": 13,
+    "attackElement": "poison",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next seek melee action is outlined before resolution."
+  },
+  {
+    "id": "auctioneer_drone",
+    "name": "Auctioneer Drone",
+    "description": "A floor 5 seek ranged threat; reacts notably to shock.",
+    "floor": 5,
+    "ai": "seek_ranged",
+    "hp": 20,
+    "armor": 2,
+    "sight": 8,
+    "attackPower": 13,
+    "attackElement": "poison",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next seek ranged action is outlined before resolution."
+  },
+  {
+    "id": "repo_mantis",
+    "name": "Repo Mantis",
+    "description": "A floor 5 flanker threat; reacts notably to acid.",
+    "floor": 5,
+    "ai": "flanker",
+    "hp": 24,
+    "armor": 1,
+    "sight": 8,
+    "attackPower": 13,
+    "attackElement": "poison",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next flanker action is outlined before resolution."
+  },
+  {
+    "id": "interest_shade",
+    "name": "Interest Shade",
+    "description": "A floor 5 hazard placer threat; reacts notably to psychic.",
+    "floor": 5,
+    "ai": "hazard_placer",
+    "hp": 21,
+    "armor": 1,
+    "sight": 8,
+    "attackPower": 13,
+    "attackElement": "poison",
+    "tags": [
+      "psychic"
+    ],
+    "weakness": "psychic",
+    "telegraph": "Its next hazard placer action is outlined before resolution."
+  },
+  {
+    "id": "signal_parasite",
+    "name": "Signal Parasite",
+    "description": "A floor 6 skirmisher threat; reacts notably to shock.",
+    "floor": 6,
+    "ai": "skirmisher",
+    "hp": 22,
+    "armor": 0,
+    "sight": 9,
+    "attackPower": 15,
+    "attackElement": "psychic",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next skirmisher action is outlined before resolution."
+  },
+  {
+    "id": "coil_sentinel",
+    "name": "Coil Sentinel",
+    "description": "A floor 6 guard post threat; reacts notably to acid.",
+    "floor": 6,
+    "ai": "guard_post",
+    "hp": 30,
+    "armor": 3,
+    "sight": 9,
+    "attackPower": 15,
+    "attackElement": "psychic",
+    "tags": [
+      "metal"
+    ],
+    "weakness": "acid",
+    "telegraph": "Its next guard post action is outlined before resolution."
+  },
+  {
+    "id": "broadcast_specter",
+    "name": "Broadcast Specter",
+    "description": "A floor 6 support threat; reacts notably to psychic.",
+    "floor": 6,
+    "ai": "support",
+    "hp": 20,
+    "armor": 1,
+    "sight": 9,
+    "attackPower": 15,
+    "attackElement": "psychic",
+    "tags": [
+      "psychic"
+    ],
+    "weakness": "psychic",
+    "telegraph": "Its next support action is outlined before resolution."
+  },
+  {
+    "id": "uplink_hunter",
+    "name": "Uplink Hunter",
+    "description": "A floor 6 charger threat; reacts notably to shock.",
+    "floor": 6,
+    "ai": "charger",
+    "hp": 28,
+    "armor": 2,
+    "sight": 9,
+    "attackPower": 15,
+    "attackElement": "psychic",
+    "tags": [
+      "powered"
+    ],
+    "weakness": "shock",
+    "telegraph": "Its next charger action is outlined before resolution."
+  },
+  {
+    "id": "stagehand_brute",
+    "name": "Stagehand Brute",
+    "description": "A floor 6 seek melee threat; reacts notably to poison.",
+    "floor": 6,
+    "ai": "seek_melee",
+    "hp": 31,
+    "armor": 3,
+    "sight": 9,
+    "attackPower": 15,
+    "attackElement": "psychic",
+    "tags": [
+      "organic"
+    ],
+    "weakness": "poison",
+    "telegraph": "Its next seek melee action is outlined before resolution."
+  }
+]

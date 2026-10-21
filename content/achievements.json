@@ -1,0 +1,842 @@
+[
+  {
+    "id": "improvised_conductor",
+    "name": "Improvised Conductor",
+    "description": "Awarded when the shock chain event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "shock_chain",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "Improvised Conductor. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "unlicensed_electrician",
+    "name": "Unlicensed Electrician",
+    "description": "Awarded when the short circuit event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "short_circuit",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Unlicensed Electrician. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "it_was_load_bearing",
+    "name": "It Was Load Bearing",
+    "description": "Awarded when the wall break event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "wall_break",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "It Was Load Bearing. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "safer_through_paperwork",
+    "name": "Safer Through Paperwork",
+    "description": "Awarded when the alternate boss event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "alternate_boss",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "Safer Through Paperwork. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "minimal_violence",
+    "name": "Minimal Violence",
+    "description": "Awarded when the pacify encounter event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "pacify_encounter",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 7,
+    "rewardPool": "minor",
+    "message": "Minimal Violence. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "a_clean_escape",
+    "name": "A Clean Escape",
+    "description": "Awarded when the no damage room event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "no_damage_room",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "A Clean Escape. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "a_terrible_first_impression",
+    "name": "A Terrible First Impression",
+    "description": "Awarded when the first death event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "first_death",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "A Terrible First Impression. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "company_property",
+    "name": "Company Property",
+    "description": "Awarded when the explosion chain event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "explosion_chain",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Company Property. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "no_refunds",
+    "name": "No Refunds",
+    "description": "Awarded when the failed trade event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "failed_trade",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "No Refunds. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "we_can_fix_this",
+    "name": "We Can Fix This",
+    "description": "Awarded when the revive ally event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "revive_ally",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "We Can Fix This. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "not_a_door",
+    "name": "Not a Door",
+    "description": "Awarded when the breach route event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "breach_route",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Not a Door. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "audit_complete",
+    "name": "Audit Complete",
+    "description": "Awarded when the objective hack event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "objective_hack",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Audit Complete. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "liquid_assets",
+    "name": "Liquid Assets",
+    "description": "Awarded when the flood room event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "flood_room",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Liquid Assets. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "unplanned_ventilation",
+    "name": "Unplanned Ventilation",
+    "description": "Awarded when the gas ignition event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "gas_ignition",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Unplanned Ventilation. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "training_issue",
+    "name": "Training Issue",
+    "description": "Awarded when the trap trigger self event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "trap_trigger_self",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "Training Issue. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "friendly_warning",
+    "name": "Friendly Warning",
+    "description": "Awarded when the ally saved event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "ally_saved",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Friendly Warning. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "poorly_timed_bravery",
+    "name": "Poorly Timed Bravery",
+    "description": "Awarded when the guard ally event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "guard_ally",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Poorly Timed Bravery. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "refund_denied",
+    "name": "Refund Denied",
+    "description": "Awarded when the vendor refused event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "vendor_refused",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "Refund Denied. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "exceptional_paper_trail",
+    "name": "Exceptional Paper Trail",
+    "description": "Awarded when the evidence complete event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "evidence_complete",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Exceptional Paper Trail. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "conductive_friendship",
+    "name": "Conductive Friendship",
+    "description": "Awarded when the shock ally saved event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "shock_ally_saved",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Conductive Friendship. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "full_circuit",
+    "name": "Full Circuit",
+    "description": "Awarded when the shock multi target event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "shock_multi_target",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Full Circuit. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "bureaucratic_shortcut",
+    "name": "Bureaucratic Shortcut",
+    "description": "Awarded when the scanner bypass event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "scanner_bypass",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Bureaucratic Shortcut. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "technically_correct",
+    "name": "Technically Correct",
+    "description": "Awarded when the objective exploit event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "objective_exploit",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Technically Correct. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "certified_difficult",
+    "name": "Certified Difficult",
+    "description": "Awarded when the hard check success event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "hard_check_success",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Certified Difficult. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "ghost_in_the_receipts",
+    "name": "Ghost in the Receipts",
+    "description": "Awarded when the stealth vault event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "stealth_vault",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Ghost in the Receipts. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "found_the_off_switch",
+    "name": "Found the Off Switch",
+    "description": "Awarded when the machine disable event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "machine_disable",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Found the Off Switch. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "human_firewall",
+    "name": "Human Firewall",
+    "description": "Awarded when the shield multi ally event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "shield_multi_ally",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Human Firewall. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "thirty_second_plan",
+    "name": "Thirty Second Plan",
+    "description": "Awarded when the quick plan event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "quick_plan",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "Thirty Second Plan. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "last_cast",
+    "name": "Last Cast",
+    "description": "Awarded when the zero focus victory event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "zero_focus_victory",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Last Cast. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "first_bloodless_boss",
+    "name": "First Bloodless Boss",
+    "description": "Awarded when the boss noncombat event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "boss_noncombat",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "First Bloodless Boss. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "physics_has_spoken",
+    "name": "Physics Has Spoken",
+    "description": "Awarded when the push hazard kill event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "push_hazard_kill",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 7,
+    "rewardPool": "minor",
+    "message": "Physics Has Spoken. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "glass_economies",
+    "name": "Glass Economies",
+    "description": "Awarded when the fragile enemy shatter event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "fragile_enemy_shatter",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Glass Economies. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "do_not_drink",
+    "name": "Do Not Drink",
+    "description": "Awarded when the poison self event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "poison_self",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "Do Not Drink. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "substandard_wiring",
+    "name": "Substandard Wiring",
+    "description": "Awarded when the shock machine event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "shock_machine",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Substandard Wiring. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "better_than_a_map",
+    "name": "Better Than A Map",
+    "description": "Awarded when the secret discovery event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "secret_discovery",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Better Than A Map. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "everything_is_a_tool",
+    "name": "Everything Is A Tool",
+    "description": "Awarded when the improvised weapon kill event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "improvised_weapon_kill",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Everything Is A Tool. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "union_break",
+    "name": "Union Break",
+    "description": "Awarded when the support enemy defeat event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "support_enemy_defeat",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Union Break. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "too_many_buttons",
+    "name": "Too Many Buttons",
+    "description": "Awarded when the device combo event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "device_combo",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Too Many Buttons. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "consolation_prize",
+    "name": "Consolation Prize",
+    "description": "Awarded when the loot low rarity event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "loot_low_rarity",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 1,
+    "rewardPool": "minor",
+    "message": "Consolation Prize. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "chairman_of_chaos",
+    "name": "Chairman Of Chaos",
+    "description": "Awarded when the audience threshold event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "audience_threshold",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Chairman Of Chaos. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "return_to_sender",
+    "name": "Return To Sender",
+    "description": "Awarded when the projectile deflected event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "projectile_deflected",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Return To Sender. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "line_is_closed",
+    "name": "Line Is Closed",
+    "description": "Awarded when the door trap kill event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "door_trap_kill",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Line Is Closed. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "borrowed_time",
+    "name": "Borrowed Time",
+    "description": "Awarded when the revive final round event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "revive_final_round",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 6,
+    "rewardPool": "minor",
+    "message": "Borrowed Time. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "clean_sweep",
+    "name": "Clean Sweep",
+    "description": "Awarded when the room zero damage event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "room_zero_damage",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Clean Sweep. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "flameless_firefighter",
+    "name": "Flameless Firefighter",
+    "description": "Awarded when the extinguish chain event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "extinguish_chain",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Flameless Firefighter. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "second_opinion",
+    "name": "Second Opinion",
+    "description": "Awarded when the multiple checks event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "multiple_checks",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Second Opinion. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "double_entry",
+    "name": "Double Entry",
+    "description": "Awarded when the trade twice event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "trade_twice",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 2,
+    "rewardPool": "minor",
+    "message": "Double Entry. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "locksmith_rebellion",
+    "name": "Locksmith Rebellion",
+    "description": "Awarded when the locked path bypass event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "locked_path_bypass",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Locksmith Rebellion. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "frictionless_solution",
+    "name": "Frictionless Solution",
+    "description": "Awarded when the slide enemy event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "slide_enemy",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Frictionless Solution. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "supervisor_warning",
+    "name": "Supervisor Warning",
+    "description": "Awarded when the boss telegraph avoid event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "boss_telegraph_avoid",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "encounter",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Supervisor Warning. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "bad_chemistry",
+    "name": "Bad Chemistry",
+    "description": "Awarded when the acid fire chain event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "acid_fire_chain",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 5,
+    "rewardPool": "minor",
+    "message": "Bad Chemistry. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "making_a_splash",
+    "name": "Making A Splash",
+    "description": "Awarded when the water push event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "water_push",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 4,
+    "rewardPool": "minor",
+    "message": "Making A Splash. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "all_according_to_form",
+    "name": "All According To Form",
+    "description": "Awarded when the multi key objective event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "multi_key_objective",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "All According To Form. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "absurd_overtime",
+    "name": "Absurd Overtime",
+    "description": "Awarded when the long encounter survival event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "long_encounter_survival",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 3,
+    "rewardPool": "minor",
+    "message": "Absurd Overtime. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "final_accounting",
+    "name": "Final Accounting",
+    "description": "Awarded when the finish floor six event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "finish_floor_six",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 10,
+    "rewardPool": "major",
+    "message": "Final Accounting. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "we_are_not_leaving",
+    "name": "We Are Not Leaving",
+    "description": "Awarded when the all survive event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "all_survive",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 10,
+    "rewardPool": "major",
+    "message": "We Are Not Leaving. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "one_chair_empty",
+    "name": "One Chair Empty",
+    "description": "Awarded when the survive with casualty event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "survive_with_casualty",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "One Chair Empty. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "a_very_small_audience",
+    "name": "A Very Small Audience",
+    "description": "Awarded when the solo win event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "solo_win",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "A Very Small Audience. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "committee_of_four",
+    "name": "Committee Of Four",
+    "description": "Awarded when the four player win event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "four_player_win",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 8,
+    "rewardPool": "major",
+    "message": "Committee Of Four. The Producer claims this outcome was always part of the plan."
+  },
+  {
+    "id": "actual_teamwork",
+    "name": "Actual Teamwork",
+    "description": "Awarded when the four unique assists event occurs for the first time in its eligible scope.",
+    "condition": {
+      "eventType": "four_unique_assists",
+      "minCount": 1,
+      "requiredCondition": "verified_server_event"
+    },
+    "scope": "run",
+    "audienceDelta": 7,
+    "rewardPool": "minor",
+    "message": "Actual Teamwork. The Producer claims this outcome was always part of the plan."
+  }
+]

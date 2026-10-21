@@ -1,0 +1,82 @@
+[
+  {
+    "id": "quiet_committee",
+    "name": "Quiet Committee",
+    "description": "Sponsor faction favoring rescue, gifting occasional first aid pack.",
+    "focus": "rescue",
+    "signatureItem": "first_aid_pack",
+    "conditionEvent": "revive_ally",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "unreliable_foundry",
+    "name": "Unreliable Foundry",
+    "description": "Sponsor faction favoring explosions, gifting occasional blast brick.",
+    "focus": "explosions",
+    "signatureItem": "blast_brick",
+    "conditionEvent": "explosion_chain",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "transit_union",
+    "name": "Transit Union",
+    "description": "Sponsor faction favoring movement, gifting occasional courier satchel.",
+    "focus": "movement",
+    "signatureItem": "courier_satchel",
+    "conditionEvent": "quick_plan",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "anonymous_accountant",
+    "name": "Anonymous Accountant",
+    "description": "Sponsor faction favoring objectives, gifting occasional ink stamp.",
+    "focus": "objectives",
+    "signatureItem": "ink_stamp",
+    "conditionEvent": "objective_hack",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "glass_benefactors",
+    "name": "Glass Benefactors",
+    "description": "Sponsor faction favoring critical, gifting occasional ceramic knife.",
+    "focus": "critical",
+    "signatureItem": "ceramic_knife",
+    "conditionEvent": "fragile_enemy_shatter",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "underwriters_collective",
+    "name": "Underwriters Collective",
+    "description": "Sponsor faction favoring defense, gifting occasional riot shield.",
+    "focus": "defense",
+    "signatureItem": "riot_shield",
+    "conditionEvent": "guard_ally",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "tea_and_toxins",
+    "name": "Tea And Toxins",
+    "description": "Sponsor faction favoring alchemy, gifting occasional acid ampoule.",
+    "focus": "alchemy",
+    "signatureItem": "acid_ampoule",
+    "conditionEvent": "acid_fire_chain",
+    "offerFloor": 2,
+    "reputationStart": 0
+  },
+  {
+    "id": "signal_minority",
+    "name": "Signal Minority",
+    "description": "Sponsor faction favoring stealth, gifting occasional signal jammer.",
+    "focus": "stealth",
+    "signatureItem": "signal_jammer",
+    "conditionEvent": "stealth_vault",
+    "offerFloor": 2,
+    "reputationStart": 0
+  }
+]

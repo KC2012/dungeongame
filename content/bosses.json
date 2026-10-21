@@ -1,0 +1,326 @@
+[
+  {
+    "id": "the_compliance_marshal",
+    "name": "The Compliance Marshal",
+    "description": "Floor 1 guardian: Shields the gate and summons ink drones. Alternative: Submit stamped self-termination form.",
+    "floor": 1,
+    "hp": 95,
+    "armor": 1,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "shock",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Shields the gate and summons ink drones",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "shock",
+          "magnitude": 1,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "The Compliance Marshal charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "shock",
+          "magnitude": 6,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "The Compliance Marshal exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "submit_stamped_self_termination_form",
+      "requirements": 2,
+      "description": "Submit stamped self-termination form"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  },
+  {
+    "id": "pallet_king",
+    "name": "Pallet King",
+    "description": "Floor 2 guardian: Conveyor crush and scrap barriers. Alternative: Feed reactor three correctly classified objects.",
+    "floor": 2,
+    "hp": 120,
+    "armor": 2,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "acid",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Conveyor crush and scrap barriers",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "acid",
+          "magnitude": 2,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "Pallet King charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "acid",
+          "magnitude": 7,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "Pallet King exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "feed_reactor_three_correctly_classified_objects",
+      "requirements": 3,
+      "description": "Feed reactor three correctly classified objects"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  },
+  {
+    "id": "the_specimen_curator",
+    "name": "The Specimen Curator",
+    "description": "Floor 3 guardian: Cage segments lock tiles. Alternative: Disable three restraint generators.",
+    "floor": 3,
+    "hp": 145,
+    "armor": 2,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "fire",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Cage segments lock tiles",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "fire",
+          "magnitude": 2,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "The Specimen Curator charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "fire",
+          "magnitude": 8,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "The Specimen Curator exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "disable_three_restraint_generators",
+      "requirements": 3,
+      "description": "Disable three restraint generators"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  },
+  {
+    "id": "schedule_warden",
+    "name": "Schedule Warden",
+    "description": "Floor 4 guardian: Train path telegraph then sweep. Alternative: Reprogram dispatch table to remove warden.",
+    "floor": 4,
+    "hp": 170,
+    "armor": 3,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "shock",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Train path telegraph then sweep",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "shock",
+          "magnitude": 3,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "Schedule Warden charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "shock",
+          "magnitude": 9,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "Schedule Warden exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "reprogram_dispatch_table_to_remove_warden",
+      "requirements": 2,
+      "description": "Reprogram dispatch table to remove warden"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  },
+  {
+    "id": "the_receivables_choir",
+    "name": "The Receivables Choir",
+    "description": "Floor 5 guardian: Linked nodes siphon Focus. Alternative: Present two evidence records to invalidate contract.",
+    "floor": 5,
+    "hp": 195,
+    "armor": 3,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "psychic",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Linked nodes siphon Focus",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "psychic",
+          "magnitude": 3,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "The Receivables Choir charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "psychic",
+          "magnitude": 10,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "The Receivables Choir exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "present_two_evidence_records_to_invalidate_contract",
+      "requirements": 2,
+      "description": "Present two evidence records to invalidate contract"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  },
+  {
+    "id": "the_signal_engine",
+    "name": "The Signal Engine",
+    "description": "Floor 6 guardian: Three-stage transmitter bombardment. Alternative: Reroute three cables and authenticate kill switch.",
+    "floor": 6,
+    "hp": 220,
+    "armor": 4,
+    "ai": "boss_script",
+    "telegraphRounds": 1,
+    "attackElement": "shock",
+    "phases": [
+      {
+        "thresholdPercent": 100,
+        "telegraph": "Three-stage transmitter bombardment",
+        "effect": {
+          "type": "spawn_hazard",
+          "element": "shock",
+          "magnitude": 4,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 60,
+        "telegraph": "The Signal Engine charges a wide attack.",
+        "effect": {
+          "type": "damage",
+          "element": "shock",
+          "magnitude": 11,
+          "target": "area"
+        }
+      },
+      {
+        "thresholdPercent": 25,
+        "telegraph": "The Signal Engine exposes its core for one round.",
+        "effect": {
+          "type": "apply_status",
+          "status": "exposed",
+          "magnitude": 1,
+          "target": "self"
+        }
+      }
+    ],
+    "alternateVictory": {
+      "method": "reroute_three_cables_and_authenticate_kill_switch",
+      "requirements": 3,
+      "description": "Reroute three cables and authenticate kill switch"
+    },
+    "counterplay": [
+      "cover",
+      "disable_machine",
+      "timing"
+    ],
+    "combatVictory": true
+  }
+]

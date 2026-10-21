@@ -1,0 +1,16 @@
+test_abilities_are_not_stubs (test_preproduction.CatalogContract.test_abilities_are_not_stubs) ... ok
+test_achievement_events_have_emitters (test_preproduction.CatalogContract.test_achievement_events_have_emitters) ... ok
+test_boss_alternatives (test_preproduction.CatalogContract.test_boss_alternatives) ... ok
+test_broker_cannot_infinite_money (test_preproduction.CatalogContract.test_broker_cannot_infinite_money) ... ok
+test_class_and_adaptation_supply (test_preproduction.CatalogContract.test_class_and_adaptation_supply) ... ok
+test_ingredients_and_sponsor_items_exist (test_preproduction.CatalogContract.test_ingredients_and_sponsor_items_exist) ... ok
+test_no_zero_power_active_effect (test_preproduction.CatalogContract.test_no_zero_power_active_effect) ... ok
+test_room_structure (test_preproduction.CatalogContract.test_room_structure) ... ok
+test_saved_manifest_matches (test_preproduction.CatalogContract.test_saved_manifest_matches) ... ok
+test_six_floors_unique_and_ordered (test_preproduction.CatalogContract.test_six_floors_unique_and_ordered) ... ok
+test_validator (test_preproduction.CatalogContract.test_validator) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.850s
+
+OK

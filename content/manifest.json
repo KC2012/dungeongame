@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0-preproduction",
+  "catalogs": {
+    "items": 92,
+    "hazards": 25,
+    "floors": 6,
+    "recipes": 10,
+    "bosses": 6,
+    "sponsors": 8,
+    "rooms": 42,
+    "abilities": 58,
+    "events": 25,
+    "professions": 8,
+    "adaptations": 6,
+    "achievements": 60,
+    "backgrounds": 12,
+    "monsters": 30,
+    "achievement_events": 60
+  },
+  "notes": "Human-authored proposed balance; every record must be given working engine behavior."
+}

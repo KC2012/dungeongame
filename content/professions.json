@@ -1,0 +1,66 @@
+[
+  {
+    "id": "breaker",
+    "name": "Breaker",
+    "description": "Absorb attacks and open walls without surrendering position.",
+    "role": "frontline",
+    "passive": "guard_armor",
+    "unlockFloor": 3
+  },
+  {
+    "id": "circuiter",
+    "name": "Circuiter",
+    "description": "Wire traps, switch devices and route electricity.",
+    "role": "control",
+    "passive": "conductive_mastery",
+    "unlockFloor": 3
+  },
+  {
+    "id": "field_surgeon",
+    "name": "Field Surgeon",
+    "description": "Trade personal damage for surviving allies.",
+    "role": "support",
+    "passive": "triage_efficiency",
+    "unlockFloor": 3
+  },
+  {
+    "id": "saboteur",
+    "name": "Saboteur",
+    "description": "Turn hazardous equipment into tactical infrastructure.",
+    "role": "traps",
+    "passive": "trap_efficiency",
+    "unlockFloor": 3
+  },
+  {
+    "id": "broker",
+    "name": "Broker",
+    "description": "Secure better deals and coordinate special rewards.",
+    "role": "utility",
+    "passive": "bargain_instinct",
+    "unlockFloor": 3
+  },
+  {
+    "id": "vanguard",
+    "name": "Vanguard",
+    "description": "Relocate faster and draw aggro safely.",
+    "role": "movement",
+    "passive": "momentum",
+    "unlockFloor": 3
+  },
+  {
+    "id": "synthesist",
+    "name": "Synthesist",
+    "description": "Combine chemicals into dangerous area control.",
+    "role": "alchemy",
+    "passive": "reaction_affinity",
+    "unlockFloor": 3
+  },
+  {
+    "id": "signal_thief",
+    "name": "Signal Thief",
+    "description": "Mislead sensors and exploit the Director systems.",
+    "role": "stealth",
+    "passive": "broadcast_spoof",
+    "unlockFloor": 3
+  }
+]

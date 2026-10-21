@@ -1,0 +1,146 @@
+[
+  {
+    "id": "night_custodian",
+    "name": "Night Custodian",
+    "description": "Read the building before it kills you.",
+    "attributeMods": {
+      "Wit": 2,
+      "Nerve": 1,
+      "Might": -1
+    },
+    "starterItem": "mop_pole",
+    "trait": "hazard_sense"
+  },
+  {
+    "id": "delivery_rider",
+    "name": "Delivery Rider",
+    "description": "Carry vital objects through bad situations.",
+    "attributeMods": {
+      "Finesse": 2,
+      "Nerve": 1,
+      "Wit": -1
+    },
+    "starterItem": "courier_satchel",
+    "trait": "quick_step"
+  },
+  {
+    "id": "kitchen_worker",
+    "name": "Kitchen Worker",
+    "description": "Improvised chemistry and sharp corners.",
+    "attributeMods": {
+      "Might": 2,
+      "Wit": 1,
+      "Finesse": -1
+    },
+    "starterItem": "cleaver",
+    "trait": "fire_tolerance"
+  },
+  {
+    "id": "street_mechanic",
+    "name": "Street Mechanic",
+    "description": "Machines are negotiable.",
+    "attributeMods": {
+      "Wit": 2,
+      "Might": 1,
+      "Nerve": -1
+    },
+    "starterItem": "wrench",
+    "trait": "machine_tinker"
+  },
+  {
+    "id": "school_librarian",
+    "name": "School Librarian",
+    "description": "Find a key among impossible data.",
+    "attributeMods": {
+      "Wit": 2,
+      "Nerve": 1,
+      "Might": -1
+    },
+    "starterItem": "index_cards",
+    "trait": "catalog_memory"
+  },
+  {
+    "id": "volunteer_medic",
+    "name": "Volunteer Medic",
+    "description": "Keep a group alive under pressure.",
+    "attributeMods": {
+      "Nerve": 2,
+      "Wit": 1,
+      "Might": -1
+    },
+    "starterItem": "first_aid_pack",
+    "trait": "field_stabilize"
+  },
+  {
+    "id": "courier_clerk",
+    "name": "Courier Clerk",
+    "description": "Paper can be stronger than armor.",
+    "attributeMods": {
+      "Finesse": 2,
+      "Wit": 1,
+      "Might": -1
+    },
+    "starterItem": "ink_stamp",
+    "trait": "document_forgery"
+  },
+  {
+    "id": "construction_worker",
+    "name": "Construction Worker",
+    "description": "A wall is a suggestion.",
+    "attributeMods": {
+      "Might": 2,
+      "Nerve": 1,
+      "Finesse": -1
+    },
+    "starterItem": "crowbar",
+    "trait": "wall_reader"
+  },
+  {
+    "id": "stage_magician",
+    "name": "Stage Magician",
+    "description": "The audience watches the wrong hand.",
+    "attributeMods": {
+      "Finesse": 2,
+      "Wit": 1,
+      "Might": -1
+    },
+    "starterItem": "flash_pellet",
+    "trait": "misdirection"
+  },
+  {
+    "id": "community_gardener",
+    "name": "Community Gardener",
+    "description": "Biology adapts to everything.",
+    "attributeMods": {
+      "Nerve": 2,
+      "Wit": 1,
+      "Finesse": -1
+    },
+    "starterItem": "spore_pouch",
+    "trait": "toxins_knowledge"
+  },
+  {
+    "id": "parking_attendant",
+    "name": "Parking Attendant",
+    "description": "Control movement through bad geometry.",
+    "attributeMods": {
+      "Nerve": 2,
+      "Finesse": 1,
+      "Wit": -1
+    },
+    "starterItem": "reflective_vest",
+    "trait": "traffic_sense"
+  },
+  {
+    "id": "repair_apprentice",
+    "name": "Repair Apprentice",
+    "description": "Make broken things useful again.",
+    "attributeMods": {
+      "Wit": 2,
+      "Finesse": 1,
+      "Nerve": -1
+    },
+    "starterItem": "repair_tape",
+    "trait": "rapid_repair"
+  }
+]

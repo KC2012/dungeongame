@@ -1,0 +1,1262 @@
+[
+  {
+    "id": "orientation_booth",
+    "name": "Orientation Booth",
+    "description": "Floor 1 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#...c...#",
+      "#.......#",
+      "#...o...#",
+      "+.......+",
+      "#.......#",
+      "#...~...#",
+      "#...c...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "queue_maze",
+    "name": "Queue Maze",
+    "description": "Floor 1 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#.#...#.#",
+      "#...o...#",
+      "#.#...#.#",
+      "+...^...+",
+      "#.#...#.#",
+      "#...c...#",
+      "#.#...#.#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "broken_elevator",
+    "name": "Broken Elevator",
+    "description": "Floor 1 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.ccc...#",
+      "#..~~...#",
+      "+..~o~..+",
+      "#..~~...#",
+      "#...ccc.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "employee_break_room",
+    "name": "Employee Break Room",
+    "description": "Floor 1 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.##.##.#",
+      "#.#...#.#",
+      "+.#.o.#.+",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "stamp_counter",
+    "name": "Stamp Counter",
+    "description": "Floor 1 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.#..c..#",
+      "#.#.....#",
+      "+...o...+",
+      "#.....#.#",
+      "#..c..#.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "leaking_generator",
+    "name": "Leaking Generator",
+    "description": "Floor 1 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "turnstile_depot",
+    "name": "Turnstile Depot",
+    "description": "Floor 1 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 1,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "compressor_channel",
+    "name": "Compressor Channel",
+    "description": "Floor 2 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#.#...#.#",
+      "#...o...#",
+      "#.#...#.#",
+      "+...^...+",
+      "#.#...#.#",
+      "#...c...#",
+      "#.#...#.#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "glass_sorting",
+    "name": "Glass Sorting",
+    "description": "Floor 2 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.ccc...#",
+      "#..~~...#",
+      "+..~o~..+",
+      "#..~~...#",
+      "#...ccc.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "scrap_bazaar",
+    "name": "Scrap Bazaar",
+    "description": "Floor 2 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.##.##.#",
+      "#.#...#.#",
+      "+.#.o.#.+",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "conveyor_spur",
+    "name": "Conveyor Spur",
+    "description": "Floor 2 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.#..c..#",
+      "#.#.....#",
+      "+...o...+",
+      "#.....#.#",
+      "#..c..#.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "waste_acid_tank",
+    "name": "Waste Acid Tank",
+    "description": "Floor 2 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "reactor_sorting",
+    "name": "Reactor Sorting",
+    "description": "Floor 2 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "crate_chute",
+    "name": "Crate Chute",
+    "description": "Floor 2 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 2,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#..~~~..#",
+      "#..~^~..#",
+      "+..~o~..+",
+      "#..~^~..#",
+      "#..~~~..#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "mutagen_display",
+    "name": "Mutagen Display",
+    "description": "Floor 3 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.ccc...#",
+      "#..~~...#",
+      "+..~o~..+",
+      "#..~~...#",
+      "#...ccc.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "broken_exhibit",
+    "name": "Broken Exhibit",
+    "description": "Floor 3 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.##.##.#",
+      "#.#...#.#",
+      "+.#.o.#.+",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "symmetry_hall",
+    "name": "Symmetry Hall",
+    "description": "Floor 3 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.#..c..#",
+      "#.#.....#",
+      "+...o...+",
+      "#.....#.#",
+      "#..c..#.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "cold_sample_room",
+    "name": "Cold Sample Room",
+    "description": "Floor 3 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "adaptation_booth",
+    "name": "Adaptation Booth",
+    "description": "Floor 3 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "specimen_corridor",
+    "name": "Specimen Corridor",
+    "description": "Floor 3 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#..~~~..#",
+      "#..~^~..#",
+      "+..~o~..+",
+      "#..~^~..#",
+      "#..~~~..#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "reagent_theater",
+    "name": "Reagent Theater",
+    "description": "Floor 3 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 3,
+    "layout": [
+      "####+####",
+      "#...c...#",
+      "#.......#",
+      "#...o...#",
+      "+.......+",
+      "#.......#",
+      "#...~...#",
+      "#...c...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "overpass_platform",
+    "name": "Overpass Platform",
+    "description": "Floor 4 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.##.##.#",
+      "#.#...#.#",
+      "+.#.o.#.+",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "switchyard",
+    "name": "Switchyard",
+    "description": "Floor 4 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.#..c..#",
+      "#.#.....#",
+      "+...o...+",
+      "#.....#.#",
+      "#..c..#.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "control_booth",
+    "name": "Control Booth",
+    "description": "Floor 4 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "substation_north",
+    "name": "Substation North",
+    "description": "Floor 4 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "substation_south",
+    "name": "Substation South",
+    "description": "Floor 4 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#..~~~..#",
+      "#..~^~..#",
+      "+..~o~..+",
+      "#..~^~..#",
+      "#..~~~..#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "ticket_gantry",
+    "name": "Ticket Gantry",
+    "description": "Floor 4 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#...c...#",
+      "#.......#",
+      "#...o...#",
+      "+.......+",
+      "#.......#",
+      "#...~...#",
+      "#...c...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "rail_signal",
+    "name": "Rail Signal",
+    "description": "Floor 4 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 4,
+    "layout": [
+      "####+####",
+      "#.#...#.#",
+      "#...o...#",
+      "#.#...#.#",
+      "+...^...+",
+      "#.#...#.#",
+      "#...c...#",
+      "#.#...#.#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "ledger_vault",
+    "name": "Ledger Vault",
+    "description": "Floor 5 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.#..c..#",
+      "#.#.....#",
+      "+...o...+",
+      "#.....#.#",
+      "#..c..#.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "negotiation_pit",
+    "name": "Negotiation Pit",
+    "description": "Floor 5 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "auction_balcony",
+    "name": "Auction Balcony",
+    "description": "Floor 5 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "collections_hall",
+    "name": "Collections Hall",
+    "description": "Floor 5 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#..~~~..#",
+      "#..~^~..#",
+      "+..~o~..+",
+      "#..~^~..#",
+      "#..~~~..#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "data_exchange",
+    "name": "Data Exchange",
+    "description": "Floor 5 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#...c...#",
+      "#.......#",
+      "#...o...#",
+      "+.......+",
+      "#.......#",
+      "#...~...#",
+      "#...c...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "legal_archive",
+    "name": "Legal Archive",
+    "description": "Floor 5 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#.#...#.#",
+      "#...o...#",
+      "#.#...#.#",
+      "+...^...+",
+      "#.#...#.#",
+      "#...c...#",
+      "#.#...#.#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "contract_cage",
+    "name": "Contract Cage",
+    "description": "Floor 5 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 5,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.ccc...#",
+      "#..~~...#",
+      "+..~o~..+",
+      "#..~~...#",
+      "#...ccc.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "relay_orchard",
+    "name": "Relay Orchard",
+    "description": "Floor 6 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#...^...#",
+      "#...^...#",
+      "#..ccc..#",
+      "+...o...+",
+      "#..ccc..#",
+      "#...^...#",
+      "#...^...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "signal_tunnel",
+    "name": "Signal Tunnel",
+    "description": "Floor 6 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#..c.c..#",
+      "#.......#",
+      "#..o.o..#",
+      "+...c...+",
+      "#..o.o..#",
+      "#.......#",
+      "#..c.c..#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "control_theater",
+    "name": "Control Theater",
+    "description": "Floor 6 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#..~~~..#",
+      "#..~^~..#",
+      "+..~o~..+",
+      "#..~^~..#",
+      "#..~~~..#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "cover",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  },
+  {
+    "id": "power_coupler",
+    "name": "Power Coupler",
+    "description": "Floor 6 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#...c...#",
+      "#.......#",
+      "#...o...#",
+      "+.......+",
+      "#.......#",
+      "#...~...#",
+      "#...c...#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "hazard",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 4
+  },
+  {
+    "id": "dead_air_gallery",
+    "name": "Dead Air Gallery",
+    "description": "Floor 6 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#.#...#.#",
+      "#...o...#",
+      "#.#...#.#",
+      "+...^...+",
+      "#.#...#.#",
+      "#...c...#",
+      "#.#...#.#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 2,
+    "features": [
+      "cover",
+      "loot",
+      "shortcut"
+    ],
+    "encounterBudget": 1
+  },
+  {
+    "id": "transmission_vault",
+    "name": "Transmission Vault",
+    "description": "Floor 6 spatial prefab with hazards; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.ccc...#",
+      "#..~~...#",
+      "+..~o~..+",
+      "#..~~...#",
+      "#...ccc.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 3,
+    "features": [
+      "hazard",
+      "loot",
+      "ambush"
+    ],
+    "encounterBudget": 2
+  },
+  {
+    "id": "final_uplink",
+    "name": "Final Uplink",
+    "description": "Floor 6 spatial prefab with cover and devices; includes alternative use of its objects.",
+    "floor": 6,
+    "layout": [
+      "####+####",
+      "#.......#",
+      "#.##.##.#",
+      "#.#...#.#",
+      "+.#.o.#.+",
+      "#.#...#.#",
+      "#.##.##.#",
+      "#.......#",
+      "####+####"
+    ],
+    "sockets": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "weight": 1,
+    "features": [
+      "cover",
+      "machine",
+      "ambush"
+    ],
+    "encounterBudget": 3
+  }
+]

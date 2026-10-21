@@ -1,0 +1,552 @@
+[
+  {
+    "id": "conditional_mercy",
+    "name": "Conditional Mercy",
+    "description": "A clearly optional bargain: gain heal by accepting elite next floor.",
+    "availableFromFloor": 1,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: heal",
+        "reward": "heal",
+        "risk": "elite_next_floor"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "sponsor_trial",
+    "name": "Sponsor Trial",
+    "description": "A clearly optional bargain: gain item by accepting hazard next room.",
+    "availableFromFloor": 1,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: item",
+        "reward": "item",
+        "risk": "hazard_next_room"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "aisle_closure",
+    "name": "Aisle Closure",
+    "description": "A clearly optional bargain: gain credits by accepting blocked shortcut.",
+    "availableFromFloor": 1,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: credits",
+        "reward": "credits",
+        "risk": "blocked_shortcut"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "shuttle_detour",
+    "name": "Shuttle Detour",
+    "description": "A clearly optional bargain: gain secret by accepting extra encounter.",
+    "availableFromFloor": 1,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: secret",
+        "reward": "secret",
+        "risk": "extra_encounter"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "unclaimed_reward",
+    "name": "Unclaimed Reward",
+    "description": "A clearly optional bargain: gain talent by accepting wound.",
+    "availableFromFloor": 1,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: talent",
+        "reward": "talent",
+        "risk": "wound"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "unusual_overtime",
+    "name": "Unusual Overtime",
+    "description": "A clearly optional bargain: gain credits by accepting extra wave.",
+    "availableFromFloor": 2,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: credits",
+        "reward": "credits",
+        "risk": "extra_wave"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "safety_inspection",
+    "name": "Safety Inspection",
+    "description": "A clearly optional bargain: gain heal by accepting loss of time.",
+    "availableFromFloor": 2,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: heal",
+        "reward": "heal",
+        "risk": "loss_of_time"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "recycling_bonus",
+    "name": "Recycling Bonus",
+    "description": "A clearly optional bargain: gain craft material by accepting acid storm.",
+    "availableFromFloor": 2,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: craft material",
+        "reward": "craft_material",
+        "risk": "acid_storm"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "missing_forms",
+    "name": "Missing Forms",
+    "description": "A clearly optional bargain: gain key by accepting suspicion.",
+    "availableFromFloor": 2,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: key",
+        "reward": "key",
+        "risk": "suspicion"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "black_market_day",
+    "name": "Black Market Day",
+    "description": "A clearly optional bargain: gain discount by accepting reputation.",
+    "availableFromFloor": 2,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: discount",
+        "reward": "discount",
+        "risk": "reputation"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "exhibit_gamble",
+    "name": "Exhibit Gamble",
+    "description": "A clearly optional bargain: gain adaptation hint by accepting extra mutant.",
+    "availableFromFloor": 3,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: adaptation hint",
+        "reward": "adaptation_hint",
+        "risk": "extra_mutant"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "noisy_advertisement",
+    "name": "Noisy Advertisement",
+    "description": "A clearly optional bargain: gain credits by accepting ambush.",
+    "availableFromFloor": 3,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: credits",
+        "reward": "credits",
+        "risk": "ambush"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "audience_vote",
+    "name": "Audience Vote",
+    "description": "A clearly optional bargain: gain minor loot by accepting random mod.",
+    "availableFromFloor": 3,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: minor loot",
+        "reward": "minor_loot",
+        "risk": "random_mod"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "dispatch_emergency",
+    "name": "Dispatch Emergency",
+    "description": "A clearly optional bargain: gain shortcut by accepting shock pulse.",
+    "availableFromFloor": 3,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: shortcut",
+        "reward": "shortcut",
+        "risk": "shock_pulse"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "flicker_discount",
+    "name": "Flicker Discount",
+    "description": "A clearly optional bargain: gain shield by accepting darkness.",
+    "availableFromFloor": 3,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: shield",
+        "reward": "shield",
+        "risk": "darkness"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "wage_garnishment",
+    "name": "Wage Garnishment",
+    "description": "A clearly optional bargain: gain rare loot by accepting lose credits.",
+    "availableFromFloor": 4,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: rare loot",
+        "reward": "rare_loot",
+        "risk": "lose_credits"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "credit_insurance",
+    "name": "Credit Insurance",
+    "description": "A clearly optional bargain: gain medkit by accepting shop tax.",
+    "availableFromFloor": 4,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: medkit",
+        "reward": "medkit",
+        "risk": "shop_tax"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "sincere_apology",
+    "name": "Sincere Apology",
+    "description": "A clearly optional bargain: gain heal by accepting audience loss.",
+    "availableFromFloor": 4,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: heal",
+        "reward": "heal",
+        "risk": "audience_loss"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "show_stopper",
+    "name": "Show Stopper",
+    "description": "A clearly optional bargain: gain major loot by accepting elite next floor.",
+    "availableFromFloor": 4,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: major loot",
+        "reward": "major_loot",
+        "risk": "elite_next_floor"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "secret_audit",
+    "name": "Secret Audit",
+    "description": "A clearly optional bargain: gain evidence by accepting hazard next room.",
+    "availableFromFloor": 4,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: evidence",
+        "reward": "evidence",
+        "risk": "hazard_next_room"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "volatile_dividend",
+    "name": "Volatile Dividend",
+    "description": "A clearly optional bargain: gain blast item by accepting self damage.",
+    "availableFromFloor": 5,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: blast item",
+        "reward": "blast_item",
+        "risk": "self_damage"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "faulty_antidote",
+    "name": "Faulty Antidote",
+    "description": "A clearly optional bargain: gain antidote by accepting poison cloud.",
+    "availableFromFloor": 5,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: antidote",
+        "reward": "antidote",
+        "risk": "poison_cloud"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "extra_intermission",
+    "name": "Extra Intermission",
+    "description": "A clearly optional bargain: gain full focus by accepting spawn reinforcements.",
+    "availableFromFloor": 5,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: full focus",
+        "reward": "full_focus",
+        "risk": "spawn_reinforcements"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "crowd_favorite",
+    "name": "Crowd Favorite",
+    "description": "A clearly optional bargain: gain unlock by accepting hard boss.",
+    "availableFromFloor": 5,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: unlock",
+        "reward": "unlock",
+        "risk": "hard_boss"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  },
+  {
+    "id": "final_sponsorship",
+    "name": "Final Sponsorship",
+    "description": "A clearly optional bargain: gain final cache by accepting extra boss phase.",
+    "availableFromFloor": 5,
+    "trigger": "safe_room_offer",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept: final cache",
+        "reward": "final_cache",
+        "risk": "extra_boss_phase"
+      },
+      {
+        "id": "decline",
+        "label": "Decline",
+        "reward": "none",
+        "risk": "none"
+      }
+    ],
+    "oncePerRun": true
+  }
+]

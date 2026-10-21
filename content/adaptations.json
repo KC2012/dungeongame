@@ -1,0 +1,79 @@
+[
+  {
+    "id": "ceramic_skin",
+    "name": "Ceramic Skin",
+    "description": "Endure blows at the cost of agility.",
+    "bonus": {
+      "armor": 3
+    },
+    "drawback": {
+      "speed": -1
+    },
+    "unlockFloor": 3
+  },
+  {
+    "id": "gill_lungs",
+    "name": "Gill Lungs",
+    "description": "Move through liquid and survive chemical vapors.",
+    "bonus": {
+      "waterCost": -1,
+      "poisonResist": 2
+    },
+    "drawback": {
+      "fireResist": -1
+    },
+    "unlockFloor": 3
+  },
+  {
+    "id": "copper_veins",
+    "name": "Copper Veins",
+    "description": "Channel current and reach machinery at a distance.",
+    "bonus": {
+      "shockResist": 4,
+      "deviceRange": 1
+    },
+    "drawback": {
+      "coldResist": -2
+    },
+    "unlockFloor": 3
+  },
+  {
+    "id": "lightframe",
+    "name": "Lightframe",
+    "description": "Slip around threats with a brittle skeleton.",
+    "bonus": {
+      "speed": 1,
+      "dodge": 10
+    },
+    "drawback": {
+      "armor": -1
+    },
+    "unlockFloor": 3
+  },
+  {
+    "id": "fungal_network",
+    "name": "Fungal Network",
+    "description": "Regenerate slowly; extreme vulnerability to flame.",
+    "bonus": {
+      "poisonResist": 4,
+      "regeneration": 1
+    },
+    "drawback": {
+      "fireResist": -3
+    },
+    "unlockFloor": 3
+  },
+  {
+    "id": "extra_hands",
+    "name": "Extra Hands",
+    "description": "Manipulate objects faster while sacrificing concentration.",
+    "bonus": {
+      "interactionAPDiscount": 1,
+      "carrySlots": 2
+    },
+    "drawback": {
+      "maxFocus": -2
+    },
+    "unlockFloor": 3
+  }
+]

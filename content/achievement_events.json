@@ -1,0 +1,542 @@
+[
+  {
+    "id": "shock_chain",
+    "name": "Shock Chain",
+    "description": "Server-confirmed combatDamage outcome: shock chain.",
+    "family": "combatDamage",
+    "achievement": "improvised_conductor",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "short_circuit",
+    "name": "Short Circuit",
+    "description": "Server-confirmed physicalWorld outcome: short circuit.",
+    "family": "physicalWorld",
+    "achievement": "unlicensed_electrician",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "wall_break",
+    "name": "Wall Break",
+    "description": "Server-confirmed physicalWorld outcome: wall break.",
+    "family": "physicalWorld",
+    "achievement": "it_was_load_bearing",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "alternate_boss",
+    "name": "Alternate Boss",
+    "description": "Server-confirmed objective outcome: alternate boss.",
+    "family": "objective",
+    "achievement": "safer_through_paperwork",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "pacify_encounter",
+    "name": "Pacify Encounter",
+    "description": "Server-confirmed objective outcome: pacify encounter.",
+    "family": "objective",
+    "achievement": "minimal_violence",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "no_damage_room",
+    "name": "No Damage Room",
+    "description": "Server-confirmed exploration outcome: no damage room.",
+    "family": "exploration",
+    "achievement": "a_clean_escape",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "first_death",
+    "name": "First Death",
+    "description": "Server-confirmed actorState outcome: first death.",
+    "family": "actorState",
+    "achievement": "a_terrible_first_impression",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "explosion_chain",
+    "name": "Explosion Chain",
+    "description": "Server-confirmed physicalWorld outcome: explosion chain.",
+    "family": "physicalWorld",
+    "achievement": "company_property",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "failed_trade",
+    "name": "Failed Trade",
+    "description": "Server-confirmed lootEconomy outcome: failed trade.",
+    "family": "lootEconomy",
+    "achievement": "no_refunds",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "revive_ally",
+    "name": "Revive Ally",
+    "description": "Server-confirmed actorState outcome: revive ally.",
+    "family": "actorState",
+    "achievement": "we_can_fix_this",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "breach_route",
+    "name": "Breach Route",
+    "description": "Server-confirmed physicalWorld outcome: breach route.",
+    "family": "physicalWorld",
+    "achievement": "not_a_door",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "objective_hack",
+    "name": "Objective Hack",
+    "description": "Server-confirmed objective outcome: objective hack.",
+    "family": "objective",
+    "achievement": "audit_complete",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "flood_room",
+    "name": "Flood Room",
+    "description": "Server-confirmed physicalWorld outcome: flood room.",
+    "family": "physicalWorld",
+    "achievement": "liquid_assets",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "gas_ignition",
+    "name": "Gas Ignition",
+    "description": "Server-confirmed physicalWorld outcome: gas ignition.",
+    "family": "physicalWorld",
+    "achievement": "unplanned_ventilation",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "trap_trigger_self",
+    "name": "Trap Trigger Self",
+    "description": "Server-confirmed exploration outcome: trap trigger self.",
+    "family": "exploration",
+    "achievement": "training_issue",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "ally_saved",
+    "name": "Ally Saved",
+    "description": "Server-confirmed actorState outcome: ally saved.",
+    "family": "actorState",
+    "achievement": "friendly_warning",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "guard_ally",
+    "name": "Guard Ally",
+    "description": "Server-confirmed actorState outcome: guard ally.",
+    "family": "actorState",
+    "achievement": "poorly_timed_bravery",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "vendor_refused",
+    "name": "Vendor Refused",
+    "description": "Server-confirmed lootEconomy outcome: vendor refused.",
+    "family": "lootEconomy",
+    "achievement": "refund_denied",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "evidence_complete",
+    "name": "Evidence Complete",
+    "description": "Server-confirmed objective outcome: evidence complete.",
+    "family": "objective",
+    "achievement": "exceptional_paper_trail",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "shock_ally_saved",
+    "name": "Shock Ally Saved",
+    "description": "Server-confirmed actorState outcome: shock ally saved.",
+    "family": "actorState",
+    "achievement": "conductive_friendship",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "shock_multi_target",
+    "name": "Shock Multi Target",
+    "description": "Server-confirmed combatDamage outcome: shock multi target.",
+    "family": "combatDamage",
+    "achievement": "full_circuit",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "scanner_bypass",
+    "name": "Scanner Bypass",
+    "description": "Server-confirmed objective outcome: scanner bypass.",
+    "family": "objective",
+    "achievement": "bureaucratic_shortcut",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "objective_exploit",
+    "name": "Objective Exploit",
+    "description": "Server-confirmed objective outcome: objective exploit.",
+    "family": "objective",
+    "achievement": "technically_correct",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "hard_check_success",
+    "name": "Hard Check Success",
+    "description": "Server-confirmed exploration outcome: hard check success.",
+    "family": "exploration",
+    "achievement": "certified_difficult",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "stealth_vault",
+    "name": "Stealth Vault",
+    "description": "Server-confirmed objective outcome: stealth vault.",
+    "family": "objective",
+    "achievement": "ghost_in_the_receipts",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "machine_disable",
+    "name": "Machine Disable",
+    "description": "Server-confirmed physicalWorld outcome: machine disable.",
+    "family": "physicalWorld",
+    "achievement": "found_the_off_switch",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "shield_multi_ally",
+    "name": "Shield Multi Ally",
+    "description": "Server-confirmed actorState outcome: shield multi ally.",
+    "family": "actorState",
+    "achievement": "human_firewall",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "quick_plan",
+    "name": "Quick Plan",
+    "description": "Server-confirmed exploration outcome: quick plan.",
+    "family": "exploration",
+    "achievement": "thirty_second_plan",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "zero_focus_victory",
+    "name": "Zero Focus Victory",
+    "description": "Server-confirmed combatDamage outcome: zero focus victory.",
+    "family": "combatDamage",
+    "achievement": "last_cast",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "boss_noncombat",
+    "name": "Boss Noncombat",
+    "description": "Server-confirmed objective outcome: boss noncombat.",
+    "family": "objective",
+    "achievement": "first_bloodless_boss",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "push_hazard_kill",
+    "name": "Push Hazard Kill",
+    "description": "Server-confirmed combatDamage outcome: push hazard kill.",
+    "family": "combatDamage",
+    "achievement": "physics_has_spoken",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "fragile_enemy_shatter",
+    "name": "Fragile Enemy Shatter",
+    "description": "Server-confirmed combatDamage outcome: fragile enemy shatter.",
+    "family": "combatDamage",
+    "achievement": "glass_economies",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "poison_self",
+    "name": "Poison Self",
+    "description": "Server-confirmed actorState outcome: poison self.",
+    "family": "actorState",
+    "achievement": "do_not_drink",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "shock_machine",
+    "name": "Shock Machine",
+    "description": "Server-confirmed physicalWorld outcome: shock machine.",
+    "family": "physicalWorld",
+    "achievement": "substandard_wiring",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "secret_discovery",
+    "name": "Secret Discovery",
+    "description": "Server-confirmed exploration outcome: secret discovery.",
+    "family": "exploration",
+    "achievement": "better_than_a_map",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "improvised_weapon_kill",
+    "name": "Improvised Weapon Kill",
+    "description": "Server-confirmed combatDamage outcome: improvised weapon kill.",
+    "family": "combatDamage",
+    "achievement": "everything_is_a_tool",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "support_enemy_defeat",
+    "name": "Support Enemy Defeat",
+    "description": "Server-confirmed combatDamage outcome: support enemy defeat.",
+    "family": "combatDamage",
+    "achievement": "union_break",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "device_combo",
+    "name": "Device Combo",
+    "description": "Server-confirmed physicalWorld outcome: device combo.",
+    "family": "physicalWorld",
+    "achievement": "too_many_buttons",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "loot_low_rarity",
+    "name": "Loot Low Rarity",
+    "description": "Server-confirmed lootEconomy outcome: loot low rarity.",
+    "family": "lootEconomy",
+    "achievement": "consolation_prize",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "audience_threshold",
+    "name": "Audience Threshold",
+    "description": "Server-confirmed meta outcome: audience threshold.",
+    "family": "meta",
+    "achievement": "chairman_of_chaos",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "projectile_deflected",
+    "name": "Projectile Deflected",
+    "description": "Server-confirmed combatDamage outcome: projectile deflected.",
+    "family": "combatDamage",
+    "achievement": "return_to_sender",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "door_trap_kill",
+    "name": "Door Trap Kill",
+    "description": "Server-confirmed physicalWorld outcome: door trap kill.",
+    "family": "physicalWorld",
+    "achievement": "line_is_closed",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "revive_final_round",
+    "name": "Revive Final Round",
+    "description": "Server-confirmed actorState outcome: revive final round.",
+    "family": "actorState",
+    "achievement": "borrowed_time",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "room_zero_damage",
+    "name": "Room Zero Damage",
+    "description": "Server-confirmed exploration outcome: room zero damage.",
+    "family": "exploration",
+    "achievement": "clean_sweep",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "extinguish_chain",
+    "name": "Extinguish Chain",
+    "description": "Server-confirmed physicalWorld outcome: extinguish chain.",
+    "family": "physicalWorld",
+    "achievement": "flameless_firefighter",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "multiple_checks",
+    "name": "Multiple Checks",
+    "description": "Server-confirmed objective outcome: multiple checks.",
+    "family": "objective",
+    "achievement": "second_opinion",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "trade_twice",
+    "name": "Trade Twice",
+    "description": "Server-confirmed lootEconomy outcome: trade twice.",
+    "family": "lootEconomy",
+    "achievement": "double_entry",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "locked_path_bypass",
+    "name": "Locked Path Bypass",
+    "description": "Server-confirmed objective outcome: locked path bypass.",
+    "family": "objective",
+    "achievement": "locksmith_rebellion",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "slide_enemy",
+    "name": "Slide Enemy",
+    "description": "Server-confirmed physicalWorld outcome: slide enemy.",
+    "family": "physicalWorld",
+    "achievement": "frictionless_solution",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "boss_telegraph_avoid",
+    "name": "Boss Telegraph Avoid",
+    "description": "Server-confirmed objective outcome: boss telegraph avoid.",
+    "family": "objective",
+    "achievement": "supervisor_warning",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "acid_fire_chain",
+    "name": "Acid Fire Chain",
+    "description": "Server-confirmed physicalWorld outcome: acid fire chain.",
+    "family": "physicalWorld",
+    "achievement": "bad_chemistry",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "water_push",
+    "name": "Water Push",
+    "description": "Server-confirmed physicalWorld outcome: water push.",
+    "family": "physicalWorld",
+    "achievement": "making_a_splash",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "multi_key_objective",
+    "name": "Multi Key Objective",
+    "description": "Server-confirmed objective outcome: multi key objective.",
+    "family": "objective",
+    "achievement": "all_according_to_form",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "long_encounter_survival",
+    "name": "Long Encounter Survival",
+    "description": "Server-confirmed actorState outcome: long encounter survival.",
+    "family": "actorState",
+    "achievement": "absurd_overtime",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "finish_floor_six",
+    "name": "Finish Floor Six",
+    "description": "Server-confirmed objective outcome: finish floor six.",
+    "family": "objective",
+    "achievement": "final_accounting",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "all_survive",
+    "name": "All Survive",
+    "description": "Server-confirmed meta outcome: all survive.",
+    "family": "meta",
+    "achievement": "we_are_not_leaving",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "survive_with_casualty",
+    "name": "Survive With Casualty",
+    "description": "Server-confirmed meta outcome: survive with casualty.",
+    "family": "meta",
+    "achievement": "one_chair_empty",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "solo_win",
+    "name": "Solo Win",
+    "description": "Server-confirmed meta outcome: solo win.",
+    "family": "meta",
+    "achievement": "a_very_small_audience",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "four_player_win",
+    "name": "Four Player Win",
+    "description": "Server-confirmed meta outcome: four player win.",
+    "family": "meta",
+    "achievement": "committee_of_four",
+    "emitterRequired": true,
+    "testRequired": true
+  },
+  {
+    "id": "four_unique_assists",
+    "name": "Four Unique Assists",
+    "description": "Server-confirmed meta outcome: four unique assists.",
+    "family": "meta",
+    "achievement": "actual_teamwork",
+    "emitterRequired": true,
+    "testRequired": true
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "$schema":"http://json-schema.org/draft-07/schema#",
+  "title":"The Crawl Content Catalog",
+  "definitions":{
+    "id":{"type":"string","pattern":"^[a-z][a-z0-9_]*$"},
+    "effect":{"type":"object","required":["type","magnitude","target"],"properties":{"type":{"enum":["damage","heal","shield","guard","dash","push","pull","apply_status","spawn_hazard","destroy_tile","teleport","reveal","summon","gain_resource","modify_stat","cleanse","hack","taunt","set_trap","create_cover","grant_item","modify_audience","trade","revive","disable_machine","conjure_object","craft_component","enable_crafting","repair_object"]},"magnitude":{"type":"number","minimum":0},"target":{"enum":["self","ally","enemy","tile","area","party"]},"element":{"type":"string"},"status":{"type":"string"}},"additionalProperties":true},
+    "entry":{"type":"object","required":["id","name","description"],"properties":{"id":{"$ref":"#/definitions/id"},"name":{"type":"string","minLength":3},"description":{"type":"string","minLength":10}},"additionalProperties":true},
+    "room":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["floor","layout","sockets","features"],"properties":{"floor":{"type":"integer","minimum":1,"maximum":6},"layout":{"type":"array","minItems":9,"maxItems":9,"items":{"type":"string","minLength":9,"maxLength":9}},"sockets":{"type":"array","items":{"enum":["N","S","E","W"]}},"features":{"type":"array","minItems":1,"items":{"type":"string"}}}}]},
+    "ability":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["profession","apCost","range","focusCost","effects"],"properties":{"apCost":{"type":"integer","minimum":1,"maximum":3},"focusCost":{"type":"integer","minimum":0},"range":{"type":"integer","minimum":0},"effects":{"type":"array","minItems":1,"items":{"$ref":"#/definitions/effect"}}}}]},
+    "item":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["kind","slot","power","effects","weight","basePrice"],"properties":{"power":{"type":"integer","minimum":0},"basePrice":{"type":"integer","minimum":0},"weight":{"type":"integer","minimum":0},"effects":{"type":"array","minItems":1,"items":{"$ref":"#/definitions/effect"}}}}]},
+    "monster":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["floor","ai","hp","armor","weakness","telegraph"],"properties":{"floor":{"type":"integer","minimum":1,"maximum":6},"hp":{"type":"integer","minimum":1},"armor":{"type":"integer","minimum":0},"ai":{"type":"string"}}}]},
+    "achievement":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["condition","scope","audienceDelta","message"],"properties":{"condition":{"type":"object","required":["eventType"]},"scope":{"enum":["run","encounter"]},"audienceDelta":{"type":"integer","minimum":0}}}]},
+    "floor":{"allOf":[{"$ref":"#/definitions/entry"},{"type":"object","required":["number","boss","requiredObjective","alternateBoss","environment"],"properties":{"number":{"type":"integer","minimum":1,"maximum":6},"boss":{"$ref":"#/definitions/id"}}}]}
+  }
+}
