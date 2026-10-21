@@ -28,3 +28,15 @@ EXCLUDED: PvP mode, open-world map, player-made dungeon editor, voice chat, stre
 
 ## Scope changes
 Any proposed feature must specify (a) what is cut, (b) which test proves it, (c) multiplayer consequences. No silent feature cancellation. Disclose missing features rather than replacing them with static buttons.
+
+## Local implementation decisions — 2026-10-20
+
+- Colyseus 0.16 uses explicit server snapshots over its authenticated transport, rather than sharing writable client state. Phaser is pinned to 3.90.0; original pixel silhouettes are drawn procedurally. No art-generation or external paid service is used.
+- Current floors use a 45×45 snake of nine rotated authored prefabs, two optional maintenance links and a lower bypass. The authored objectives and ordered alternate-device operations drive progression; no class is mandatory for the physical route. Hacking or disabling a quest device is an alternate way to perform that same operation. Final uplink stages must occur in order.
+- Optional maintenance doors accept quest keys, skill/tool hacks or structural damage. The ordinary route remains open without optional gear.
+- Catalog zero-range ally/device items normalize to adjacency; omitted hazard element becomes poison for the spore tool, omitted flash status becomes stunned against an enemy, and party skill range limits affected allies. Named passives resolve through exhaustive tables.
+- Short-form `quick_plan` is awarded for a valid unanimous single-action tactical plan. Its narrative achievement name does not measure real-world seconds; achievements remain deterministic from submitted commands and completed rounds.
+- A gift is a proposal. The recipient must accept while adjacent; inventory/weight and item presence are checked atomically at acceptance. Stale, replayed, or declined gifts do not move items.
+- Spawned map hazards persist until handled; player-created hazards use their catalog duration. This prevents every later-room hazard expiring during the walk from the entrance.
+- Solo and co-op use the same reducer and server. Default host bind is loopback; remote/LAN access must be explicitly enabled by the host. No tunnel or public deployment is launched automatically.
+- Debug-assisted campaign fixtures start with 500 HP, +8 armor and a rail driver. They still walk, spend AP, resolve combat, operate devices and descend through ordinary actions. These results prove progression, not normal balance or human win rates.

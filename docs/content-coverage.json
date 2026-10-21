@@ -1,0 +1,328 @@
+{
+  "records": 448,
+  "catalogs": [
+    {
+      "kind": "abilities",
+      "count": 58,
+      "route": "profession/general actions through primitive interpreter"
+    },
+    {
+      "kind": "achievements",
+      "count": 60,
+      "route": "confirmed server event matcher"
+    },
+    {
+      "kind": "achievement_events",
+      "count": 60,
+      "route": "emitter contract; see missing source hooks below"
+    },
+    {
+      "kind": "adaptations",
+      "count": 6,
+      "route": "floor-3 saferoom choice"
+    },
+    {
+      "kind": "backgrounds",
+      "count": 12,
+      "route": "lobby character creation"
+    },
+    {
+      "kind": "bosses",
+      "count": 6,
+      "route": "combat phases and alternate devices"
+    },
+    {
+      "kind": "events",
+      "count": 25,
+      "route": "audience-threshold saferoom bargains"
+    },
+    {
+      "kind": "floors",
+      "count": 6,
+      "route": "ordered run transitions"
+    },
+    {
+      "kind": "hazards",
+      "count": 25,
+      "route": "floor fixtures or optional archive selection"
+    },
+    {
+      "kind": "items",
+      "count": 92,
+      "route": "equipment/attack/use; materials through recipes or floor objectives"
+    },
+    {
+      "kind": "monsters",
+      "count": 30,
+      "route": "seeded per-floor encounter selection"
+    },
+    {
+      "kind": "professions",
+      "count": 8,
+      "route": "floor-3 saferoom choice"
+    },
+    {
+      "kind": "recipes",
+      "count": 10,
+      "route": "ingredient-consuming craft transaction"
+    },
+    {
+      "kind": "rooms",
+      "count": 42,
+      "route": "floor-prefab selection and rotation"
+    },
+    {
+      "kind": "sponsors",
+      "count": 8,
+      "route": "qualified event gift transaction"
+    }
+  ],
+  "traits": 61,
+  "professionPassives": 8,
+  "backgroundTraits": 12,
+  "skillsCompiled": 58,
+  "hooks": [
+    {
+      "id": "shock_chain",
+      "sourceMention": true
+    },
+    {
+      "id": "short_circuit",
+      "sourceMention": true
+    },
+    {
+      "id": "wall_break",
+      "sourceMention": true
+    },
+    {
+      "id": "alternate_boss",
+      "sourceMention": true
+    },
+    {
+      "id": "pacify_encounter",
+      "sourceMention": true
+    },
+    {
+      "id": "no_damage_room",
+      "sourceMention": true
+    },
+    {
+      "id": "first_death",
+      "sourceMention": true
+    },
+    {
+      "id": "explosion_chain",
+      "sourceMention": true
+    },
+    {
+      "id": "failed_trade",
+      "sourceMention": true
+    },
+    {
+      "id": "revive_ally",
+      "sourceMention": true
+    },
+    {
+      "id": "breach_route",
+      "sourceMention": true
+    },
+    {
+      "id": "objective_hack",
+      "sourceMention": true
+    },
+    {
+      "id": "flood_room",
+      "sourceMention": true
+    },
+    {
+      "id": "gas_ignition",
+      "sourceMention": true
+    },
+    {
+      "id": "trap_trigger_self",
+      "sourceMention": true
+    },
+    {
+      "id": "ally_saved",
+      "sourceMention": true
+    },
+    {
+      "id": "guard_ally",
+      "sourceMention": true
+    },
+    {
+      "id": "vendor_refused",
+      "sourceMention": true
+    },
+    {
+      "id": "evidence_complete",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_ally_saved",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_multi_target",
+      "sourceMention": true
+    },
+    {
+      "id": "scanner_bypass",
+      "sourceMention": true
+    },
+    {
+      "id": "objective_exploit",
+      "sourceMention": true
+    },
+    {
+      "id": "hard_check_success",
+      "sourceMention": true
+    },
+    {
+      "id": "stealth_vault",
+      "sourceMention": true
+    },
+    {
+      "id": "machine_disable",
+      "sourceMention": true
+    },
+    {
+      "id": "shield_multi_ally",
+      "sourceMention": true
+    },
+    {
+      "id": "quick_plan",
+      "sourceMention": true
+    },
+    {
+      "id": "zero_focus_victory",
+      "sourceMention": true
+    },
+    {
+      "id": "boss_noncombat",
+      "sourceMention": true
+    },
+    {
+      "id": "push_hazard_kill",
+      "sourceMention": true
+    },
+    {
+      "id": "fragile_enemy_shatter",
+      "sourceMention": true
+    },
+    {
+      "id": "poison_self",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_machine",
+      "sourceMention": true
+    },
+    {
+      "id": "secret_discovery",
+      "sourceMention": true
+    },
+    {
+      "id": "improvised_weapon_kill",
+      "sourceMention": true
+    },
+    {
+      "id": "support_enemy_defeat",
+      "sourceMention": true
+    },
+    {
+      "id": "device_combo",
+      "sourceMention": true
+    },
+    {
+      "id": "loot_low_rarity",
+      "sourceMention": true
+    },
+    {
+      "id": "audience_threshold",
+      "sourceMention": true
+    },
+    {
+      "id": "projectile_deflected",
+      "sourceMention": true
+    },
+    {
+      "id": "door_trap_kill",
+      "sourceMention": true
+    },
+    {
+      "id": "revive_final_round",
+      "sourceMention": true
+    },
+    {
+      "id": "room_zero_damage",
+      "sourceMention": true
+    },
+    {
+      "id": "extinguish_chain",
+      "sourceMention": true
+    },
+    {
+      "id": "multiple_checks",
+      "sourceMention": true
+    },
+    {
+      "id": "trade_twice",
+      "sourceMention": true
+    },
+    {
+      "id": "locked_path_bypass",
+      "sourceMention": true
+    },
+    {
+      "id": "slide_enemy",
+      "sourceMention": true
+    },
+    {
+      "id": "boss_telegraph_avoid",
+      "sourceMention": true
+    },
+    {
+      "id": "acid_fire_chain",
+      "sourceMention": true
+    },
+    {
+      "id": "water_push",
+      "sourceMention": true
+    },
+    {
+      "id": "multi_key_objective",
+      "sourceMention": true
+    },
+    {
+      "id": "long_encounter_survival",
+      "sourceMention": true
+    },
+    {
+      "id": "finish_floor_six",
+      "sourceMention": true
+    },
+    {
+      "id": "all_survive",
+      "sourceMention": true
+    },
+    {
+      "id": "survive_with_casualty",
+      "sourceMention": true
+    },
+    {
+      "id": "solo_win",
+      "sourceMention": true
+    },
+    {
+      "id": "four_player_win",
+      "sourceMention": true
+    },
+    {
+      "id": "four_unique_assists",
+      "sourceMention": true
+    }
+  ],
+  "missingSourceMentions": [],
+  "qualification": "Source mentions and compilation are structural coverage, not proof of behavioral completeness. See executed content-behavior, gold-scenario, whole-run and networking tests."
+}
