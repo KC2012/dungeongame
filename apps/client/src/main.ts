@@ -6,6 +6,7 @@ import {
 } from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
+import { enemyIdentity, itemOpportunity } from "./identity";
 import { scenarios } from "../../../packages/content/src/scenarios";
 import "./style.css";
 import type {
@@ -398,7 +399,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="boss-hud" aria-live="polite"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -438,6 +439,14 @@ function render() {
         ? "SAFEROOM · services available"
         : "EXPLORATION · server-confirmed movement";
   const f = catalog.floors[game.floor - 1];
+  const boss = Object.values(game.actors).find(
+    (v) => v.tags.includes("boss") && !v.dead,
+  );
+  const bossHud = document.querySelector<HTMLElement>("#boss-hud")!;
+  bossHud.hidden = !boss;
+  bossHud.innerHTML = boss
+    ? `<b>${escape(boss.name)}</b><span>${boss.hp}/${boss.maxHP} HP · Phase ${boss.bossPhase + 1}</span><div class="health"><span style="width:${(100 * boss.hp) / boss.maxHP}%"></span></div><small>${boss.telegraph.length ? "⚠ MARKED TILES STRIKE NEXT ENEMY PHASE · move clear before Ready" : "Watch for the next marked attack"} · Devices ${game.alternate.length}/${f.alternateBoss.goal}</small>`
+    : "";
   document.querySelector("#mission")!.innerHTML =
     `<h3>Floor objective</h3><b>${escape(f.requiredObjective.id.replaceAll("_", " "))}</b><p class="muted">${game.objective.length}/${f.requiredObjective.goal} complete</p><p class="statusline">Boss: ${game.bossDefeated ? "resolved" : escape(find("bosses", f.boss).name)}<br>Alternative: ${game.alternate.length}/${f.alternateBoss.goal} devices<br>Audience ${game.audience}/100 · Credits ${game.credits} · XP ${game.xp}</p>`;
   document.querySelector("#party")!.innerHTML = `<h3>Crew</h3>${Object.values(
@@ -618,7 +627,12 @@ function inspector() {
   );
   const o = game.objects.find((o) => same(o, selected!));
   const situation = scenarios.find((v) => t.tags.includes("scene:" + v.id));
-  el.innerHTML = `${situation ? `<h3>${escape(situation.name)}</h3><p class="statusline">${escape(situation.situation)}</p><small>${escape(situation.possibilities)}</small>` : ""}${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
+  const enemy =
+    a?.kind === "enemy"
+      ? find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId)
+      : undefined;
+  const role = enemy ? enemyIdentity(enemy) : undefined;
+  el.innerHTML = `${role ? `<p class="pill">${escape(role.glyph)} · ${escape(role.name)}</p><small>${escape(role.plan)}${enemy?.weakness ? " Weakness: " + escape(enemy.weakness) + "." : ""}</small>` : ""}${situation ? `<h3>${escape(situation.name)}</h3><p class="statusline">${escape(situation.situation)}</p><small>${escape(situation.possibilities)}</small>` : ""}${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
     t.hazards,
   )
     .map(
@@ -794,7 +808,7 @@ function showDrawer(kind: string) {
         .map((s) => {
           const e = find("items", s.id),
             equip = ["weapon", "armor", "trinket", "tool"].includes(e.kind);
-          return `<article class="item"><h2>${escape(e.name)} ×${s.count}</h2><p>${escape(e.description)}</p><small>${escape(e.trait)} · ${e.weight} weight · ${escape(itemMechanics(e))}</small><div class="row">${equip ? button("Equip", "equip:" + e.id) : ""}${e.kind === "consumable" || (e.kind === "tool" && e.effects.some((f: any) => f.type !== "modify_stat")) || e.trait === "quest" ? button("Use / target", "use:" + e.id) : e.kind === "material" ? "<small>Recipe material</small>" : ""}${button("Drop at cache", "drop:" + e.id)}</div>${Object.values(
+          return `<article class="item"><h2>${escape(e.name)} ×${s.count}</h2><p>${escape(e.description)}</p>${itemOpportunity(e) ? `<p class="opportunity">↳ ${escape(itemOpportunity(e))}</p>` : ""}<small>${escape(e.trait)} · ${e.weight} weight · ${escape(itemMechanics(e))}</small><div class="row">${equip ? button("Equip", "equip:" + e.id) : ""}${e.kind === "consumable" || (e.kind === "tool" && e.effects.some((f: any) => f.type !== "modify_stat")) || e.trait === "quest" ? button("Use / target", "use:" + e.id) : e.kind === "material" ? "<small>Recipe material</small>" : ""}${button("Drop at cache", "drop:" + e.id)}</div>${Object.values(
             game!.actors,
           )
             .filter(
@@ -824,7 +838,29 @@ function showDrawer(kind: string) {
               `<p>${escape(id)} · ${v.duration} rounds · potency ${v.potency} · ${escape(({ burning: "Fire damage each round", poisoned: "Poison damage each round", bleeding: "Physical damage each round", corroded: "Armor reduced by 2", chilled: "Movement costs 1 extra AP", stunned: "Next tactical budget reduced to 2 AP", confused: "Accuracy reduced by 15", exposed: "Incoming accuracy increased by 15", aimed: "Accuracy increased by 15" } as Record<string, string>)[id] ?? "Temporary modifier")}</p>`,
           )
           .join("") || "<p class=muted>No active statuses.</p>"
-      }<h2>Floor 3 · identity choices</h2><p class="intro">Choose once in a saferoom on floor 3 or later. Your choice persists for this run.</p><div class="grid">${["professions", "adaptations"].flatMap((k) => catalog[k].map((e) => `<article class="item"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p><p>${escape(e.passive ? modifierText(professionModifiers[e.passive] ?? {}) : modifierText({ ...e.bonus, ...e.drawback }))}</p>${button("Choose " + escape(e.name), "choose:" + k + ":" + e.id, game!.floor >= 3 && game!.phase === "SAFE_ROOM" && !(k === "professions" ? a.profession : a.adaptation) ? "" : "disabled")}</article>`)).join("")}</div>`;
+      }<section class="identity-moment"><div class="eyebrow">Floor 3 / crawler development</div><h2>Rewrite your contract.</h2><p class="intro">One profession. One adaptation. Both stay with you for this run. ${game.floor >= 3 && game.phase === "SAFE_ROOM" ? "The station is ready. Choose each path below." : "The station opens in a saferoom on floor 3 or later."}</p>${[
+        "professions",
+        "adaptations",
+      ]
+        .map(
+          (k) =>
+            `<h2>${k === "professions" ? "01 · Your profession" : "02 · Your adaptation"} ${a[k === "professions" ? "profession" : "adaptation"] ? "✓ chosen" : ""}</h2><div class="grid">${catalog[
+              k
+            ]
+              .map(
+                (e) =>
+                  `<article class="item ${a[k === "professions" ? "profession" : "adaptation"] === e.id ? "chosen" : ""}"><h2>${escape(e.name)}</h2><p>${escape(e.description)}</p><p>${escape(e.passive ? modifierText(professionModifiers[e.passive] ?? {}) : modifierText({ ...e.bonus, ...e.drawback }))}</p>${
+                    k === "professions"
+                      ? `<small>Unlocks ${catalog.abilities
+                          .filter((v) => v.profession === e.id)
+                          .map((v) => escape(v.name))
+                          .join(" · ")}</small>`
+                      : ""
+                  }${button("Choose " + escape(e.name), "choose:" + k + ":" + e.id, game!.floor >= 3 && game!.phase === "SAFE_ROOM" && !(k === "professions" ? a.profession : a.adaptation) ? "" : "disabled")}</article>`,
+              )
+              .join("")}</div>`,
+        )
+        .join("")}</section>`;
     } else if (kind === "safe") {
       html = `<div class="row">${button("Rest · once this floor", "rest", a.restFloor === game.floor ? "disabled" : "")}${button("Treat wound · " + 5 * game.floor + " credits", "medic", a.wounds ? "" : "disabled")}${button("Leave saferoom", "leave-safe")}${button(game.floor === 6 ? "End the broadcast" : game.descendVotes?.includes(actorId) ? "Waiting for crew" : "Vote to descend", "descend", game.bossDefeated && game.objective.length >= catalog.floors[game.floor - 1].requiredObjective.goal ? 'class="primary"' : "disabled")}</div><p class="intro">Credits ${game.credits}. Rest heals 35% HP and restores Focus. Complete floor objectives and resolve the boss to descend. Crafting consumes the listed materials.</p><h2>Rewards & overflow</h2><div class="row">${game.rewards
         .filter((r) => !r.claimed)

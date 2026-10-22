@@ -219,6 +219,19 @@ export function visualCues(
       if (v) add(e, v[0], at, v[1], v[2], undefined, delay);
     }
   }
+  for (const a of Object.values(after.actors).filter(
+    (a) => a.tags.includes("boss") && !a.dead,
+  )) {
+    const old = before.actors[a.id];
+    if (!old || old.bossPhase !== a.bossPhase)
+      add(
+        { runId: after.runId, eventId: after.nextEventId } as GameEvent,
+        "ring",
+        a,
+        !old ? a.name.toUpperCase() : `PHASE ${a.bossPhase + 1}`,
+        ink.blast,
+      );
+  }
   // State deltas cover systems that do not emit individual status/hazard events.
   for (const a of Object.values(after.actors)) {
     const old = before.actors[a.id];

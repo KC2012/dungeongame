@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import type { State, Actor, Point } from "../../../packages/engine/src/types";
 import { PresentationStream } from "./presentation";
 import { WorldEffects } from "./effects";
+import { entry } from "../../../packages/content/src/index";
+import { enemyIdentity } from "./identity";
 import { scenarios } from "../../../packages/content/src/scenarios";
 export class DungeonScene extends Phaser.Scene {
   stream = new PresentationStream();
@@ -129,6 +131,11 @@ export class DungeonScene extends Phaser.Scene {
           g.fillRect(x * 16 + 1, y * 16 + 1, 14, 3);
           g.lineStyle(1, 0x30382b);
           g.strokeRect(x * 16, y * 16, 16, 16);
+          if (t.hp < 8) {
+            g.lineStyle(1, 0xa5a088);
+            g.lineBetween(x * 16 + 5, y * 16 + 5, x * 16 + 8, y * 16 + 9);
+            g.lineBetween(x * 16 + 8, y * 16 + 9, x * 16 + 6, y * 16 + 13);
+          }
         } else {
           g.fillStyle(theme.mark);
           g.fillRect(x * 16 + ((x + y) % 3) + 3, y * 16 + 13, 3, 1);
@@ -285,13 +292,57 @@ export class DungeonScene extends Phaser.Scene {
             ? 0xc69b78
             : 0xa76859,
       );
-      g.fillRect(a.x * 16 + 4, a.y * 16 + 2, 8, 5);
-      g.fillRect(a.x * 16 + 3, a.y * 16 + 7, 10, 6);
-      g.fillRect(a.x * 16 + 4, a.y * 16 + 13, 3, 2);
-      g.fillRect(a.x * 16 + 9, a.y * 16 + 13, 3, 2);
-      g.fillStyle(0x171e17);
-      g.fillRect(a.x * 16 + 5, a.y * 16 + 4, 2, 2);
-      g.fillRect(a.x * 16 + 9, a.y * 16 + 4, 2, 2);
+      const record =
+        a.kind === "enemy"
+          ? entry(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId)
+          : undefined;
+      const identity = record ? enemyIdentity(record) : undefined;
+      if (a.kind !== "enemy") {
+        g.fillRect(a.x * 16 + 4, a.y * 16 + 2, 8, 5);
+        g.fillRect(a.x * 16 + 3, a.y * 16 + 7, 10, 6);
+        g.fillRect(a.x * 16 + 4, a.y * 16 + 13, 3, 2);
+        g.fillRect(a.x * 16 + 9, a.y * 16 + 13, 3, 2);
+        g.fillStyle(0x171e17);
+        g.fillRect(a.x * 16 + 5, a.y * 16 + 4, 2, 2);
+        g.fillRect(a.x * 16 + 9, a.y * 16 + 4, 2, 2);
+      } else {
+        const x = a.x * 16,
+          y = a.y * 16;
+        if (a.tags.includes("boss")) {
+          g.fillRect(x + 1, y + 4, 14, 9);
+          g.fillRect(x + 4, y + 1, 8, 14);
+          g.lineStyle(1, 0xe8c48e);
+          g.strokeRect(x + 1, y + 2, 14, 13);
+          // A distinct crown/crest for each floor; phase pips remain readable without color.
+          for (let i = 0; i < s.floor; i++)
+            g.fillRect(x + 2 + i * 2, y - 2, 1, 3);
+          for (let i = 0; i <= a.bossPhase; i++) {
+            g.fillStyle(0xffdda0);
+            g.fillRect(x + 2 + i * 4, y + 14, 2, 2);
+          }
+        } else if (["R", "H", "S"].includes(identity!.glyph)) {
+          g.fillTriangle(x + 8, y + 2, x + 1, y + 13, x + 15, y + 13);
+          if (identity!.glyph === "R") g.fillRect(x + 11, y + 4, 5, 2);
+          if (identity!.glyph === "S") {
+            g.fillRect(x + 1, y + 1, 2, 4);
+            g.fillRect(x + 13, y + 1, 2, 4);
+          }
+          if (identity!.glyph === "H") g.strokeRect(x + 2, y + 2, 12, 12);
+        } else if (identity!.glyph === "G") {
+          g.fillRect(x + 2, y + 2, 12, 13);
+          g.fillStyle(0x333e38);
+          g.fillRect(x + 2, y + 7, 5, 6);
+        } else if (identity!.glyph === "+") {
+          g.fillRect(x + 6, y + 1, 4, 14);
+          g.fillRect(x + 1, y + 6, 14, 4);
+        } else {
+          g.fillTriangle(x + 8, y + 1, x + 2, y + 11, x + 14, y + 11);
+          g.fillRect(x + 1, y + 12, 4, 3);
+          g.fillRect(x + 11, y + 12, 4, 3);
+          if (identity!.glyph === "F" || identity!.glyph === "K")
+            g.lineBetween(x, y + 4, x + 15, y + 12);
+        }
+      }
       g.fillStyle(0x364533);
       g.fillRect(a.x * 16 + 1, a.y * 16, 14, 1);
       g.fillStyle(0xc6d197);
@@ -303,7 +354,7 @@ export class DungeonScene extends Phaser.Scene {
           ? String(slot + 1)
           : a.tags.includes("boss")
             ? "B"
-            : "E",
+            : (identity?.glyph ?? "E"),
       );
       if (a.downed) label(a.x, a.y, "+" + a.downed, "#ffce92");
       const glyphs: Record<string, string> = {

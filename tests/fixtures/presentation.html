@@ -13,7 +13,11 @@ s.tiles.forEach(t=>{t.explored=true;t.kind='floor';t.hazards={};t.tags=[];t.cove
 s.actors.a.inventory.push({id:'water_bladder',count:1,durability:12});
 window.fixture={scene,phaser,get state(){return s},ready:false,run(kind){
  const n=clone(s);n.revision++;
- if(kind==='scenario'){n.seed=43;generateFloor(n);n.actors.a.x=36;n.actors.a.y=8;n.tiles.forEach(t=>t.explored=true);}
+ if(kind==='roster'){
+  const ids=['turnstile_rat','ink_drone','queue_warden','ticket_louse'];
+  ids.forEach((id,i)=>{const a=makeActor('role'+i,id,'enemy',id,8+i*2,10);n.actors[a.id]=a;});
+ }
+ if(kind==='scenario'){n.seed=43;generateFloor(n);n.actors.a.x=36;n.actors.a.y=8;n.actors.a.hp=n.actors.a.maxHP;n.actors.a.downed=0;n.actors.a.dead=false;n.actors.a.statuses={};n.tiles.forEach(t=>t.explored=true);}
  if(kind==='move'){perform(n,n.actors.a,{type:'MOVE',x:9,y:8});}
  if(kind==='attack'){attack(n,n.actors.a,n.actors.e,8,'physical',5);}
  if(kind==='environment'){
@@ -21,7 +25,7 @@ window.fixture={scene,phaser,get state(){return s},ready:false,run(kind){
    enqueue(n,{x:10,y:9},'shock',2,'a',6);enqueue(n,{x:12,y:9},'fire',2,'a',2);environment(n);
    status(n.actors.e,'burning',2,3,'a');
  }
- if(kind==='boss'){n.actors.e.tags.push('boss');n.actors.e.telegraph=[{x:8,y:8},{x:9,y:8},{x:8,y:9}];}
+ if(kind==='boss'){n.actors.e.tags.push('boss');n.actors.e.catalogId='the_compliance_marshal';n.actors.e.name='The Compliance Marshal';n.actors.e.telegraph=[{x:8,y:8},{x:9,y:8},{x:8,y:9}];}
  if(kind==='down'){hurt(n,n.actors.a,999,'physical','e');}
  if(kind==='push'){push(n,n.actors.a,n.actors.e,2);}
  const checksum=hash(n);scene.setState(n,'a',undefined,[]);s=n;

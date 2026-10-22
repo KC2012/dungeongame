@@ -17,3 +17,13 @@ Four small authored situations (flooded relay, volatile stores, abandoned checkp
 Validation: 538 tests pass; 600 seeded floors checked twice for identical hashes, safe spawns and all object/exit reachability; actual volatile ignition/explosion test. Two assisted six-floor campaigns reached VICTORY (one alternate route, one combat), report a22-campaign.json. All 7 browser scenarios pass; a22-flooded-relay.png shows the actual generated room rendered by Phaser. Production build/typecheck and 448-record content validation pass.
 
 Limitations: four reusable situations, not the entire example list; no suspended-load physics or new puzzle subsystem. Situation selection changes newly generated floor content, but not the deterministic generation contract. Previously serialized floors are not retroactively decorated. Human balance remains unmeasured.
+
+## A2.3 — enemy, loot, boss and crawler identity
+
+Enemies now use tactical-role glyphs and silhouettes: ranged triangles/barrels, broad sentries, support crosses, summoner crests and distinct melee/flanker/skirmisher marks. Inspector identifies actual AI role and catalog weakness. Bosses use large crested bodies, floor crest counts and phase pips; confirmed entrance/phase changes generate map cues, and a visible boss HUD shows current HP/phase, next-enemy-phase warning and alternative-device progress. Combat and systemic defeat retain different visual callouts. Existing items receive concise tactical-use hints; no stat creep, catalog expansion or rule changes. Floor 3 character choices now form a two-stage contract station with ability previews, selected-state feedback, exact modifiers and original server gating.
+
+Validation: production build passed; 540 tests passed (including all existing suites and catalog-role/opportunity regressions). Browser evidence and final phase results recorded below after execution. No AI, item, boss or progression rule was rewritten. The AI role is a behavioral hint, not a prediction of a secretly committed command.
+
+Limitations: silhouettes are lightweight glyph/pixel shapes, not bespoke animated sprite art. Six bosses share a guardian silhouette with floor crests; unique hand-animated boss bodies remain a presentation opportunity. Actual floor-3 selection correctness is covered by the existing progression suite; the browser regression checks the real character UI and pre-floor-3 lockout.
+
+A2.3 browser outcome: all 8 passed (41.3s), including real character-screen choice lockout, item mechanics, actual Phaser role/guardian rendering and existing two/four-client/reconnect scenarios. Screenshots: a23-enemy-roles.png and a23-crawler-development.png.

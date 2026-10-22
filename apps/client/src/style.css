@@ -417,3 +417,10 @@ details summary {
     transition: none !important;
   }
 }
+#boss-hud { padding: 10px 14px; border-bottom: 1px solid #ae7750; background: #342b22; }
+#boss-hud > span { float: right; color: #d9bd8c; }
+#boss-hud[hidden] { display: none; }
+.identity-moment { margin-top: 30px; padding: 22px; border: 1px solid #a5a787; background: #242f29; }
+.identity-moment > h2 { margin: 16px 0; }
+.identity-moment .chosen { border: 2px solid #c5d895; background: #34432d; }
+.opportunity { color: #d9cf91 !important; border-left: 2px solid #bba566; padding-left: 8px; }

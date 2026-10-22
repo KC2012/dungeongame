@@ -340,3 +340,27 @@ test("an unacknowledged action is retried once with the same nonce", async ({
   await page.waitForTimeout(5500);
   await expect(page.locator("#header-info")).toContainText("Round 1");
 });
+
+test("crawler development separates permanent choices and retains exact item mechanics", async ({
+  page,
+}) => {
+  await startSolo(page);
+  await page.keyboard.press("c");
+  await expect(
+    page.getByRole("heading", { name: "Rewrite your contract." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "01 · Your profession" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "02 · Your adaptation" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Choose Breaker", exact: true }),
+  ).toBeDisabled();
+  await expect(page.getByText(/Unlocks/).first()).toBeVisible();
+  await page.screenshot({ path: "docs/alpha2/a23-crawler-development.png" });
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("i");
+  await expect(page.locator("#drawer")).toContainText("weight");
+});
