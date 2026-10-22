@@ -1,0 +1,375 @@
+import Ajv from "ajv";
+import schema from "../../../schemas/entries.schema.json";
+import manifest from "../../../content/manifest.json";
+import abilities from "../../../content/abilities.json";
+import achievements from "../../../content/achievements.json";
+import achievement_events from "../../../content/achievement_events.json";
+import adaptations from "../../../content/adaptations.json";
+import backgrounds from "../../../content/backgrounds.json";
+import bosses from "../../../content/bosses.json";
+import events from "../../../content/events.json";
+import floors from "../../../content/floors.json";
+import hazards from "../../../content/hazards.json";
+import items from "../../../content/items.json";
+import monsters from "../../../content/monsters.json";
+import professions from "../../../content/professions.json";
+import recipes from "../../../content/recipes.json";
+import rooms from "../../../content/rooms.json";
+import sponsors from "../../../content/sponsors.json";
+import { hash } from "../../engine/src/random";
+import type { Catalog, Entry, Effect } from "../../engine/src/types";
+export const catalog: Catalog = {
+  abilities,
+  achievements,
+  achievement_events,
+  adaptations,
+  backgrounds,
+  bosses,
+  events,
+  floors,
+  hazards,
+  items,
+  monsters,
+  professions,
+  recipes,
+  rooms,
+  sponsors,
+};
+export const contentHash = hash(catalog);
+export function entry(kind: string, id: string): Entry {
+  const e = catalog[kind]?.find((e) => e.id === id);
+  if (!e) throw Error(`Unknown ${kind}: ${id}`);
+  return e;
+}
+export const effectTypes = [
+  "damage",
+  "heal",
+  "shield",
+  "guard",
+  "dash",
+  "push",
+  "pull",
+  "apply_status",
+  "spawn_hazard",
+  "destroy_tile",
+  "teleport",
+  "reveal",
+  "summon",
+  "gain_resource",
+  "modify_stat",
+  "cleanse",
+  "hack",
+  "taunt",
+  "set_trap",
+  "create_cover",
+  "grant_item",
+  "modify_audience",
+  "trade",
+  "revive",
+  "disable_machine",
+  "conjure_object",
+  "craft_component",
+  "enable_crafting",
+  "repair_object",
+];
+export const traitModifiers: Record<string, Record<string, number>> = {
+  reach: { reach: 1 },
+  bleed: { bleed: 1 },
+  breach: { structural: 4 },
+  machine: { hack: 2 },
+  pin: { pin: 1 },
+  loud: { loud: 1 },
+  armor_pierce: { pierce: 2 },
+  pull: { pull: 1 },
+  conductive: { conductive: 1 },
+  battery: { battery: 1 },
+  corrode: { corrode: 1 },
+  ignite: { ignite: 1 },
+  freeze: { freeze: 1 },
+  fragile: { fragile: 1 },
+  ricochet: { ricochet: 1 },
+  cloud: { cloud: 1 },
+  line: { line: 1 },
+  push: { push: 1 },
+  stun: { stun: 1 },
+  fire_ward: { fireResist: 2 },
+  poison_ward: { poisonResist: 2 },
+  cold_ward: { coldResist: 2 },
+  insulating: { shockResist: 4 },
+  heavy: { speed: -1, armor: 1 },
+  metal: { metal: 1 },
+  regrowth: { regeneration: 1 },
+  knockback_resist: { knockbackResist: 1 },
+  accuracy: { accuracy: 5 },
+  dodge: { dodge: 10 },
+  taunt: { threat: 1 },
+  braced: { guard: 1 },
+  discount: { discount: 5 },
+  spotlight: { spotlight: 2 },
+  stealth: { stealth: 1 },
+  revival: { freeRevive: 1 },
+  visibility: { sight: 1 },
+  capacity: { capacity: 2 },
+  document: { hack: 2 },
+  repair: { repair: 3 },
+  craft: { craft: 1 },
+  disarm: { disable: 2 },
+  unlock: { hack: 2 },
+  inspect: { reveal: 4 },
+  reveal: { reveal: 3 },
+  light: { light: 2 },
+  shortcut: { bridge: 1 },
+  healing: { heal: 1 },
+  focus: { focus: 1 },
+  wound: { wound: 1 },
+  cleanse: { cleanse: 1 },
+  resource: { charges: 1 },
+  wet: { water: 1 },
+  flammable: { oil: 1 },
+  slow: { slow: 1 },
+  hack: { hack: 1 },
+  cover: { cover: 1 },
+  quest: { quest: 1 },
+  offhand: { shield: 3 },
+  conceal: { conceal: 1 },
+  wet_chain: { conductive: 1 },
+  craft_component_only: { craft: 1 },
+};
+export const backgroundModifiers: Record<string, Record<string, number>> = {
+  hazard_sense: { sight: 1 },
+  quick_step: { speed: 1 },
+  fire_tolerance: { fireResist: 2 },
+  machine_tinker: { hack: 2 },
+  catalog_memory: { sight: 1 },
+  field_stabilize: { freeRevive: 1 },
+  document_forgery: { hack: 2 },
+  wall_reader: { structural: 4 },
+  misdirection: { dodge: 5 },
+  toxins_knowledge: { poisonResist: 2 },
+  traffic_sense: { guard: 1 },
+  rapid_repair: { repair: 3 },
+};
+export const professionModifiers: Record<string, Record<string, number>> = {
+  guard_armor: { guard: 1 },
+  conductive_mastery: { shockResist: 2 },
+  triage_efficiency: { heal: 2 },
+  trap_efficiency: { trap: 2 },
+  bargain_instinct: { discount: 10 },
+  momentum: { speed: 1 },
+  reaction_affinity: { hazard: 1 },
+  broadcast_spoof: { stealth: 1 },
+};
+export function compileEffects(e: Entry): Effect[] {
+  return (e.effects ?? []).map((raw: Effect) => {
+    const f = { ...raw };
+    if (f.target === "party") f.radius = e.range>0?e.range:99;
+    if (f.type === "modify_stat" && !f.stat) {
+      f.stat = e.id === "adrenal_surge" ? "speed" : "passive";
+    }
+    if (f.type === "apply_status" && !f.status) {
+      f.status = "stunned";
+      f.target = "enemy";
+    }
+    if (e.trait === "conceal" && f.type === "spawn_hazard")
+      f.magnitude = Math.max(2, f.magnitude);
+    if (f.type === "spawn_hazard" && !f.element) f.element = "poison";
+    if (f.type === "gain_resource")
+      f.resourceKind =
+        e.id === "claim_credit"
+          ? "credits"
+          : e.trait === "resource"
+            ? "charges"
+            : "focus";
+    if (f.type === "cleanse" && e.trait === "wound") f.clearsWound = true;
+    if (f.type === "revive" && e.profession === "field_surgeon")
+      f.freeMedkitRevive = true;
+    return f;
+  });
+}
+export function validateCatalog(data: Catalog = catalog): string[] {
+  const errors: string[] = [];
+  const ajv = new Ajv({ strict: false, allErrors: true });
+  for (const [kind, records] of Object.entries(data)) {
+    const type =
+      (
+        {
+          items: "item",
+          abilities: "ability",
+          monsters: "monster",
+          achievements: "achievement",
+          rooms: "room",
+          floors: "floor",
+        } as Record<string, string>
+      )[kind] ?? "entry";
+    const validate = ajv.compile({ ...schema, $ref: `#/definitions/${type}` });
+    const ids = new Set<string>();
+    for (const r of records) {
+      if (!validate(r))
+        errors.push(`${kind}: ${ajv.errorsText(validate.errors)}`);
+      if (ids.has(r.id)) errors.push(`duplicate ${kind}:${r.id}`);
+      ids.add(r.id);
+      if (
+        kind === "monsters" &&
+        ![
+          "seek_melee",
+          "seek_ranged",
+          "guard_post",
+          "flanker",
+          "hazard_placer",
+          "summoner",
+          "support",
+          "charger",
+          "skirmisher",
+          "boss_script",
+        ].includes(r.ai)
+      )
+        errors.push(`unknown AI ${r.id}`);
+      if (
+        kind === "hazards" &&
+        r.materialTags.some(
+          (t: string) =>
+            ![
+              "solid",
+              "flammable",
+              "conductive",
+              "wet",
+              "liquid",
+              "fragile",
+              "corrodible",
+              "metal",
+              "organic",
+              "opaque",
+              "powered",
+              "gas",
+              "ice",
+              "structural",
+              "volatile",
+            ].includes(t),
+        )
+      )
+        errors.push(`unknown material ${r.id}`);
+      if (
+        kind === "backgrounds" &&
+        (!backgroundModifiers[r.trait] ||
+          Object.values(r.attributeMods).reduce(
+            (n: number, v) => n + Number(v),
+            0,
+          ) !== 2)
+      )
+        errors.push(`background ${r.id}`);
+      if (kind === "professions" && !professionModifiers[r.passive])
+        errors.push(`passive ${r.id}`);
+      if (kind === "rooms") {
+        const layout = r.layout;
+        const seen = new Set<string>(["4,0"]),
+          queue = [[4, 0]];
+        for (let i = 0; i < queue.length; i++) {
+          const [x, y] = queue[i];
+          for (const [xx, yy] of [
+            [x, y - 1],
+            [x + 1, y],
+            [x, y + 1],
+            [x - 1, y],
+          ])
+            if (
+              xx >= 0 &&
+              yy >= 0 &&
+              xx < 9 &&
+              yy < 9 &&
+              layout[yy][xx] !== "#" &&
+              !seen.has(xx + "," + yy)
+            ) {
+              seen.add(xx + "," + yy);
+              queue.push([xx, yy]);
+            }
+        }
+        if (
+          ![
+            [4, 8],
+            [0, 4],
+            [8, 4],
+            [4, 4],
+          ].every(([x, y]) => seen.has(x + "," + y)) ||
+          layout.some((row: string) => /[^#.+~^oc]/.test(row))
+        )
+          errors.push(`room connectivity ${r.id}`);
+      }
+      for (const f of compileEffects(r)) {
+        if (
+          f.status &&
+          ![
+            "burning",
+            "corroded",
+            "chilled",
+            "stunned",
+            "poisoned",
+            "confused",
+            "aimed",
+            "exposed",
+            "hidden",
+            "bleeding",
+          ].includes(f.status)
+        )
+          errors.push(`status ${r.id}`);
+        if (
+          f.element &&
+          ![
+            "physical",
+            "fire",
+            "shock",
+            "acid",
+            "cold",
+            "poison",
+            "psychic",
+            "water",
+            "blast",
+            "smoke",
+            "force",
+          ].includes(f.element)
+        )
+          errors.push(`element ${r.id}`);
+      }
+
+      if (r.trait && kind === "items" && !traitModifiers[r.trait])
+        errors.push(`unknown trait ${r.trait}`);
+      for (const f of compileEffects(r))
+        if (!effectTypes.includes(f.type))
+          errors.push(`unknown effect ${f.type}`);
+    }
+    if ((manifest.catalogs as Record<string, number>)[kind] !== records.length)
+      errors.push(`count ${kind}`);
+  }
+  const has = (kind: string, id: string) => data[kind].some((e) => e.id === id);
+  for (const b of data.backgrounds)
+    if (!has("items", b.starterItem)) errors.push(`starter ${b.id}`);
+  for (const a of data.abilities)
+    if (a.profession !== "general" && !has("professions", a.profession))
+      errors.push(`profession ${a.id}`);
+  for (const r of data.recipes)
+    for (const id of [r.outputItem, ...Object.keys(r.ingredients)])
+      if (!has("items", id)) errors.push(`recipe ${r.id}:${id}`);
+  for (const s of data.sponsors)
+    if (!has("items", s.signatureItem)) errors.push(`sponsor ${s.id}`);
+  for (const f of data.floors) {
+    if (!has("bosses", f.boss)) errors.push(`boss ${f.id}`);
+    if (
+      f.requiredObjective.goal > f.requiredObjective.sources.length ||
+      f.alternateBoss.goal > f.alternateBoss.operations.length
+    )
+      errors.push(`impossible objective ${f.id}`);
+    if (
+      !f.requiredRoomTags.every((tag: string) =>
+        data.rooms.some(
+          (r) => r.floor === f.number && r.features.includes(tag),
+        ),
+      )
+    )
+      errors.push(`room features ${f.id}`);
+    for (const id of f.environment)
+      if (!has("hazards", id)) errors.push(`hazard ${id}`);
+  }
+  for (const a of data.achievements)
+    if (!has("achievement_events", a.condition.eventType))
+      errors.push(`event ${a.id}`);
+  return errors;
+}

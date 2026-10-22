@@ -1,0 +1,66 @@
+{
+  "rounds": 30000,
+  "fixture": "4 crawlers + 50 enemies, open 45x45 map, debug HP and armor; includes invalid commands and bounded water propagation",
+  "elapsedSeconds": 741.35697754,
+  "medianMs": 18.918574999959674,
+  "p95Ms": 43.763864999986254,
+  "maxMs": 16227.207637000014,
+  "maxDeferred": 0,
+  "slowest": [
+    {
+      "round": 6267,
+      "ms": 16227.207637000014,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 3869,
+      "ms": 14714.467686999997,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 3870,
+      "ms": 9584.38287999999,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 6266,
+      "ms": 5384.639675000013,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 22896,
+      "ms": 3922.7572559999535,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 22901,
+      "ms": 3100.8970059999265,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 22907,
+      "ms": 2669.69881099998,
+      "deferred": 0,
+      "actors": 54
+    },
+    {
+      "round": 22913,
+      "ms": 2034.0123240000103,
+      "deferred": 0,
+      "actors": 54
+    }
+  ],
+  "maxObservedHeapMiB": 64.19989776611328,
+  "rejectedActions": 26493,
+  "node": "v24.19.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "checksum": "d4a8025b03f031bf",
+  "qualification": "Load/invariant test only; no human win-rate or separate-network claim."
+}

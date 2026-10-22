@@ -1,0 +1,44 @@
+{
+  "assisted": false,
+  "sourceHash": "26ac24175d4e3fcfb23b920e423b02ba00690a4b16c9a4c4272b33730d0c0a0a",
+  "assistance": "None",
+  "elapsedSeconds": 197.838,
+  "rows": [
+    {
+      "seed": 0,
+      "players": 4,
+      "route": "alternate",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 2262,
+      "reason": "achievement"
+    },
+    {
+      "seed": 1,
+      "players": 4,
+      "route": "combat",
+      "result": "STUCK",
+      "floor": 2,
+      "turns": 1550,
+      "reason": "no progress"
+    },
+    {
+      "seed": 2,
+      "players": 4,
+      "route": "combat",
+      "result": "DEFEAT",
+      "floor": 6,
+      "turns": 2801,
+      "reason": "party_wipe"
+    },
+    {
+      "seed": 3,
+      "players": 4,
+      "route": "combat",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 2900,
+      "reason": "achievement"
+    }
+  ]
+}

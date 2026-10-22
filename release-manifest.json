@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "status": "LOCAL_ALPHA",
+  "sourceCommit": "ae41b47b316130eb81668ca9be19dcfaa28d6183",
+  "tag": "v0.1.0-local-alpha",
+  "buildFiles": {
+    "dist/client/assets/index-BX5Er227.js": "11e29fd87cf35b8384c755ed3c07a46a6e3b1269577922adf666c16e6938321b",
+    "dist/client/assets/index-COejIZ3x.css": "81c8fbe001a95b1c7bc7a7c8621328b1cf3798e1eb85253f70699cd03cf0ebe2",
+    "dist/client/index.html": "5c16e57f857df3604c4c48ecef58f7cff42145d698e0d6cec4955b85391eb974",
+    "dist/server.js": "6aaf54517fb9aa34c71f5726be5764210354bd1598a0306665d3ba318a7c561b"
+  },
+  "runtime": "Node >=22; npm ci --omit=dev then npm run host from dungeongame",
+  "qualification": "Local source and compiled delivery; remote/human acceptance and desktop timing remain unverified."
+}

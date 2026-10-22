@@ -1,7 +1,22 @@
-# THE CRAWL — preproduction package v1.0
-**Date:** 2026-10-20. **Status:** PROPOSED DESIGN CONTRACT VALIDATED / IMPLEMENTATION NOT STARTED.
+# THE CRAWL — The Concourse
 
-A private, unofficial, original-content Dungeon Crawler Carl fan-setting interpretation for a 1–4 player cooperative browser roguelite. Six floors, synchronous tactical rounds, systemic environments, an absurd broadcast Director, and permanent death with modest horizontal unlocks. This package is a build specification, **not** a playable game. It contains original material inside a deliberately recognizable fan premise; it is not an official adaptation or licensed asset pack.
+**LOCAL_ALPHA 0.1.0.** An implemented, server-authoritative six-floor tactical browser co-op game for 1–4 crawlers, based on the original design package below. This is an unofficial private fan-setting interpretation with original playable characters, writing, floors and procedural pixel art.
+
+```sh
+npm ci
+npm run build
+npm run host
+```
+
+Use Node.js 22+; commands run from the repository root. The default host binds loopback port 2567. Create or join a private room in a desktop browser. No accounts, paid services, public deployment or tunnel are required.
+
+See [local hosting and controls](docs/HOSTING.md), [current implementation and actual test evidence](CURRENT_STATE.md), [known issues](docs/ISSUES.md), and [acceptance comparison](docs/ACCEPTANCE_REPORT.md), and [local release contents](docs/RELEASE.md). `PLAYABLE_RC` is not claimed: separate-network testing and human balance/accessibility acceptance remain required.
+
+Development commands: `npm run dev`, `npm run validate:content`, `npm test`, `npm run e2e`, `npm run typecheck`. The original Python validator and 11 preproduction tests remain available. All 448 authored records are loaded; compilation coverage and actual tested action paths are reported separately.
+
+## Original design contract
+
+The documents and catalogs below define the game's rules and initial proposed balance. They are retained for traceability; the original preproduction status is superseded by CURRENT_STATE.md. They do not establish that every release gate has been passed.
 
 ## Read in order
 1. `DECISIONS.md` — scope and hard decisions.
@@ -34,4 +49,4 @@ A private, unofficial, original-content Dungeon Crawler Carl fan-setting interpr
 `python tools/validate.py` from repository root. Requires Python 3; optional `jsonschema` package to run formal schema checks, with built-in integrity checks always available.
 
 ## Honest limits
-No app, sprites, multiplayer deployment, automated gameplay simulation, or playtest outcomes are included. Books or paid RPG rules have not been copied or independently examined in full. Research references are publicly accessible descriptions, not proprietary game assets. This design package is implementation-ready as a *design contract*, but extensive development and validation remain.
+The original package contained no app. The current local alpha includes the app and automated simulations; no public multiplayer deployment or human playtest outcomes are claimed. Books or paid RPG rules have not been copied or independently examined in full. Research references are publicly accessible descriptions, not proprietary game assets. This design package is implementation-ready as a *design contract*, and human balance and external acceptance remain required.

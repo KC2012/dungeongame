@@ -1,0 +1,16 @@
+{
+  "assisted": true,
+  "assistance": "Starting 500 HP, +8 armor and rail driver; no teleporting, save resets, free objective flags or in-run stat modifications.",
+  "elapsedSeconds": 48.819,
+  "rows": [
+    {
+      "seed": 0,
+      "players": 4,
+      "route": "alternate",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 4568,
+      "reason": "achievement"
+    }
+  ]
+}

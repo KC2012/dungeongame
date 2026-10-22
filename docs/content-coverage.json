@@ -1,0 +1,866 @@
+{
+  "records": 448,
+  "catalogs": [
+    {
+      "kind": "abilities",
+      "count": 58,
+      "ids": [
+        "basic_guard",
+        "snap_strike",
+        "hard_shove",
+        "inspect_weakness",
+        "emergency_bandage",
+        "careful_aim",
+        "sprint_burst",
+        "throw_debris",
+        "mark_target",
+        "wipe_corrosion",
+        "shield_wall",
+        "crack_masonry",
+        "anchor_stance",
+        "hammer_fall",
+        "bodyguard",
+        "breach_line",
+        "arc_tap",
+        "bridge_contact",
+        "breaker_trip",
+        "chain_spark",
+        "remote_switch",
+        "insulate_crew",
+        "stabilize",
+        "medic_kit",
+        "clear_toxin",
+        "rapid_triage",
+        "adrenal_surge",
+        "last_reserves",
+        "wire_snare",
+        "bolt_charge",
+        "rig_explosive",
+        "disarm_fast",
+        "jury_rig_cover",
+        "minefield",
+        "demand_discount",
+        "counteroffer",
+        "claim_credit",
+        "favor_owed",
+        "paper_shield",
+        "audit_trail",
+        "forward_rush",
+        "shield_push",
+        "intercept",
+        "momentum_hit",
+        "hold_passage",
+        "rapid_retreat",
+        "acid_vial",
+        "frost_flask",
+        "cinder_mist",
+        "foam_barrier",
+        "neutralize",
+        "compound_bloom",
+        "false_reading",
+        "hack_door",
+        "silent_step",
+        "ghost_ping",
+        "rewire_feed",
+        "signal_eclipse"
+      ],
+      "route": "profession/general actions through primitive interpreter"
+    },
+    {
+      "kind": "achievements",
+      "count": 60,
+      "ids": [
+        "improvised_conductor",
+        "unlicensed_electrician",
+        "it_was_load_bearing",
+        "safer_through_paperwork",
+        "minimal_violence",
+        "a_clean_escape",
+        "a_terrible_first_impression",
+        "company_property",
+        "no_refunds",
+        "we_can_fix_this",
+        "not_a_door",
+        "audit_complete",
+        "liquid_assets",
+        "unplanned_ventilation",
+        "training_issue",
+        "friendly_warning",
+        "poorly_timed_bravery",
+        "refund_denied",
+        "exceptional_paper_trail",
+        "conductive_friendship",
+        "full_circuit",
+        "bureaucratic_shortcut",
+        "technically_correct",
+        "certified_difficult",
+        "ghost_in_the_receipts",
+        "found_the_off_switch",
+        "human_firewall",
+        "thirty_second_plan",
+        "last_cast",
+        "first_bloodless_boss",
+        "physics_has_spoken",
+        "glass_economies",
+        "do_not_drink",
+        "substandard_wiring",
+        "better_than_a_map",
+        "everything_is_a_tool",
+        "union_break",
+        "too_many_buttons",
+        "consolation_prize",
+        "chairman_of_chaos",
+        "return_to_sender",
+        "line_is_closed",
+        "borrowed_time",
+        "clean_sweep",
+        "flameless_firefighter",
+        "second_opinion",
+        "double_entry",
+        "locksmith_rebellion",
+        "frictionless_solution",
+        "supervisor_warning",
+        "bad_chemistry",
+        "making_a_splash",
+        "all_according_to_form",
+        "absurd_overtime",
+        "final_accounting",
+        "we_are_not_leaving",
+        "one_chair_empty",
+        "a_very_small_audience",
+        "committee_of_four",
+        "actual_teamwork"
+      ],
+      "route": "confirmed server event matcher"
+    },
+    {
+      "kind": "achievement_events",
+      "count": 60,
+      "ids": [
+        "shock_chain",
+        "short_circuit",
+        "wall_break",
+        "alternate_boss",
+        "pacify_encounter",
+        "no_damage_room",
+        "first_death",
+        "explosion_chain",
+        "failed_trade",
+        "revive_ally",
+        "breach_route",
+        "objective_hack",
+        "flood_room",
+        "gas_ignition",
+        "trap_trigger_self",
+        "ally_saved",
+        "guard_ally",
+        "vendor_refused",
+        "evidence_complete",
+        "shock_ally_saved",
+        "shock_multi_target",
+        "scanner_bypass",
+        "objective_exploit",
+        "hard_check_success",
+        "stealth_vault",
+        "machine_disable",
+        "shield_multi_ally",
+        "quick_plan",
+        "zero_focus_victory",
+        "boss_noncombat",
+        "push_hazard_kill",
+        "fragile_enemy_shatter",
+        "poison_self",
+        "shock_machine",
+        "secret_discovery",
+        "improvised_weapon_kill",
+        "support_enemy_defeat",
+        "device_combo",
+        "loot_low_rarity",
+        "audience_threshold",
+        "projectile_deflected",
+        "door_trap_kill",
+        "revive_final_round",
+        "room_zero_damage",
+        "extinguish_chain",
+        "multiple_checks",
+        "trade_twice",
+        "locked_path_bypass",
+        "slide_enemy",
+        "boss_telegraph_avoid",
+        "acid_fire_chain",
+        "water_push",
+        "multi_key_objective",
+        "long_encounter_survival",
+        "finish_floor_six",
+        "all_survive",
+        "survive_with_casualty",
+        "solo_win",
+        "four_player_win",
+        "four_unique_assists"
+      ],
+      "route": "60 confirmed-outcome source fixtures and authored achievement/reward matching tests"
+    },
+    {
+      "kind": "adaptations",
+      "count": 6,
+      "ids": [
+        "ceramic_skin",
+        "gill_lungs",
+        "copper_veins",
+        "lightframe",
+        "fungal_network",
+        "extra_hands"
+      ],
+      "route": "floor-3 saferoom choice"
+    },
+    {
+      "kind": "backgrounds",
+      "count": 12,
+      "ids": [
+        "night_custodian",
+        "delivery_rider",
+        "kitchen_worker",
+        "street_mechanic",
+        "school_librarian",
+        "volunteer_medic",
+        "courier_clerk",
+        "construction_worker",
+        "stage_magician",
+        "community_gardener",
+        "parking_attendant",
+        "repair_apprentice"
+      ],
+      "route": "lobby character creation"
+    },
+    {
+      "kind": "bosses",
+      "count": 6,
+      "ids": [
+        "the_compliance_marshal",
+        "pallet_king",
+        "the_specimen_curator",
+        "schedule_warden",
+        "the_receivables_choir",
+        "the_signal_engine"
+      ],
+      "route": "combat phases and alternate devices"
+    },
+    {
+      "kind": "events",
+      "count": 25,
+      "ids": [
+        "conditional_mercy",
+        "sponsor_trial",
+        "aisle_closure",
+        "shuttle_detour",
+        "unclaimed_reward",
+        "unusual_overtime",
+        "safety_inspection",
+        "recycling_bonus",
+        "missing_forms",
+        "black_market_day",
+        "exhibit_gamble",
+        "noisy_advertisement",
+        "audience_vote",
+        "dispatch_emergency",
+        "flicker_discount",
+        "wage_garnishment",
+        "credit_insurance",
+        "sincere_apology",
+        "show_stopper",
+        "secret_audit",
+        "volatile_dividend",
+        "faulty_antidote",
+        "extra_intermission",
+        "crowd_favorite",
+        "final_sponsorship"
+      ],
+      "route": "audience-threshold saferoom bargains"
+    },
+    {
+      "kind": "floors",
+      "count": 6,
+      "ids": [
+        "intake",
+        "reclamation",
+        "adaptation_expo",
+        "transit_authority",
+        "debt_market",
+        "signal_control"
+      ],
+      "route": "ordered run transitions"
+    },
+    {
+      "kind": "hazards",
+      "count": 25,
+      "ids": [
+        "open_flame",
+        "oil_slick",
+        "steam_vent",
+        "live_wire",
+        "pooled_water",
+        "battery_puddle",
+        "acid_spill",
+        "corrosive_fog",
+        "freeze_tile",
+        "frost_spray",
+        "poison_mushroom",
+        "toxic_canister",
+        "explosive_barrel",
+        "crusher_plate",
+        "spiked_grate",
+        "conveyor_belt",
+        "rotating_saw",
+        "electrical_door",
+        "smoke_screen",
+        "static_cloud",
+        "crumbling_ceiling",
+        "magnetic_pulse",
+        "trapdoor_pit",
+        "glue_trap",
+        "shock_coil"
+      ],
+      "route": "floor fixtures or optional archive selection"
+    },
+    {
+      "kind": "items",
+      "count": 92,
+      "ids": [
+        "mop_pole",
+        "cleaver",
+        "crowbar",
+        "wrench",
+        "pipe_spear",
+        "staple_gun",
+        "nailgun",
+        "slug_thrower",
+        "ceramic_knife",
+        "forklift_hook",
+        "arc_rod",
+        "coil_pistol",
+        "acid_projector",
+        "flare_spitter",
+        "cryo_sprayer",
+        "glass_hammer",
+        "saw_disk",
+        "smoke_cannon",
+        "rail_driver",
+        "magnetic_harpoon",
+        "thermal_drill",
+        "pulse_carbine",
+        "corrosive_injector",
+        "compressor_fist",
+        "work_apron",
+        "reflective_vest",
+        "padded_coveralls",
+        "rubber_suit",
+        "ceramic_plate",
+        "steel_wrap",
+        "spore_jacket",
+        "insulated_carapace",
+        "fire_blanket_armor",
+        "cold_cell_shell",
+        "magnetic_harness",
+        "riot_shield",
+        "copper_coin",
+        "lucky_pencil",
+        "blink_timer",
+        "siren_pin",
+        "anchor_bracelet",
+        "receipt_charm",
+        "heat_sink",
+        "toxin_filter",
+        "pocket_relay",
+        "audience_lens",
+        "thief_knot",
+        "rescue_whistle",
+        "first_aid_pack",
+        "shock_cell",
+        "acid_ampoule",
+        "fire_flask",
+        "cold_ampoule",
+        "smoke_pellet",
+        "flash_pellet",
+        "foam_canister",
+        "stamina_ration",
+        "wound_seal",
+        "antidote",
+        "battery_bundle",
+        "blast_brick",
+        "distress_beacon",
+        "neutralizer_salts",
+        "oil_flask",
+        "water_bladder",
+        "glue_charge",
+        "signal_jammer",
+        "bandage_roll",
+        "courier_satchel",
+        "ink_stamp",
+        "index_cards",
+        "spore_pouch",
+        "repair_tape",
+        "portable_bench",
+        "wire_cutter",
+        "lock_pick",
+        "pressure_gauge",
+        "circuit_tester",
+        "thermal_lantern",
+        "foldable_ladder",
+        "scrap_metal",
+        "circuit_shard",
+        "catalyst_paste",
+        "sterile_cloth",
+        "fuel_gel",
+        "glacial_salt",
+        "conductive_wire",
+        "filter_membrane",
+        "badge_fragment",
+        "transit_pass",
+        "debt_ledger",
+        "signal_coil"
+      ],
+      "route": "equipment/attack/use; materials through recipes or floor objectives"
+    },
+    {
+      "kind": "monsters",
+      "count": 30,
+      "ids": [
+        "turnstile_rat",
+        "ticket_louse",
+        "queue_warden",
+        "ink_drone",
+        "mop_mimic",
+        "sorting_spider",
+        "bottle_golem",
+        "belt_runner",
+        "acid_mote",
+        "forklift_shade",
+        "catalog_leech",
+        "lab_assistant",
+        "glass_strider",
+        "molt_stalker",
+        "reagent_blob",
+        "track_skimmer",
+        "signal_sentry",
+        "platform_crawler",
+        "conductor_swarm",
+        "switchback_hound",
+        "debt_wisp",
+        "ledger_butcher",
+        "auctioneer_drone",
+        "repo_mantis",
+        "interest_shade",
+        "signal_parasite",
+        "coil_sentinel",
+        "broadcast_specter",
+        "uplink_hunter",
+        "stagehand_brute"
+      ],
+      "route": "seeded per-floor encounter selection"
+    },
+    {
+      "kind": "professions",
+      "count": 8,
+      "ids": [
+        "breaker",
+        "circuiter",
+        "field_surgeon",
+        "saboteur",
+        "broker",
+        "vanguard",
+        "synthesist",
+        "signal_thief"
+      ],
+      "route": "floor-3 saferoom choice"
+    },
+    {
+      "kind": "recipes",
+      "count": 10,
+      "ids": [
+        "patch_kit",
+        "charge_pack",
+        "solvent_flask",
+        "flare_mix",
+        "freeze_flask",
+        "blast_charge",
+        "quick_seal",
+        "improvised_cover",
+        "smoke_blend",
+        "cleanser"
+      ],
+      "route": "ingredient-consuming craft transaction"
+    },
+    {
+      "kind": "rooms",
+      "count": 42,
+      "ids": [
+        "orientation_booth",
+        "queue_maze",
+        "broken_elevator",
+        "employee_break_room",
+        "stamp_counter",
+        "leaking_generator",
+        "turnstile_depot",
+        "compressor_channel",
+        "glass_sorting",
+        "scrap_bazaar",
+        "conveyor_spur",
+        "waste_acid_tank",
+        "reactor_sorting",
+        "crate_chute",
+        "mutagen_display",
+        "broken_exhibit",
+        "symmetry_hall",
+        "cold_sample_room",
+        "adaptation_booth",
+        "specimen_corridor",
+        "reagent_theater",
+        "overpass_platform",
+        "switchyard",
+        "control_booth",
+        "substation_north",
+        "substation_south",
+        "ticket_gantry",
+        "rail_signal",
+        "ledger_vault",
+        "negotiation_pit",
+        "auction_balcony",
+        "collections_hall",
+        "data_exchange",
+        "legal_archive",
+        "contract_cage",
+        "relay_orchard",
+        "signal_tunnel",
+        "control_theater",
+        "power_coupler",
+        "dead_air_gallery",
+        "transmission_vault",
+        "final_uplink"
+      ],
+      "route": "floor-prefab selection and rotation"
+    },
+    {
+      "kind": "sponsors",
+      "count": 8,
+      "ids": [
+        "quiet_committee",
+        "unreliable_foundry",
+        "transit_union",
+        "anonymous_accountant",
+        "glass_benefactors",
+        "underwriters_collective",
+        "tea_and_toxins",
+        "signal_minority"
+      ],
+      "route": "qualified event gift transaction"
+    }
+  ],
+  "traits": 61,
+  "professionPassives": 8,
+  "backgroundTraits": 12,
+  "skillsCompiled": 58,
+  "hooks": [
+    {
+      "id": "shock_chain",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "short_circuit",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "wall_break",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "alternate_boss",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "pacify_encounter",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "no_damage_room",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "first_death",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "explosion_chain",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "failed_trade",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "revive_ally",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "breach_route",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "objective_hack",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "flood_room",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "gas_ignition",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "trap_trigger_self",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "ally_saved",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "guard_ally",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "vendor_refused",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "evidence_complete",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_ally_saved",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_multi_target",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "scanner_bypass",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "objective_exploit",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "hard_check_success",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "stealth_vault",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "machine_disable",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "shield_multi_ally",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "quick_plan",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "zero_focus_victory",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "boss_noncombat",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "push_hazard_kill",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "fragile_enemy_shatter",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "poison_self",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "shock_machine",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "secret_discovery",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "improvised_weapon_kill",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "support_enemy_defeat",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "device_combo",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "loot_low_rarity",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "audience_threshold",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "projectile_deflected",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "door_trap_kill",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "revive_final_round",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "room_zero_damage",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "extinguish_chain",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "multiple_checks",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "trade_twice",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "locked_path_bypass",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "slide_enemy",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "boss_telegraph_avoid",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "acid_fire_chain",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "water_push",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "multi_key_objective",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "long_encounter_survival",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "finish_floor_six",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "all_survive",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "survive_with_casualty",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "solo_win",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "four_player_win",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    },
+    {
+      "id": "four_unique_assists",
+      "fixtureFile": "tests/unit/achievement-hooks.test.ts",
+      "sourceMention": true
+    }
+  ],
+  "missingSourceMentions": [],
+  "qualification": "Source mentions and compilation are structural coverage, not proof of behavioral completeness. See executed content-behavior, gold-scenario, whole-run and networking tests."
+}

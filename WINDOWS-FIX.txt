@@ -1,0 +1,19 @@
+THE CRAWL 0.1.1 WINDOWS SAVE FIX
+
+1. Stop the running host with Ctrl+C in its terminal.
+2. Extract this ZIP into a temporary folder.
+3. Copy ALL extracted contents into your existing game folder:
+   C:\Users\KC\Desktop\dungeongame
+   Choose Replace for existing files. The dist folder must merge with the
+   existing dist folder; do not put the patch in an extra nested folder.
+4. In the game folder terminal run:
+   npm run host
+5. Reload http://localhost:2567 and create your private room.
+
+Dependencies are unchanged. No npm reinstall or administrator rights needed.
+Keep your existing .data directory and saves.
+
+The rebuilt dist/server.js fixes unsupported Windows directory fsync.
+Matching source, package version and regression test are also included.
+Actual Windows persistence/build/browser CI passed:
+https://github.com/KC2012/dungeongame/actions/runs/39559708156

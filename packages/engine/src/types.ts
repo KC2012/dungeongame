@@ -1,0 +1,246 @@
+export type Point = { x: number; y: number };
+export type Element =
+  | "physical"
+  | "fire"
+  | "shock"
+  | "acid"
+  | "cold"
+  | "poison"
+  | "psychic"
+  | "water"
+  | "blast"
+  | "smoke"
+  | "force";
+export type Phase =
+  | "LOBBY"
+  | "EXPLORATION"
+  | "PLANNING"
+  | "SAFE_ROOM"
+  | "RESULT";
+export type Effect = {
+  type: string;
+  magnitude: number;
+  target: string;
+  element?: Element;
+  status?: string;
+  duration?: number;
+  radius?: number;
+  stat?: string;
+  resourceKind?: string;
+  itemId?: string;
+  freeMedkitRevive?: boolean;
+  clearsWound?: boolean;
+};
+export type Entry = {
+  id: string;
+  name: string;
+  description: string;
+  [key: string]: any;
+};
+export type Catalog = Record<string, Entry[]>;
+export type Status = {
+  duration: number;
+  potency: number;
+  source: string;
+  serial?: number;
+};
+export type Stack = { id: string; count: number; durability: number };
+export type Actor = Point & {
+  id: string;
+  name: string;
+  kind: "crawler" | "enemy" | "minion";
+  catalogId: string;
+  palette?: number;
+  owner?: string;
+  hp: number;
+  maxHP: number;
+  focus: number;
+  maxFocus: number;
+  ap: number;
+  level: number;
+  stats: Record<string, number>;
+  statuses: Record<string, Status>;
+  statusSerial?: number;
+  inventory: Stack[];
+  equipment: Record<string, string>;
+  profession?: string;
+  adaptation?: string;
+  talents: string[];
+  offers: string[];
+  cooldowns: Record<string, number>;
+  used: Record<string, number>;
+  downed: number;
+  downedAt: number;
+  dead: boolean;
+  downs: number;
+  revivedFloor: number;
+  wounds: number;
+  shield: number;
+  shieldSource?: string;
+  guard: number;
+  reaction: string;
+  tags: string[];
+  online: boolean;
+  alert: boolean;
+  telegraph: Point[];
+  bossPhase: number;
+  noReward: boolean;
+  restFloor: number;
+  bench: boolean;
+  charges: number;
+};
+export type Tile = {
+  kind: "wall" | "floor" | "door" | "rubble" | "pit";
+  hp: number;
+  cover: number;
+  tags: string[];
+  elevation: number;
+  hazards: Record<
+    string,
+    {
+      intensity: number;
+      duration: number;
+      damage: number;
+      source: string;
+      persistent?: boolean;
+      disabled?: number;
+    }
+  >;
+  explored: boolean;
+  room: number;
+  locked?: boolean;
+  jammed?: boolean;
+  open?: boolean;
+  trap?: { owner: string; damage: number };
+};
+export type WorldObject = Point & {
+  id: string;
+  name: string;
+  kind:
+    | "objective"
+    | "alternate"
+    | "safe"
+    | "exit"
+    | "cache"
+    | "machine"
+    | "secret";
+  done: boolean;
+  hp: number;
+  maxHP: number;
+  powered: boolean;
+  disabled: number;
+  jammed: boolean;
+  operation?: string;
+  items?: Stack[];
+};
+export type GameEvent = {
+  eventId: number;
+  runId: string;
+  round: number;
+  actorId: string;
+  targetIds: string[];
+  tile?: Point;
+  type: string;
+  tags: string[];
+  encounterId: string;
+  payload: Record<string, any>;
+};
+export type HazardIntent = Point & {
+  element: Element;
+  intensity: number;
+  source: string;
+  duration: number;
+  damage: number;
+  step: number;
+  expanded?: boolean;
+};
+export type State = {
+  schemaVersion: 1;
+  contentHash: string;
+  runId: string;
+  seed: number;
+  rng: Record<string, number>;
+  floor: number;
+  round: number;
+  revision: number;
+  phase: Phase;
+  width: number;
+  height: number;
+  tiles: Tile[];
+  objects: WorldObject[];
+  actors: Record<string, Actor>;
+  objective: string[];
+  alternate: string[];
+  bossDefeated: boolean;
+  xp: number;
+  credits: number;
+  audience: number;
+  achievements: string[];
+  achievementKeys: string[];
+  counters: Record<string, number>;
+  events: GameEvent[];
+  nextEventId: number;
+  deferredEvents: HazardIntent[];
+  exposures?: string[];
+  shop: Stack[];
+  overflow: Stack[];
+  rewards: {
+    id: string;
+    item: string;
+    turn: string;
+    claimed: boolean;
+    passed?: string[];
+  }[];
+  offers: string[];
+  resolvedOffers: string[];
+  risks: string[];
+  unlocks: string[];
+  transactions: string[];
+  tradeRequests?: {
+    id: string;
+    from: string;
+    to: string;
+    item: string;
+    resolved: boolean;
+  }[];
+  result?: "VICTORY" | "DEFEAT";
+  floorRoutes: string[];
+  visited: number[];
+  safeUsed: boolean;
+  descendVotes?: string[];
+  turns: number;
+};
+export type Action = {
+  type:
+    | "MOVE"
+    | "ATTACK"
+    | "ABILITY"
+    | "USE"
+    | "GUARD"
+    | "DODGE"
+    | "OVERWATCH"
+    | "WAIT"
+    | "INTERACT"
+    | "REVIVE"
+    | "EQUIP"
+    | "DROP"
+    | "GIVE"
+    | "TRADE"
+    | "REST"
+    | "CRAFT"
+    | "BUY"
+    | "SELL"
+    | "CHOOSE"
+    | "OFFER"
+    | "REWARD"
+    | "DESCEND"
+    | "MEDIC";
+  target?: string;
+  x?: number;
+  y?: number;
+  id?: string;
+  choice?: string;
+  swap?: string;
+  transactionId?: string;
+};
+export type Plan = { actorId: string; actions: Action[] };
