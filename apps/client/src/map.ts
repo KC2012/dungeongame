@@ -4,6 +4,8 @@ import { PresentationStream } from "./presentation";
 import { WorldEffects } from "./effects";
 import { entry } from "../../../packages/content/src/index";
 import { enemyIdentity } from "./identity";
+import { spriteNames, spritePixels, palette, type SpriteName } from "./assets";
+import { pointerTile } from "./pointer";
 import { scenarios } from "../../../packages/content/src/scenarios";
 export class DungeonScene extends Phaser.Scene {
   stream = new PresentationStream();
@@ -11,6 +13,9 @@ export class DungeonScene extends Phaser.Scene {
   reducedMotion = false;
   graphics!: Phaser.GameObjects.Graphics;
   texts: Phaser.GameObjects.Text[] = [];
+  sprites: Phaser.GameObjects.Image[] = [];
+  planned?: Point;
+  pinned = false;
   snapshot?: State;
   actorId = "";
   spectateId = "";
@@ -22,13 +27,28 @@ export class DungeonScene extends Phaser.Scene {
   targetBlocked = false;
   targetLabel = "";
   aiming = false;
-  zoom = 2;
+  zoom = 3;
   constructor() {
     super("dungeon");
   }
   create() {
     this.graphics = this.add.graphics();
     this.effects = new WorldEffects(this);
+    for (const name of spriteNames) {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 16;
+      const ctx = canvas.getContext("2d")!;
+      spritePixels(name).forEach((row, y) =>
+        row.forEach((c, x) => {
+          if (palette[c]) {
+            ctx.fillStyle = palette[c];
+            ctx.fillRect(x, y, 1, 1);
+          }
+        }),
+      );
+      if (!this.textures.exists("world:" + name))
+        this.textures.addCanvas("world:" + name, canvas);
+    }
     // Camera viewport dimensions change before this Scale event is dispatched.
     // Recenter immediately instead of waiting for another authority snapshot.
     const resize = () => this.paint();
@@ -36,21 +56,33 @@ export class DungeonScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () =>
       this.scale.off(Phaser.Scale.Events.RESIZE, resize),
     );
+    const locate = (p: Phaser.Input.Pointer) => {
+      // Camera matrices are refreshed before conversion, including immediately after zoom/resize.
+      this.cameras.main.preRender();
+      const e = p.event as MouseEvent;
+      return pointerTile(
+        e.clientX,
+        e.clientY,
+        this.game.canvas.getBoundingClientRect(),
+        { width: this.scale.width, height: this.scale.height },
+        (x, y) => this.cameras.main.getWorldPoint(x, y),
+      );
+    };
     this.input.on("pointermove", (p: Phaser.Input.Pointer) => {
-      const w = this.cameras.main.getWorldPoint(p.x, p.y);
-      this.hover({ x: Math.floor(w.x / 16), y: Math.floor(w.y / 16) });
+      const at = locate(p);
+      if (at && !this.pinned) this.hover(at);
     });
     this.input.on("pointerdown", (p: Phaser.Input.Pointer) => {
-      const w = this.cameras.main.getWorldPoint(p.x, p.y);
-      this.choose({ x: Math.floor(w.x / 16), y: Math.floor(w.y / 16) });
+      const at = locate(p);
+      if (at) this.choose(at);
     });
     this.input.on(
       "wheel",
       (_p: unknown, _g: unknown, _dx: number, dy: number) => {
         this.zoom = Phaser.Math.Clamp(
           this.zoom + (dy < 0 ? 0.25 : -0.25),
-          1,
-          4,
+          1.5,
+          5,
         );
         this.paint();
       },
@@ -88,6 +120,22 @@ export class DungeonScene extends Phaser.Scene {
     g.clear();
     this.texts.forEach((t) => t.destroy());
     this.texts = [];
+    this.sprites.forEach((v) => v.destroy());
+    this.sprites = [];
+    const sprite = (
+      name: SpriteName,
+      x: number,
+      y: number,
+      depth = 2,
+      alpha = 1,
+    ) => {
+      this.sprites.push(
+        this.add
+          .image(x * 16 + 8, y * 16 + 8, "world:" + name)
+          .setDepth(depth)
+          .setAlpha(alpha),
+      );
+    };
     const label = (x: number, y: number, v: string, color = "#e9dfb5") => {
       this.texts.push(
         this.add
@@ -166,58 +214,51 @@ export class DungeonScene extends Phaser.Scene {
             g.fillRect(x * 16 + 3, y * 16 + 5, 4, 1);
           }
         }
-        if (t.tags.includes("volatile")) {
-          g.fillStyle(0xb5744f);
-          g.fillRect(x * 16 + 4, y * 16 + 3, 8, 10);
-          label(x, y, "!", "#ffdeb0");
-        } else if (t.tags.includes("flammable")) {
-          g.fillStyle(0x8c7950);
-          g.fillRect(x * 16 + 3, y * 16 + 11, 10, 2);
-        }
-        if (t.tags.includes("gas") && !t.hazards.poison)
-          label(x, y, "P", "#c4a3de");
-        if (t.tags.includes("ice")) {
-          g.lineStyle(1, 0xb1ebef);
-          g.lineBetween(x * 16 + 2, y * 16 + 12, x * 16 + 12, y * 16 + 2);
-        }
-        if (t.cover) {
-          g.fillStyle(0x777963);
-          g.fillRect(x * 16 + 3, y * 16 + 5, 10, 7);
-          label(x, y, "=");
-        }
+        if (t.kind === "pit") sprite("pit", x, y);
+        if (t.kind === "rubble") sprite("rubble", x, y);
         if (t.kind === "door") {
-          g.fillStyle(0xa88e5e);
-          g.fillRect(x * 16 + 1, y * 16 + 2, t.open ? 3 : 13, 12);
+          g.fillStyle(t.locked ? 0x7e5140 : 0x617882);
+          g.fillRect(x * 16 + 1, y * 16, 14, 16);
+          g.fillStyle(0x17262b);
+          g.fillRect(x * 16 + 3, y * 16 + 2, t.open ? 10 : 4, 14);
+          if (!t.open) {
+            g.fillStyle(0xbdab76);
+            g.fillRect(x * 16 + 11, y * 16 + 7, 2, 2);
+          }
         }
-        for (const [el, h] of Object.entries(t.hazards)) {
-          const c: Record<string, number> = {
-            water: 0x547e97,
-            shock: 0xe4cd67,
-            fire: 0xc48151,
-            acid: 0x98ab64,
-            poison: 0x9082ad,
-            cold: 0x8cbfc1,
-            smoke: 0x888c80,
-          };
-          g.fillStyle(c[el] ?? 0x999966, 0.6);
-          g.fillRect(x * 16 + 1, y * 16 + 1, 14, 14);
-          label(
-            x,
-            y,
-            (
-              {
-                water: "~",
-                shock: "Z",
-                fire: "!",
-                acid: "A",
-                poison: "P",
-                cold: "*",
-                smoke: "S",
-              } as Record<string, string>
-            )[el] ?? "!",
-          );
+        if (
+          t.tags.includes("flammable") &&
+          !t.tags.includes("volatile") &&
+          t.kind !== "wall"
+        )
+          sprite("oil", x, y, 1, 0.8);
+        if (t.tags.includes("gas") && !t.hazards.poison)
+          sprite("gas", x, y, 2, 0.55);
+        for (const [element, h] of Object.entries(t.hazards)) {
+          const name = (
+            {
+              water: "water",
+              fire: "fire",
+              shock: "shock",
+              acid: "acid",
+              poison: "gas",
+              cold: "ice",
+              smoke: "smoke",
+            } as Record<string, SpriteName>
+          )[element];
+          if (name)
+            sprite(
+              name,
+              x,
+              y,
+              element === "smoke" ? 6 : 2,
+              h.disabled ? 0.2 : element === "water" ? 0.75 : 0.85,
+            );
         }
-        if (t.trap) label(x, y, "^");
+        if (t.tags.includes("ice")) sprite("ice", x, y, 2, 0.8);
+        if (t.tags.includes("volatile")) sprite("barrel", x, y, 3);
+        if (t.cover) sprite("cover", x, y, 3);
+        if (t.trap) sprite("trap", x, y, 2);
       }
     const named = new Set<number>();
     for (let i = 0; i < s.tiles.length; i++) {
@@ -232,38 +273,34 @@ export class DungeonScene extends Phaser.Scene {
     }
     for (const o of s.objects) {
       if (!s.tiles[o.y * s.width + o.x]?.explored) continue;
-      g.fillStyle(
-        o.done
-          ? 0x465347
-          : {
-              objective: 0xc2ac74,
-              alternate: 0x9b9ac9,
-              safe: 0x8eae8a,
-              exit: 0xcbc7a0,
-              cache: 0xa98a5a,
-              machine: 0x7b9da1,
-              secret: 0x77876a,
-            }[o.kind],
-      );
-      g.fillRect(o.x * 16 + 3, o.y * 16 + 3, 10, 10);
-      if (o.kind === "machine") {
-        g.lineStyle(1, o.powered && !o.disabled ? 0xf7e77d : 0x688475);
-        g.strokeRect(o.x * 16 + 1, o.y * 16 + 1, 14, 14);
-      }
-      label(
-        o.x,
-        o.y,
+      const name: SpriteName = (
         {
-          objective: "?",
-          alternate: "#",
-          safe: "+",
-          exit: ">",
-          cache: "$",
-          machine: o.powered && !o.disabled ? "Z" : "−",
-          secret: "*",
-        }[o.kind],
-        "#151b15",
-      );
+          objective: "terminal",
+          alternate: o.done ? "deviceDone" : "device",
+          safe: "safe",
+          exit: "stairs",
+          cache: o.done ? "cacheOpen" : "cache",
+          machine: o.powered && !o.disabled ? "machine" : "machineOff",
+          secret: "secret",
+        } as const
+      )[o.kind];
+      sprite(name, o.x, o.y, 3, o.done && o.kind !== "cache" ? 0.55 : 1);
+      if (this.target?.x === o.x && this.target?.y === o.y)
+        label(
+          o.x,
+          o.y - 0.8,
+          o.kind === "machine"
+            ? o.powered
+              ? "POWERED RELAY"
+              : "DISCHARGED RELAY"
+            : o.kind === "cache"
+              ? "SUPPLIES"
+              : o.kind === "alternate"
+                ? "BOSS DEVICE"
+                : o.kind === "exit"
+                  ? "DESCENT"
+                  : o.kind.toUpperCase(),
+        );
     }
     for (const actor of Object.values(s.actors)) {
       const a = {
@@ -286,79 +323,49 @@ export class DungeonScene extends Phaser.Scene {
         g.lineBetween(a.x * 16 + 12, a.y * 16 + 5, a.x * 16 + 4, a.y * 16 + 13);
         continue;
       }
-      const party = Object.values(s.actors).filter((v) => v.kind === "crawler");
-      const slot = party.findIndex((v) => v.id === a.id);
-      g.fillStyle(
-        a.kind === "crawler"
-          ? colors[a.palette ?? slot % 4]
-          : a.tags.includes("boss")
-            ? 0xc69b78
-            : 0xa76859,
-      );
-      const record =
+      const identity =
         a.kind === "enemy"
-          ? entry(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId)
+          ? enemyIdentity(
+              entry(
+                a.tags.includes("boss") ? "bosses" : "monsters",
+                a.catalogId,
+              ),
+            )
           : undefined;
-      const identity = record ? enemyIdentity(record) : undefined;
-      if (a.kind !== "enemy") {
-        g.fillRect(a.x * 16 + 4, a.y * 16 + 2, 8, 5);
-        g.fillRect(a.x * 16 + 3, a.y * 16 + 7, 10, 6);
-        g.fillRect(a.x * 16 + 4, a.y * 16 + 13, 3, 2);
-        g.fillRect(a.x * 16 + 9, a.y * 16 + 13, 3, 2);
-        g.fillStyle(0x171e17);
-        g.fillRect(a.x * 16 + 5, a.y * 16 + 4, 2, 2);
-        g.fillRect(a.x * 16 + 9, a.y * 16 + 4, 2, 2);
-      } else {
-        const x = a.x * 16,
-          y = a.y * 16;
-        if (a.tags.includes("boss")) {
-          g.fillRect(x + 1, y + 4, 14, 9);
-          g.fillRect(x + 4, y + 1, 8, 14);
-          g.lineStyle(1, 0xe8c48e);
-          g.strokeRect(x + 1, y + 2, 14, 13);
-          // A distinct crown/crest for each floor; phase pips remain readable without color.
-          for (let i = 0; i < s.floor; i++)
-            g.fillRect(x + 2 + i * 2, y - 2, 1, 3);
-          for (let i = 0; i <= a.bossPhase; i++) {
-            g.fillStyle(0xffdda0);
-            g.fillRect(x + 2 + i * 4, y + 14, 2, 2);
-          }
-        } else if (["R", "H", "S"].includes(identity!.glyph)) {
-          g.fillTriangle(x + 8, y + 2, x + 1, y + 13, x + 15, y + 13);
-          if (identity!.glyph === "R") g.fillRect(x + 11, y + 4, 5, 2);
-          if (identity!.glyph === "S") {
-            g.fillRect(x + 1, y + 1, 2, 4);
-            g.fillRect(x + 13, y + 1, 2, 4);
-          }
-          if (identity!.glyph === "H") g.strokeRect(x + 2, y + 2, 12, 12);
-        } else if (identity!.glyph === "G") {
-          g.fillRect(x + 2, y + 2, 12, 13);
-          g.fillStyle(0x333e38);
-          g.fillRect(x + 2, y + 7, 5, 6);
-        } else if (identity!.glyph === "+") {
-          g.fillRect(x + 6, y + 1, 4, 14);
-          g.fillRect(x + 1, y + 6, 14, 4);
-        } else {
-          g.fillTriangle(x + 8, y + 1, x + 2, y + 11, x + 14, y + 11);
-          g.fillRect(x + 1, y + 12, 4, 3);
-          g.fillRect(x + 11, y + 12, 4, 3);
-          if (identity!.glyph === "F" || identity!.glyph === "K")
-            g.lineBetween(x, y + 4, x + 15, y + 12);
-        }
-      }
-      g.fillStyle(0x364533);
-      g.fillRect(a.x * 16 + 1, a.y * 16, 14, 1);
-      g.fillStyle(0xc6d197);
-      g.fillRect(a.x * 16 + 1, a.y * 16, (14 * a.hp) / a.maxHP, 1);
-      label(
-        a.x,
-        a.y,
-        a.kind === "crawler"
-          ? String(slot + 1)
+      const name: SpriteName =
+        a.kind !== "enemy"
+          ? "crawler"
           : a.tags.includes("boss")
-            ? "B"
-            : (identity?.glyph ?? "E"),
-      );
+            ? (`boss${s.floor}` as SpriteName)
+            : ((
+                {
+                  M: "rat",
+                  R: "gunner",
+                  G: "sentry",
+                  F: "flanker",
+                  H: "hazard",
+                  S: "summoner",
+                  "+": "support",
+                  C: "charger",
+                  K: "skirmisher",
+                } as Record<string, SpriteName>
+              )[identity!.glyph] ?? "rat");
+      sprite(name, a.x, a.y, 5);
+      g.fillStyle(0x26383d);
+      g.fillRect(a.x * 16 + 2, a.y * 16 - 1, 12, 2);
+      g.fillStyle(a.kind === "crawler" ? 0xc4dc9a : 0xce7467);
+      g.fillRect(a.x * 16 + 2, a.y * 16 - 1, (12 * a.hp) / a.maxHP, 2);
+      if (a.id === this.actorId) {
+        g.fillStyle(0xf3d58b);
+        g.fillTriangle(
+          a.x * 16 + 5,
+          a.y * 16 - 5,
+          a.x * 16 + 11,
+          a.y * 16 - 5,
+          a.x * 16 + 8,
+          a.y * 16 - 2,
+        );
+      }
       if (a.downed) label(a.x, a.y, "+" + a.downed, "#ffce92");
       const glyphs: Record<string, string> = {
         burning: "!",
@@ -372,7 +379,16 @@ export class DungeonScene extends Phaser.Scene {
       const status = Object.keys(a.statuses)
         .map((k) => glyphs[k] ?? "+")
         .join("");
-      if (status) label(a.x, a.y - 0.65, status, "#c6e5dc");
+      if (status)
+        label(
+          a.x,
+          a.y - 0.8,
+          Object.keys(a.statuses)
+            .filter((k) => k !== "lifetime")
+            .join(" · ")
+            .toUpperCase(),
+          "#c6e5dc",
+        );
       if (a.shield || a.guard) {
         g.lineStyle(1, 0x9ec8db);
         g.strokeRect(a.x * 16 + 1, a.y * 16 + 2, 14, 13);
@@ -381,6 +397,10 @@ export class DungeonScene extends Phaser.Scene {
         g.lineStyle(1, 0xffdb87);
         g.strokeRect(a.x * 16, a.y * 16, 16, 16);
       }
+    }
+    if (this.planned && this.queued.length) {
+      sprite("crawler", this.planned.x, this.planned.y, 7, 0.4);
+      label(this.planned.x, this.planned.y + 0.7, "PLAN", "#b5dbb4");
     }
     for (const p of this.queued) {
       g.lineStyle(1, 0xa5cc94);
@@ -426,9 +446,29 @@ export class DungeonScene extends Phaser.Scene {
         : (s.actors[this.spectateId] ??
           Object.values(s.actors).find((a) => a.kind === "crawler" && !a.dead));
     if (a) {
-      this.cameras.main.setBounds(0, 0, s.width * 16, s.height * 16);
+      this.cameras.main.setBounds(
+        -64,
+        -64,
+        s.width * 16 + 128,
+        s.height * 16 + 128,
+      );
       this.cameras.main.setZoom(this.zoom);
-      this.cameras.main.centerOn(a.x * 16 + 8, a.y * 16 + 8);
+      const near = Object.values(s.actors).filter(
+        (v) =>
+          v.kind === "enemy" &&
+          !v.dead &&
+          Math.abs(v.x - a.x) + Math.abs(v.y - a.y) <= 6,
+      );
+      const focus = near.length
+        ? {
+            x:
+              (a.x * 3 + near.reduce((n, v) => n + v.x, 0)) / (3 + near.length),
+            y:
+              (a.y * 3 + near.reduce((n, v) => n + v.y, 0)) / (3 + near.length),
+          }
+        : a;
+      this.cameras.main.centerOn(focus.x * 16 + 8, focus.y * 16 + 8);
+      this.cameras.main.preRender();
     }
   }
 }
