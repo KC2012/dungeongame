@@ -595,3 +595,10 @@ details summary {
 .round-recap [data-act="close-recap"] {float:right;margin-left:15px;}
 .map-column {min-height:0;}
 #map {min-height:200px;}
+.moment {padding:8px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid #d5ac67;background:#343326;font-size:12px;line-height:1.5;}
+.moment[hidden] {display:none;}
+.moment b {color:#edd49b;white-space:nowrap;}
+.moment span {flex:1;}
+.moment button {padding:4px 7px;font-size:11px;}
+#producer-line[hidden] {display:none;}
+.broadcast-strip:has(#producer-line[hidden]) {grid-template-columns:1fr;padding:3px 14px;min-height:22px;}

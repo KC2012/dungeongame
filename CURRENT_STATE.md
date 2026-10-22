@@ -40,3 +40,5 @@ A3.2: persisted On/Off/Reset guidance and opt-in host-authoritative teaching arr
 A3.3: projected movement/door/AP planning, ghost endpoint and auto-approach attack, consistent movement keys, progressive controls with Advanced override, full-width map and pinned inspection. 558 tests passed; corrected fast-input/resume and four-browser authority/resize regressions pass. Presentation still in active development.
 
 A3.4: named on-map turn recap/history, authority-specific action rejection, real conduction edges/blast bounds, contextual machine consequences and source/timing telegraphs. 563 automated tests and all 14 browser scenarios passed; build passed. Failed exploration actions publish a new snapshot revision without advancing the world turn.
+
+A3.5: earned-moment notices/choice CTAs, selective teaching Producer and optional outcome-driven semantic audio. 565 tests passed; affected browser sound/reset checks pass after fixing Escape handling from settings controls. No new content catalogs or paid dependencies.

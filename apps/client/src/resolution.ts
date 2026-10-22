@@ -79,7 +79,9 @@ export function explainResolution(
         "The boss devices resolved the encounter without a conventional kill.",
       );
     if (e.type === "action_performed" && e.payload.action === "GUARD")
-      lines.push(`${source} guarded: +2 armor during the enemy phase.`);
+      lines.push(
+        `${source} guarded: +${e.payload.armor ?? 2} armor during the enemy phase.`,
+      );
     if (e.type === "action_performed" && e.payload.action === "DODGE")
       lines.push(`${source} prepared to dodge one normal attack.`);
     if (e.type === "action_performed" && e.payload.action === "OVERWATCH")

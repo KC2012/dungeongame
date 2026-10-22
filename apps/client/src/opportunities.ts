@@ -4,6 +4,8 @@ import { neighbors, tile } from "../../../packages/engine/src/grid";
 export function knownConduction(s: State, start: Point): Point[] {
   const first = tile(s, start);
   if (!first?.explored) return [];
+  if (!first.tags.includes("wet") && !first.tags.includes("conductive"))
+    return [start];
   const points = [start],
     seen = new Set([`${start.x}:${start.y}`]);
   for (let i = 0; i < points.length && points.length < 8; i++)

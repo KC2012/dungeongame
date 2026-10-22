@@ -158,7 +158,7 @@ export class Broadcast {
   reset() {
     this.previous = undefined;
   }
-  accept(next: State, now: number): Transmission | undefined {
+  accept(next: State, now: number, guidance = false): Transmission | undefined {
     const old = this.previous;
     if (old && old.runId === next.runId && next.revision <= old.revision)
       return;
@@ -171,7 +171,12 @@ export class Broadcast {
     const events = next.events.filter(
       (e) => e.runId === next.runId && e.eventId >= old.nextEventId,
     );
-    const selected = selectTransmission(old, next, events);
+    let selected = selectTransmission(old, next, events);
+    if (
+      selected?.cause === "quiet rounds" &&
+      (guidance || events.some((e) => e.type === "action_rejected"))
+    )
+      selected = undefined;
     if (next.audience !== old.audience) {
       const earned = events.filter((e) => e.type === "achievement");
       this.audienceChange = {

@@ -55,7 +55,7 @@ export function projectPlan(s: State, id: string, actions: Action[]) {
           : c.type === "INTERACT"
             ? `Use ${s.objects.find((o) => o.id === c.id || o.id === c.target)?.name ?? "object"}`
             : c.type === "GUARD"
-              ? "Guard · +2 armor"
+              ? `Guard · +${2 + stat(actor, "guard")} armor`
               : c.type === "ABILITY" && c.id
                 ? entry("abilities", c.id).name
                 : c.type === "USE" && c.id

@@ -14,6 +14,8 @@ import {
   weaponFacts,
 } from "./planning";
 import { controlsFor } from "./progressive-ui";
+import { SoundBus } from "./audio";
+import { importantMoment, type Moment } from "./moments";
 import { ResolutionFeed } from "./resolution";
 import { knownConduction } from "./opportunities";
 import { Guidance } from "./guidance";
@@ -40,6 +42,9 @@ import {
 } from "../../../packages/engine/src/grid";
 const broadcast = new Broadcast();
 const resolution = new ResolutionFeed();
+const soundBus = new SoundBus();
+let moment: Moment | undefined;
+let dismissedIdentity = false;
 const guidance = new Guidance(localStorage);
 const root = document.querySelector<HTMLDivElement>("#app")!;
 const escape = (v: unknown) =>
@@ -99,6 +104,13 @@ let settings = {
   announcer: true,
   ...JSON.parse(localStorage.getItem("concourse.settings") ?? "{}"),
 };
+soundBus.enabled = settings.sound;
+document.addEventListener("pointerdown", () => soundBus.unlock(), {
+  capture: true,
+});
+document.addEventListener("keydown", () => soundBus.unlock(), {
+  capture: true,
+});
 document.documentElement.style.fontSize = settings.font + "px";
 function find(kind: string, id: string): Entry {
   return (
@@ -208,7 +220,7 @@ async function connect(which: string) {
         name,
         background,
         palette,
-        guided: guidance.data.enabled,
+        guided: guidance.data.enabled && !guidance.data.done.includes("boss"),
         ...(seed ? { seed: Number(seed) } : {}),
       });
     } else if (which === "join") {
@@ -291,9 +303,41 @@ function bindRoom() {
   });
   room.onMessage("snapshot", (m: any) => {
     if (room !== current) return;
+    const previous = resolution.previous;
+    if (
+      previous &&
+      previous.runId === m.game.runId &&
+      m.game.revision > previous.revision
+    ) {
+      const selectedMoment = importantMoment(
+        previous,
+        m.game,
+        actorId,
+        m.game.events.filter((e: any) => e.eventId >= previous.nextEventId),
+      );
+      if (
+        selectedMoment &&
+        !(dismissedIdentity && selectedMoment.title === "REWRITE YOUR CONTRACT")
+      )
+        moment = selectedMoment;
+    } else if (!previous || previous.runId !== m.game.runId) moment = undefined;
+    const learnedEnvironment = guidance.data.done.includes("environment");
     resolution.accept(m.game, actorId);
     guidance.accept(m.game, actorId);
-    broadcast.accept(m.game, performance.now());
+    const transmission = broadcast.accept(
+      m.game,
+      performance.now(),
+      guidance.data.enabled,
+    );
+    if (
+      !learnedEnvironment &&
+      guidance.data.done.includes("environment") &&
+      transmission &&
+      guidance.data.enabled
+    )
+      transmission.text = "Finally. Someone read the room.";
+    soundBus.accept(m.game, actorId);
+    if (transmission && settings.announcer) soundBus.play("producer", 0.3);
     game = m.game;
     root.dataset.checksum = m.checksum;
     root.dataset.revision = String(m.game.revision);
@@ -332,6 +376,7 @@ function bindRoom() {
   room.onLeave((code: number) => {
     if (room !== current) return;
     connected = false;
+    soundBus.previous = undefined;
     resolution.reset();
     broadcast.reset();
     scene?.stream.reset();
@@ -422,7 +467,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; Shift arrows aim; F inspect; R ready; I inventory; C character."><div id="round-recap" class="round-recap" role="status"></div></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div id="moment" class="moment" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; Shift arrows aim; F inspect; R ready; I inventory; C character."><div id="round-recap" class="round-recap" role="status"></div></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -501,9 +546,24 @@ function render() {
     .join("")}</ul>${button("All outcomes / history", "round-history")}`;
   const lesson = guidance.lesson(game, actorId);
   const guide = document.querySelector<HTMLElement>("#guidance")!;
-  guide.hidden = !guidance.data.enabled;
+  guide.hidden = !guidance.data.enabled || guidance.data.done.includes("boss");
   guide.dataset.lesson = lesson.focus;
   guide.innerHTML = `<b>${escape(lesson.title)}</b><p>${escape(lesson.text)}</p>`;
+  if (game.floor < 3 || game.phase !== "SAFE_ROOM") dismissedIdentity = false;
+  const activeMoment =
+    !dismissedIdentity &&
+    game.floor >= 3 &&
+    game.phase === "SAFE_ROOM" &&
+    (!a.profession || !a.adaptation)
+      ? importantMoment(game, game, actorId, [])
+      : moment;
+  const banner = document.querySelector<HTMLElement>("#moment")!;
+  banner.hidden =
+    !activeMoment ||
+    (guidance.data.enabled && activeMoment.title === "FLOOR 1");
+  banner.innerHTML = activeMoment
+    ? `<b>${escape(activeMoment.title)}</b><span>${escape(activeMoment.text)}</span>${activeMoment.action ? button("Open " + activeMoment.action, "moment-action") : ""}${button("×", "dismiss-moment", 'aria-label="Dismiss moment"')}`
+    : "";
   const f = catalog.floors[game.floor - 1];
   const producer = document.querySelector<HTMLElement>("#producer-line")!;
   const notice = broadcast.current;
@@ -512,6 +572,10 @@ function render() {
       ? `PRODUCER / ${notice.title} — ${notice.text}`
       : "PRODUCER / " +
         (settings.announcer ? "Watching the floor." : "Commentary muted");
+  producer.hidden =
+    guidance.data.enabled &&
+    !guidance.data.done.includes("round") &&
+    (!notice || notice.cause === "floor enter");
   if (producer.textContent !== producerText)
     producer.textContent = producerText;
   const change = broadcast.audienceChange;
@@ -840,19 +904,6 @@ function enqueueAction(c: Action) {
     root.dataset.pending = String(inFlight.nonce);
     send({ type: "ACTION", action: c, nonce: inFlight.nonce });
   }
-  if (settings.sound) {
-    try {
-      const ctx = new AudioContext(),
-        osc = ctx.createOscillator(),
-        gain = ctx.createGain();
-      gain.gain.value = 0.015;
-      osc.frequency.value = 240;
-      osc.connect(gain).connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.05);
-      osc.onended = () => ctx.close();
-    } catch {}
-  }
 }
 function pick(p: Point) {
   if (!game || !me()) return;
@@ -984,7 +1035,7 @@ function showDrawer(kind: string) {
   } else if (kind === "round-history") {
     html = `<p class="intro">Confirmed outcomes. History is retained for this browser session; the authority log remains in the expert panels.</p>${resolution.history.map((r) => `<article class="item"><h2>Round ${r.round}</h2><ul>${r.lines.map((line) => `<li>${escape(line)}</li>`).join("")}</ul></article>`).join("")}`;
   } else if (kind === "settings") {
-    html = `<div class="stack"><label>Guidance<select id="guidance-mode"><option value="on" ${guidance.data.enabled ? "selected" : ""}>On</option><option value="off" ${!guidance.data.enabled ? "selected" : ""}>Off · full controls</option></select></label>${button("Reset guidance progress", "guidance-reset")}<small>Reset replays prompts. A newly created guided room also receives the Floor 1 teaching arrangement.</small><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
+    html = `<div class="stack"><label>Guidance<select id="guidance-mode"><option value="on" ${guidance.data.enabled ? "selected" : ""}>On</option><option value="off" ${!guidance.data.enabled ? "selected" : ""}>Off · full controls</option></select></label>${button("Reset guidance progress", "guidance-reset")}<small>Reset replays prompts. A newly created guided room also receives the Floor 1 teaching arrangement.</small><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. World materials have distinct pixel shapes; exact details remain available in Inspector.</p></div>`;
   } else if (a && game) {
     if (kind === "inventory") {
       const total = a.inventory.reduce(
@@ -1138,6 +1189,19 @@ async function act(value: string) {
       mode = id;
       render();
       break;
+    case "moment-action":
+      showDrawer(
+        (game && importantMoment(game, game, actorId, [])?.action) ||
+          moment?.action ||
+          "character",
+      );
+      moment = undefined;
+      break;
+    case "dismiss-moment":
+      dismissedIdentity = true;
+      moment = undefined;
+      render();
+      break;
     case "round-history":
       showDrawer("round-history");
       break;
@@ -1156,7 +1220,7 @@ async function act(value: string) {
     case "guidance-reset":
       guidance.reset();
       render();
-      if (!game) title();
+      if (!game){closeDrawer();title();}
       break;
     case "inspect":
       mapFocus = false;
@@ -1438,6 +1502,8 @@ document.addEventListener("change", (e) => {
       announcer: t.id === "announcer" ? t.checked : settings.announcer,
       reducedMotion: t.id === "motion" ? t.checked : settings.reducedMotion,
     };
+    soundBus.enabled = settings.sound;
+    if (settings.sound) soundBus.unlock();
     localStorage.setItem("concourse.settings", JSON.stringify(settings));
     document.documentElement.style.fontSize = settings.font + "px";
     if (scene) scene.reducedMotion = settings.reducedMotion;
@@ -1445,10 +1511,6 @@ document.addEventListener("change", (e) => {
   }
 });
 document.addEventListener("keydown", (e) => {
-  if (
-    ["INPUT", "SELECT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)
-  )
-    return;
   if (e.key === "Escape") {
     queue = [];
     mode = "MOVE";
@@ -1458,6 +1520,10 @@ document.addEventListener("keydown", (e) => {
     render();
     return;
   }
+  if (
+    ["INPUT", "SELECT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)
+  )
+    return;
   if (drawer) return;
   const key = e.key.toLowerCase();
   const mappings: Record<string, string> = {

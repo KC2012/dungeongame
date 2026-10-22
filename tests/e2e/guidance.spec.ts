@@ -85,3 +85,46 @@ test("new-player controls stay small and Advanced restores every command", async
     .click();
   await expect(page.locator("#skill")).toHaveCount(0);
 });
+
+test("optional sound unlocks on user input and follows a confirmed outcome", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => {
+    const Native = window.AudioContext;
+    (window as any).__tones = 0;
+    window.AudioContext = class extends Native {
+      override createOscillator() {
+        (window as any).__tones++;
+        return super.createOscillator();
+      }
+    };
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByLabel("Synthesized action sounds").check();
+  await page.keyboard.press("Escape");
+  await page.locator("#seed").fill("1234");
+  await page
+    .getByRole("button", { name: "Create private room", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Begin the run", exact: true })
+    .click();
+  await page.locator("#map").focus();
+  await page.keyboard.press("ArrowUp");
+  await expect(page.locator("#round-recap")).toContainText("moved 1 tile");
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__tones))
+    .toBeGreaterThan(0);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByLabel("Synthesized action sounds").uncheck();
+  await page.keyboard.press("Escape");
+  const tones = await page.evaluate(() => (window as any).__tones);
+  await page.locator("#map").focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.locator("#header-info")).toContainText("Round 2");
+  expect(await page.evaluate(() => (window as any).__tones)).toBe(tones);
+  expect(errors).toEqual([]);
+});
