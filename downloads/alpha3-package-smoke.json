@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "de6e6504f0af19518e430fc0e1da566f1fafe6f1",
+  "archiveFreshExtraction": true,
+  "productionDependenciesOnly": true,
+  "health": {
+    "ok": true,
+    "version": "0.3.0",
+    "contentHash": "dd5a3267b7547833"
+  },
+  "createRoom": "passed",
+  "beginRun": "passed",
+  "movement": "passed",
+  "supplies": "passed",
+  "browserErrors": []
+}

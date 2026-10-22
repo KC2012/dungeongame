@@ -1,0 +1,41 @@
+{
+  "version": "0.3.0",
+  "status": "LOCAL_ALPHA_CANDIDATE",
+  "sourceRef": "v0.3.0-local-alpha",
+  "branch": "alpha3/make-the-game-understandable",
+  "baselineRef": "alpha2-known-good",
+  "buildFiles": {
+    "dist/client/assets/index-BLGxCkKG.css": "67c933f610b3bf264435c0182dc09e1bf4dbdc1aecd608b41945e4dd06a501ed",
+    "dist/client/assets/index-Ce3MhRbZ.js": "8c69ab2e61241b9c0bc2d10556e2c2a372fd042e59396c6f2d58f38c680810f6",
+    "dist/client/index.html": "e1bb211774a5dda2f68793113a1099aee98df0a57ac800208b380b86ac564383",
+    "dist/server.js": "fe5638797a98e18da499ae64a743aa5863720ff0a1b2b2e21fd58692c4cd23cb"
+  },
+  "runtime": "Node >=22; npm ci --omit=dev then npm run host from dungeongame",
+  "qualification": "Playable Alpha 3 local candidate. Novice comprehension, WAN, human accessibility/balance and fresh endurance acceptance remain unverified. Exact source commit recorded in packaged delivery-manifest.json.",
+  "sourceCommit": "de6e6504f0af19518e430fc0e1da566f1fafe6f1",
+  "milestoneCommits": [
+    "0b524c7c4cbf53227a31c4df2dab40a5592a5d5e A3.1 Establish readable pixel sprites camera and pointer mapping",
+    "dc4f26b680be177d9f705aa49e2bc3e2257e2179 A3.2 Teach Floor 1 through persistent contextual guidance",
+    "daeeb37c5ac15ba0353e014ebc48c589f625cb79 A3.3 Make AP planning truthful and disclose controls progressively",
+    "99c0d7d5d9241b5be2fe67e198c47f6b82e49af7 A3.4 Explain resolved turns and expose physical causes",
+    "9cec1bfdfa67357d8644200ba5943f993839a411 A3.5 Frame earned moments and add confirmed semantic sound cues",
+    "de6e6504f0af19518e430fc0e1da566f1fafe6f1 A3.6 Verify real first-run flows and package Alpha 3 candidate"
+  ],
+  "contains": [
+    "Complete committed source, content, specs, tests, documentation and screenshot evidence",
+    "Matching prebuilt dist/client and dist/server.js",
+    "Pinned dependency lockfile; Node.js 22+ and npm ci --omit=dev required to run",
+    "Git history.bundle for optional source-history restoration"
+  ],
+  "excludes": [
+    "node_modules",
+    ".data private saves/session credentials",
+    ".git working metadata",
+    "Caches and test-run output"
+  ],
+  "archive": {
+    "filename": "THE-CRAWL-Alpha-3-Complete.zip",
+    "bytes": 7487057,
+    "sha256": "ca257401c1a25f6570aef522212fd83b515b0b958bdab3cd8c2be1db7c567257"
+  }
+}
