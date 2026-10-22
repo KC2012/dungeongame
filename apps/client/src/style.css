@@ -563,3 +563,28 @@ details summary {
 .guidance { padding: 10px 16px; background: #233943; border-left: 3px solid #83c8d0; font-size: 13px; line-height: 1.5; }
 .guidance p { color: #b8d0ce; margin-top: 3px; max-width: 100ch; }
 .guidance[hidden] { display: none; }
+/* A3: quiet, full-width tactical stage; expert content has a single scroll surface. */
+.workspace { grid-template-rows: minmax(500px, calc(100dvh - 225px)) auto; }
+.workspace.focus-map { grid-template-columns: minmax(0, 1fr); }
+.workspace #context { padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#context p, #context h3 { font-size: 11px; }
+#context button { padding: 5px 8px; }
+.side { overflow-y: auto; }
+.side .log { max-height: none; overflow: visible; }
+#crawler-strip { color: #d8e7c3; font-size: 12px; margin-top: 3px; }
+#target-intent { background:#1e3037; padding: 7px 14px; line-height:1.5; font-size:12px; min-height:0; }
+#target-intent:empty { display:none; }
+#target-intent small { display:block; color:#bfd1cb; }
+.ap-pips { color:#dfd8a5; display:flex; gap:8px; align-items:center; }
+.ap-pips span { font-size:22px; line-height:1; color:#a4d1ce; }
+.ap-pips span.spent { color:#5b7175; }
+.plan-steps { display:flex; list-style:none; flex-wrap:wrap; gap:7px; padding:0; margin:0; counter-reset:step; }
+.plan-steps li { counter-increment:step; background:#24343b; padding:6px 9px; border:1px solid #4d6c72; font-size:12px; }
+.plan-steps li:not(.muted)::before { content:counter(step) '. '; color:#d6bd7e; }
+.plan-steps b { color:#b6d7d1; margin-left:10px; }
+.plan-steps li.muted { border:0; background:none; }
+.commit { margin-left:auto; min-width:130px; }
+.actions { gap:8px; }
+.broadcast-strip { min-height:34px; padding:6px 14px; }
+#map { min-height:280px; }
+@media (max-width:760px) { .workspace {grid-template-rows:minmax(500px,70dvh) auto;} .commit {margin-left:0;} }

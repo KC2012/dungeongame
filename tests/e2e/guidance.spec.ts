@@ -61,3 +61,27 @@ test("Guidance off persists and reset restores the new-player path", async ({
     ),
   ).toEqual([]);
 });
+
+test("new-player controls stay small and Advanced restores every command", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Create private room", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Begin the run", exact: true })
+    .click();
+  await expect(page.getByRole("button", { name: /Overwatch/ })).toHaveCount(0);
+  await expect(page.locator("#skill")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Advanced controls", exact: true })
+    .click();
+  await expect(page.getByRole("button", { name: /Overwatch/ })).toBeVisible();
+  await expect(page.locator("#skill")).toBeVisible();
+  await page.screenshot({ path: "docs/alpha3/advanced-controls.png" });
+  await page
+    .getByRole("button", { name: "Basic controls", exact: true })
+    .click();
+  await expect(page.locator("#skill")).toHaveCount(0);
+});

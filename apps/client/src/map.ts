@@ -12,6 +12,8 @@ export class DungeonScene extends Phaser.Scene {
   effects?: WorldEffects;
   reducedMotion = false;
   graphics!: Phaser.GameObjects.Graphics;
+  overlay!: Phaser.GameObjects.Graphics;
+  danger!: Phaser.GameObjects.Graphics;
   texts: Phaser.GameObjects.Text[] = [];
   sprites: Phaser.GameObjects.Image[] = [];
   planned?: Point;
@@ -33,6 +35,8 @@ export class DungeonScene extends Phaser.Scene {
   }
   create() {
     this.graphics = this.add.graphics();
+    this.overlay = this.add.graphics().setDepth(9);
+    this.danger = this.add.graphics().setDepth(4);
     this.effects = new WorldEffects(this);
     for (const name of spriteNames) {
       const canvas = document.createElement("canvas");
@@ -110,6 +114,8 @@ export class DungeonScene extends Phaser.Scene {
     if (this.effects.count) this.paint();
     this.effects.update();
     const canvas = this.game.canvas;
+    const camera=this.cameras.main;const origin=camera.getWorldPoint(0,0);const own=this.snapshot?.actors[this.actorId];
+    canvas.dataset.viewport=JSON.stringify({width:camera.width,height:camera.height,zoom:camera.zoom,origin:{x:origin.x,y:origin.y},actor:own?{x:own.x,y:own.y}:null});
     canvas.dataset.visualCues = String(this.effects.total);
     canvas.dataset.activeEffects = String(this.effects.count);
   }
@@ -118,6 +124,9 @@ export class DungeonScene extends Phaser.Scene {
     const s = this.snapshot,
       g = this.graphics;
     g.clear();
+    const overlay = this.overlay;
+    overlay.clear();
+    this.danger.clear();
     this.texts.forEach((t) => t.destroy());
     this.texts = [];
     this.sprites.forEach((v) => v.destroy());
@@ -146,7 +155,8 @@ export class DungeonScene extends Phaser.Scene {
             stroke: "#121812",
             strokeThickness: 2,
           })
-          .setOrigin(0.5),
+          .setOrigin(0.5)
+          .setDepth(10),
       );
     };
     const colors = [
@@ -390,12 +400,12 @@ export class DungeonScene extends Phaser.Scene {
           "#c6e5dc",
         );
       if (a.shield || a.guard) {
-        g.lineStyle(1, 0x9ec8db);
-        g.strokeRect(a.x * 16 + 1, a.y * 16 + 2, 14, 13);
+        overlay.lineStyle(1, 0x9ec8db);
+        overlay.strokeRect(a.x * 16 + 1, a.y * 16 + 2, 14, 13);
       }
       if (a.id === this.actorId) {
-        g.lineStyle(1, 0xffdb87);
-        g.strokeRect(a.x * 16, a.y * 16, 16, 16);
+        overlay.lineStyle(1, 0xffdb87);
+        overlay.strokeRect(a.x * 16, a.y * 16, 16, 16);
       }
     }
     if (this.planned && this.queued.length) {
@@ -403,8 +413,8 @@ export class DungeonScene extends Phaser.Scene {
       label(this.planned.x, this.planned.y + 0.7, "PLAN", "#b5dbb4");
     }
     for (const p of this.queued) {
-      g.lineStyle(1, 0xa5cc94);
-      g.strokeRect(p.x * 16 + 3, p.y * 16 + 3, 10, 10);
+      overlay.lineStyle(1, 0xa5cc94);
+      overlay.strokeRect(p.x * 16 + 3, p.y * 16 + 3, 10, 10);
     }
     if (this.target && this.previewRadius) {
       for (let y = -this.previewRadius; y <= this.previewRadius; y++)
@@ -414,22 +424,22 @@ export class DungeonScene extends Phaser.Scene {
             py = this.target.y + y;
           if (!s.tiles[py * s.width + px]?.explored || px < 0 || px >= s.width)
             continue;
-          g.lineStyle(1, 0xf0aa73);
-          g.strokeRect(px * 16 + 1, py * 16 + 1, 14, 14);
+          overlay.lineStyle(1, 0xf0aa73);
+          overlay.strokeRect(px * 16 + 1, py * 16 + 1, 14, 14);
         }
     }
     if (this.target) {
       const own = s.actors[this.actorId];
       if (this.aiming && own) {
-        g.lineStyle(1, this.targetBlocked ? 0xd3856b : 0xb7c59b, 0.65);
-        g.lineBetween(
+        overlay.lineStyle(1, this.targetBlocked ? 0xd3856b : 0xb7c59b, 0.65);
+        overlay.lineBetween(
           own.x * 16 + 8,
           own.y * 16 + 8,
           this.target.x * 16 + 8,
           this.target.y * 16 + 8,
         );
       }
-      g.lineStyle(1, this.targetBlocked ? 0xe69a76 : 0xf7e2a8);
+      overlay.lineStyle(1, this.targetBlocked ? 0xe69a76 : 0xf7e2a8);
       if (this.targetLabel)
         label(
           this.target.x,
@@ -437,9 +447,10 @@ export class DungeonScene extends Phaser.Scene {
           this.targetLabel,
           this.targetBlocked ? "#f0b49a" : "#d7e7b3",
         );
-      g.strokeRect(this.target.x * 16, this.target.y * 16, 16, 16);
+      overlay.strokeRect(this.target.x * 16, this.target.y * 16, 16, 16);
     }
     const own = s.actors[this.actorId];
+    if(own&&!own.dead){overlay.lineStyle(1,0xffdb87);overlay.strokeRect(own.x*16,own.y*16,16,16);}
     const a =
       own && !own.dead
         ? own

@@ -36,3 +36,5 @@ Production 0.2.0 health/HTML/assets/catalog smoke passed after version alignment
 Alpha 3 branch alpha3/make-the-game-understandable; Alpha 2 preserved at alpha2-known-good. A3.1 delivered original readable pixel recipes, closer camera and live-bounds pointer conversion. 549 tests and 11 browser checks passed. See docs/alpha3/AUDIT.md and PROGRESS.md. Alpha 3 is in progress.
 
 A3.2: persisted On/Off/Reset guidance and opt-in host-authoritative teaching arrangement on Floor 1. 553 unit/integration tests passed; guided-floor conduction tested across 60 seeds. Browser first-run, reset and four-client route pass after correcting first-enemy placement. Alpha 3 remains in progress.
+
+A3.3: projected movement/door/AP planning, ghost endpoint and auto-approach attack, consistent movement keys, progressive controls with Advanced override, full-width map and pinned inspection. 558 tests passed; corrected fast-input/resume and four-browser authority/resize regressions pass. Presentation still in active development.

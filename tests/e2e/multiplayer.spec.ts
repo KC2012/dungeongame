@@ -1,4 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
+// Legacy regressions exercise the full/unguided interface. New-player behavior has its own suite.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("concourse.guidance.v1"))
+      localStorage.setItem(
+        "concourse.guidance.v1",
+        JSON.stringify({ version: 1, enabled: false, done: [] }),
+      );
+  });
+});
 test("two independent browsers join the same authoritative lobby and enter the dungeon", async ({
   browser,
 }) => {
@@ -34,7 +44,7 @@ test("two independent browsers join the same authoritative lobby and enter the d
   ).toBeVisible();
   await a.keyboard.press("Escape");
   await a.keyboard.press("2");
-  await a.keyboard.press("ArrowRight");
+  await a.keyboard.press("Shift+ArrowRight");
   await expect(a.locator("#inspector")).toContainText("max range");
   await expect(a.locator("#inspector")).toContainText("LOS");
   await a.keyboard.press("1");
@@ -72,6 +82,13 @@ test("four independent browsers commit a tactical round and reconnect to the sam
   const contexts = await Promise.all(
     [0, 1, 2, 3].map(() => browser.newContext()),
   );
+  for (const context of contexts)
+    await context.addInitScript(() =>
+      localStorage.setItem(
+        "concourse.guidance.v1",
+        JSON.stringify({ version: 1, enabled: false, done: [] }),
+      ),
+    );
   const pages = await Promise.all(contexts.map((c) => c.newPage()));
   const a = pages[0];
   await a.goto("/");
@@ -149,7 +166,7 @@ test("four independent browsers commit a tactical round and reconnect to the sam
   expect(load().phase).toBe("PLANNING");
   const before = load().round;
   for (const p of pages) {
-    await p.getByRole("button", { name: "Guard [3]", exact: true }).click();
+    await p.getByRole("button", { name: /^Guard/ }).click();
     await p.getByRole("button", { name: "Ready [R]", exact: true }).click();
   }
   await expect.poll(() => load().round).toBe(before + 1);
@@ -398,6 +415,7 @@ test("map focus enlarges the dungeon and expert panels remain accessible by keyb
 }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await startSolo(page);
+  await page.getByRole("button", { name: "Show panels", exact: true }).click();
   const width = await page.locator("canvas").evaluate((c) => c.clientWidth);
   await expect(page.locator("#log-panel")).not.toHaveAttribute("open", "");
   await page.getByRole("button", { name: "Map focus", exact: true }).click();

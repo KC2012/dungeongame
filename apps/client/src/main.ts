@@ -6,6 +6,14 @@ import {
 } from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
+import {
+  projectPlan,
+  attackPreview,
+  approachAttack,
+  movementPath,
+  weaponFacts,
+} from "./planning";
+import { controlsFor } from "./progressive-ui";
 import { Guidance } from "./guidance";
 import { Broadcast } from "./broadcast";
 import { enemyIdentity, itemOpportunity } from "./identity";
@@ -57,7 +65,8 @@ let room: Room | undefined,
   scene: DungeonScene | undefined,
   phaser: Phaser.Game | undefined,
   drawer = "",
-  mapFocus = false,
+  mapFocus = true,
+  advancedControls = false,
   session: any,
   connected = false,
   startedAt = Date.now();
@@ -408,12 +417,12 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
     scene.hover = (p) => {
-      if (mode === "MOVE" || !game || (selected && same(selected, p))) return;
+      if (!game || (selected && same(selected, p))) return;
       selected = p;
       inspector();
       scene?.setState(game, actorId, selected, scene.queued);
@@ -432,6 +441,21 @@ function render() {
       },
       audio: { noAudio: true },
     });
+    const map = document.querySelector<HTMLElement>("#map")!;
+    const observer = new ResizeObserver(() => {
+      if (phaser?.isRunning) {
+        const w = map.clientWidth,
+          h = map.clientHeight;
+        if (
+          w > 0 &&
+          h > 0 &&
+          (phaser.scale.width !== w || phaser.scale.height !== h)
+        )
+          phaser.scale.setParentSize(w, h);
+      }
+    });
+    observer.observe(map);
+    phaser.events.once("destroy", () => observer.disconnect());
   }
   const workspace = document.querySelector<HTMLElement>(".workspace")!;
   const layoutChanged = workspace.classList.contains("focus-map") !== mapFocus;
@@ -501,6 +525,10 @@ function render() {
         `<div class="party-row ${v.id === actorId ? "you" : ""}"><b>${escape(v.name)}</b> <small>${v.id === actorId ? "YOU" : ""} · ${v.dead ? "DEAD" : v.downed ? "DOWNED " + v.downed : v.online ? "online" : "offline"}</small><div class="health"><span style="width:${(100 * v.hp) / v.maxHP}%"></span></div><small>HP ${v.hp}/${v.maxHP} · Focus ${v.focus}/${v.maxFocus} · L${v.level} ${sessions.find((s) => s.actorId === v.id)?.ready ? "· READY" : ""}</small><p class="statusline">${Object.keys(v.statuses).map(escape).join(" · ")}</p></div>`,
     )
     .join("")}`;
+  const plan = projectPlan(game, actorId, queue);
+  const controls = controlsFor(guidance.data, game, advancedControls);
+  document.querySelector("#crawler-strip")!.textContent =
+    `${a.name} · HP ${a.hp}/${a.maxHP} · Focus ${a.focus}/${a.maxFocus} · ${game.phase === "PLANNING" ? `${plan.remaining}/${plan.budget} AP left` : "Explore freely"}`;
   const verbs = queue
     .map(
       (c) =>
@@ -510,8 +538,15 @@ function render() {
   const skills = catalog.abilities.filter(
     (e) => e.profession === "general" || e.profession === a.profession,
   );
-  document.querySelector("#actions")!.innerHTML =
-    `<div class="row"><h3 class="grow">${a.dead ? "Spectating" : a.downed ? "Downed · ask your crew for a revive" : "Action plan"}</h3><b>${queue.length ? queue.length + " queued · " + queue.reduce((n, c) => n + actionCost(game!, a, c), 0) + "/" + (a.statuses.stunned ? 2 : 3) + " AP" : "No actions queued"}</b></div><div class="queue">${verbs || "<small>Choose an action, then a target. Invalid actions refund AP.</small>"}</div><div class="tabs">${button("Move [1]", "mode:MOVE", `class="${mode === "MOVE" ? "selected" : ""}"`)}${button("Attack [2]", "mode:ATTACK", `class="${mode === "ATTACK" ? "selected" : ""}"`)}${button("Guard [3]", "guard")}${button("Dodge", "dodge")}${button("Overwatch", "overwatch")}${button("Inventory [I]", "inventory")}${button("Character [C]", "character")}</div><div class="row"><select id="skill" aria-label="Ability"><option value="">Choose ability</option>${skills.map((e) => `<option value="${e.id}" ${skillId === e.id ? "selected" : ""}>${escape(e.name)} · ${e.apCost} AP / ${e.focusCost} focus / range ${e.range}</option>`).join("")}</select>${button("Use ability", "ability")}${button("Undo", "undo", queue.length ? "" : "disabled")}${button(sessions.find((s) => s.actorId === actorId)?.ready ? "Unready [R]" : "Ready [R]", "ready", `class="primary" ${game.phase === "PLANNING" && !a.dead && !a.downed ? "" : "disabled"}`)}</div><small>${escape(mode === "ABILITY" ? find("abilities", skillId).description : mode === "USE" ? "Choose a target for " + find("items", skillId).name + "." : mode === "INSPECT" ? "Inspect tiles, actors, and devices. No AP cost." : mode === "ATTACK" ? "Select an enemy in range and line of sight." : "Click a tile or use arrow keys to move.")}</small>`;
+  document.querySelector("#actions")!.innerHTML = `
+    <div class="row"><h3 class="grow">${game.phase === "PLANNING" ? "Your plan" : "Explore the floor"}</h3>
+    ${game.phase === "PLANNING" ? `<div class="ap-pips" aria-label="${plan.remaining} of ${plan.budget} AP remaining">${Array.from({ length: plan.budget }, (_, i) => `<span class="${i < plan.spent ? "spent" : ""}">${i < plan.spent ? "●" : "○"}</span>`).join("")} <b>${plan.remaining} AP left</b></div>` : ""}
+    ${button(advancedControls ? "Basic controls" : "Advanced controls", "advanced-controls", `aria-expanded="${advancedControls}"`)}</div>
+    <ol class="plan-steps">${plan.steps.map((step) => `<li>${escape(step.label)} <b>${step.cost} AP</b></li>`).join("") || `<li class="muted">${game.phase === "PLANNING" ? "Choose a floor tile or enemy. Nothing resolves until Ready." : "WASD / arrows / click to move. Click nearby objects to use them."}</li>`}</ol>
+    <div class="row">${button("Move [1]", "mode:MOVE", `class="${mode === "MOVE" ? "selected" : ""}"`)}${controls.attack ? button("Attack [2]", "mode:ATTACK", `class="${mode === "ATTACK" ? "selected" : ""}"`) : ""}${controls.guard ? button("Guard [3] · 1 AP", "guard") : ""}${controls.dodge ? button("Dodge · 1 AP", "dodge") : ""}${controls.overwatch ? button("Overwatch · 1 AP", "overwatch") : ""}${controls.inventory ? button("Inventory [I]", "inventory") : ""}${controls.character ? button("Character [C]", "character") : ""}
+    ${queue.length || game.phase === "PLANNING" ? button("Undo last", "undo", queue.length ? "" : "disabled") : ""}${controls.ready ? button(sessions.find((v) => v.actorId === actorId)?.ready ? "Unready [R]" : "Ready [R]", "ready", `class="primary commit" ${game.phase === "PLANNING" && !a.dead && !a.downed ? "" : "disabled"}`) : ""}</div>
+    ${controls.abilities ? `<div class="row"><select id="skill" aria-label="Ability"><option value="">Choose ability</option>${skills.map((e) => `<option value="${e.id}" ${skillId === e.id ? "selected" : ""}>${escape(e.name)} · ${e.apCost} AP / ${e.focusCost} Focus</option>`).join("")}</select>${button("Use ability", "ability")}</div>` : ""}
+    ${game.phase === "PLANNING" ? "<small>Movement resolves first → your other actions → enemies. Preview assumes other actors do not move.</small>" : ""}`;
   const nearby = game.objects.filter((o) => !o.done && distance(a, o) <= 1);
   document.querySelector("#context")!.innerHTML = `<h3>Nearby actions</h3>${
     actorId === hostId
@@ -563,6 +598,7 @@ function render() {
             find(mode === "ABILITY" ? "abilities" : "items", skillId),
           )
         : [];
+    scene.planned = projectPlan(game, actorId, queue).actor;
     scene.previewRadius = Math.max(
       0,
       ...effects.filter((f) => f.target === "area").map((f) => f.radius ?? 1),
@@ -605,7 +641,9 @@ function eventText(e: State["events"][number]): string {
   return `${e.type.replaceAll("_", " ")}${targets ? " · " + targets : ""}`;
 }
 function targetPreview(p: Point, target?: Actor): string {
-  const actor = me();
+  const projection =
+    game && me() ? projectPlan(game, actorId, queue) : undefined;
+  const actor = projection?.actor;
   if (scene) {
     scene.targetBlocked = false;
     scene.targetLabel = "";
@@ -635,7 +673,7 @@ function targetPreview(p: Point, target?: Actor): string {
               : 0,
           );
   const d = distance(actor, p),
-    clear = los(game, actor, p);
+    clear = los(projection!.view, actor, p);
   const ap = actionCost(game, actor, {
     type: mode as "ATTACK" | "ABILITY" | "USE",
     id: skillId,
@@ -658,7 +696,7 @@ function targetPreview(p: Point, target?: Actor): string {
     scene.targetBlocked = !clear || d > range;
     scene.targetLabel = hit ? hit.trim().replace(/^· /, "") : `${ap} AP`;
   }
-  return `<p class="note">Current position: ${ap} AP · max range ${range} · distance ${d} · ${clear ? "clear LOS" : "blocked LOS"}${d > range ? " · out of range" : ""}${hit}${entry.focusCost ? " · " + entry.focusCost + " Focus" : ""}${radius ? " · area radius " + radius : ""}${allyRisk ? " · WARNING: crawler in area" : ""}. Resolution can change after queued movement.</p>`;
+  return `<p class="note">Planned position ${actor.x}, ${actor.y}: ${ap} AP · max range ${range} · distance ${d} · ${clear ? "clear LOS" : "blocked LOS"}${d > range ? " · out of range" : ""}${hit}${entry.focusCost ? " · " + entry.focusCost + " Focus" : ""}${radius ? " · area radius " + radius : ""}${allyRisk ? " · WARNING: crawler in area" : ""}. Resolution can change after queued movement.</p>`;
 }
 function inspector() {
   if (!game) return;
@@ -670,7 +708,9 @@ function inspector() {
   if (!selected) {
     if (readout)
       readout.textContent =
-        "M pursuer · R gunner · G sentry · + support · crosshatch: danger";
+        "Hover to identify · click to act · F inspect · Esc unpins";
+    const intent = document.querySelector("#target-intent");
+    if (intent) intent.textContent = "";
     el.innerHTML =
       "<h3>Inspector</h3><small>Click a tile in Inspect mode to read its hazards and machinery.</small>";
     return;
@@ -691,6 +731,18 @@ function inspector() {
       ? find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId)
       : undefined;
   const role = enemy ? enemyIdentity(enemy) : undefined;
+  const intent = document.querySelector<HTMLElement>("#target-intent");
+  const projected = projectPlan(game, actorId, queue);
+  if (intent) {
+    if (a?.kind === "enemy") {
+      const attack = attackPreview(projected.view, projected.actor, a);
+      intent.innerHTML = `<b>${escape(a.name)}</b> · HP ${a.hp}/${a.maxHP} · ${escape(role?.name ?? "Enemy")}<br><span>${escape(weaponFacts(projected.actor).name)}: ${attack.cost} AP · range ${attack.range} · ${attack.clear ? "clear LOS" : "blocked LOS"} · cover ${attack.cover}${attack.chance !== undefined ? ` · ${attack.chance}% hit` : ""}</span><small>${escape(attack.problem ?? "Click to add the attack. Ready resolves the plan.")}</small>`;
+      if (attack.cover) guidance.note("cover");
+    } else if (o) {
+      intent.innerHTML = `<b>${escape(o.kind === "cache" ? "Supply crate" : o.kind === "alternate" ? "Boss device" : o.kind === "objective" ? "Objective terminal" : o.kind === "exit" ? "Descent stairs" : o.name)}</b><small>${o.kind === "machine" ? (o.powered ? "Switch off → water spreads. Water alone deals no damage." : "Activate → electricity enters connected wet/conductive tiles. Keep crawlers on dry ground.") : o.done ? "Already completed." : "Approach and click to interact. Interaction normally costs 1 AP."}</small>`;
+    } else intent.textContent = "";
+  }
+
   if (readout)
     readout.textContent = `${a?.name ?? o?.name ?? t.kind} ${a ? "· HP " + a.hp + "/" + a.maxHP : ""} ${Object.entries(
       t.hazards,
@@ -717,15 +769,39 @@ function enqueueAction(c: Action) {
     toast("Waiting for the authority server. Reconnect to act.");
     return;
   }
+  if (c.type === "MOVE") {
+    const planned = projectPlan(
+      game,
+      actorId,
+      game.phase === "PLANNING"
+        ? queue
+        : [...(inFlight ? [inFlight.action] : []), ...bufferedActions],
+    ).actor;
+    const to = { x: c.x!, y: c.y! },
+      t = tile(game, to);
+    if (!t || t.kind === "wall" || t.kind === "pit") {
+      toast(
+        t?.kind === "pit"
+          ? "A pit blocks this step. Choose another route."
+          : "A wall blocks this step. Choose another route.",
+      );
+      render();
+      return;
+    }
+    if (distance(planned, to) !== 1) {
+      toast(
+        "That step is not beside the planned position. Undo or choose a connected path.",
+      );
+      return;
+    }
+  }
   if (game.phase === "PLANNING") {
     if (queue.length >= 4) {
       toast("At most four actions; total AP must fit within 3.");
       return;
     }
     const budget = me()!.statuses.stunned ? 2 : 3;
-    const cost =
-      queue.reduce((n, a) => n + actionCost(game!, me()!, a), 0) +
-      actionCost(game!, me()!, c);
+    const cost = projectPlan(game, actorId, [...queue, c]).spent;
     if (cost > budget) {
       toast(`This plan needs ${cost} AP; ${budget} available.`);
       return;
@@ -764,6 +840,7 @@ function enqueueAction(c: Action) {
 function pick(p: Point) {
   if (!game || !me()) return;
   selected = p;
+  if (scene) scene.pinned = true;
   const a = me()!,
     t = tile(game, p);
   if (!t?.explored) {
@@ -775,6 +852,28 @@ function pick(p: Point) {
     return;
   }
   const target = Object.values(game.actors).find((v) => !v.dead && same(v, p));
+  if (target?.kind === "enemy" && (mode === "ATTACK" || mode === "MOVE")) {
+    if (game.phase === "PLANNING") {
+      const proposed = approachAttack(game, actorId, queue, target);
+      if (proposed.problem) toast(proposed.problem);
+      else queue.push(...proposed.actions);
+      render();
+    } else {
+      const preview = attackPreview(game, a, target);
+      if (preview.problem) toast(preview.problem);
+      else enqueueAction({ type: "ATTACK", target: target.id });
+    }
+    return;
+  }
+  const object = game.objects.find((o) => !o.done && same(o, p));
+  if (
+    object &&
+    mode === "MOVE" &&
+    distance(projectPlan(game, actorId, queue).actor, object) <= 1
+  ) {
+    enqueueAction({ type: "INTERACT", id: object.id });
+    return;
+  }
   if (mode === "ATTACK") {
     if (target) enqueueAction({ type: "ATTACK", target: target.id });
     else if (t.kind === "wall" || t.kind === "door")
@@ -813,7 +912,12 @@ function pick(p: Point) {
   } else {
     const last = queue.filter((c) => c.type === "MOVE").at(-1);
     const from = last ? { x: last.x!, y: last.y! } : a;
-    const steps = path(game, from, p);
+    const steps = movementPath(
+      projectPlan(game, actorId, queue).view,
+      from,
+      p,
+      actorId,
+    );
     if (!steps.length) return;
     if (game.phase === "PLANNING") {
       for (const n of steps) {
@@ -1015,6 +1119,10 @@ async function act(value: string) {
       mode = id;
       render();
       break;
+    case "advanced-controls":
+      advancedControls = !advancedControls;
+      render();
+      break;
     case "map-focus":
       mapFocus = !mapFocus;
       render();
@@ -1026,6 +1134,7 @@ async function act(value: string) {
       break;
     case "inspect":
       mapFocus = false;
+      if (scene) scene.pinned = false;
       mode = "INSPECT";
       render();
       break;
@@ -1317,6 +1426,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     queue = [];
     mode = "MOVE";
+    selected = undefined;
+    if (scene) scene.pinned = false;
     closeDrawer();
     render();
     return;
@@ -1359,13 +1470,17 @@ document.addEventListener("keydown", (e) => {
         .filter((c) => c.type === "MOVE")
         .at(-1) ?? me()!;
     const p = { x: base.x! + moves[key].x, y: base.y! + moves[key].y };
-    if (mode !== "MOVE") {
+    if (e.shiftKey) {
       selected = {
         x: (selected ?? me()!).x + moves[key].x,
         y: (selected ?? me()!).y + moves[key].y,
       };
+      if (scene) scene.pinned = true;
       render();
-    } else enqueueAction({ type: "MOVE", ...p });
+    } else {
+      selected = p;
+      enqueueAction({ type: "MOVE", ...p });
+    }
   }
 });
 try {
