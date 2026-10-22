@@ -321,6 +321,12 @@ function bindRoom() {
       )
         moment = selectedMoment;
     } else if (!previous || previous.runId !== m.game.runId) moment = undefined;
+    if (
+      moment?.title === "THREAT DETECTED" &&
+      (m.game.phase !== "PLANNING" ||
+        (previous && m.game.round > previous.round))
+    )
+      moment = undefined;
     const learnedEnvironment = guidance.data.done.includes("environment");
     resolution.accept(m.game, actorId);
     guidance.accept(m.game, actorId);
@@ -467,7 +473,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div id="moment" class="moment" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; Shift arrows aim; F inspect; R ready; I inventory; C character."><div id="round-recap" class="round-recap" role="status"></div></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div id="moment" class="moment" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; Shift arrows aim; F inspect; R ready; I inventory; C character."><div id="target-intent"></div><div id="round-recap" class="round-recap" role="status"></div></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -566,16 +572,21 @@ function render() {
     : "";
   const f = catalog.floors[game.floor - 1];
   const producer = document.querySelector<HTMLElement>("#producer-line")!;
-  const notice = broadcast.current;
+  const notice =
+    performance.now() - broadcast.lastAt < 12000
+      ? broadcast.current
+      : undefined;
   const producerText =
     settings.announcer && notice
       ? `PRODUCER / ${notice.title} — ${notice.text}`
       : "PRODUCER / " +
         (settings.announcer ? "Watching the floor." : "Commentary muted");
   producer.hidden =
-    guidance.data.enabled &&
-    !guidance.data.done.includes("round") &&
-    (!notice || notice.cause === "floor enter");
+    !settings.announcer ||
+    !notice ||
+    (guidance.data.enabled &&
+      game.floor === 1 &&
+      notice.cause === "floor enter");
   if (producer.textContent !== producerText)
     producer.textContent = producerText;
   const change = broadcast.audienceChange;
@@ -647,7 +658,7 @@ function render() {
     .map((v) => button("Revive " + escape(v.name), "revive:" + v.id))
     .join(
       "",
-    )}${game.phase === "SAFE_ROOM" ? button("Saferoom services", "safe", 'class="primary"') : ""}${actorId === hostId && game.phase === "PLANNING" ? button("Force ready after 45s idle", "force") : ""}<p class="muted">${game.bossDefeated ? "Exit unlocked when floor objectives are complete." : "Boss attacks mark tiles one round ahead. Move out of ! tiles."}</p>`;
+    )}${game.phase === "SAFE_ROOM" ? button("Saferoom services", "safe", 'class="primary"') : ""}${actorId === hostId && game.phase === "PLANNING" ? button("Force ready after 45s idle", "force") : ""}${!guidance.data.enabled || guidance.data.done.includes("objective") ? `<p class="muted">${game.bossDefeated ? "Exit unlocked when floor objectives are complete." : "Boss attacks mark tiles one round ahead. Move out of ! tiles."}</p>` : ""}`;
   if (a.dead || a.downed) {
     document.querySelector("#actions")!.innerHTML =
       `<h2>${a.dead ? "Your crawler has died. Spectating the crew." : "Downed · " + a.downed + " rounds to receive help."}</h2><p class="muted">${a.dead ? "Death is permanent for this run. You can inspect, ping and watch allies." : "An adjacent ally needs 2 AP and a medkit to revive you."}</p><div class="row">${button("Inventory", "inventory")}${button("Character", "character")}${Object.values(
@@ -1220,7 +1231,10 @@ async function act(value: string) {
     case "guidance-reset":
       guidance.reset();
       render();
-      if (!game){closeDrawer();title();}
+      if (!game) {
+        closeDrawer();
+        title();
+      }
       break;
     case "inspect":
       mapFocus = false;

@@ -37,3 +37,22 @@ Confirmed first combat, level/talent, Audience thresholds, valuable loot, bargai
 Optional synthesized Web Audio has distinct movement, strike/miss/hit/critical/hurt, electricity/fire/explosion, objective/danger/level, Audience/Producer/boss/loss recipes. One user-gesture-unlocked context, quiet envelopes and bounded categories consume confirmed events, replacing the old generic submission beep. Sound stays optional and disabled by default. No audio files, external dependencies or paid service.
 
 Validation: 565 tests passed; build/typecheck passed; 14/15 browser tests passed initially. Sound testing exposed Escape being ignored while a settings checkbox had focus, leaving the drawer open; Escape now closes drawers from input/select focus, and title guidance reset clears stale drawer state. Both affected sound/unlock/mute and guidance reset scenarios passed (5.7s). The final full browser run follows A3.6. Browser tests verify tone creation/unlock/mute, not human auditory quality.
+
+## A3.6 — integrated first-run regression and polish
+
+Two production-browser walkthroughs (seeds 1234 and 264461152) open actual supplies, fight the existing rat through displayed plans/Ready, approach the relay along a dry route, activate it and verify real conduction damage/stun to the stationary sentry. No world-state injection or combat-stat assistance; the harness reads saved authority state for routing. Added inspection checks across zoom, page scroll and 1280/1920 resizes. Hover details now overlay the map rather than changing its height under the pointer. Effect captions retain screen size and stack instead of magnifying with zoom. Guidance is more compact, stale first-threat notices clear after resolution, old Producer lines expire, premature boss advice is contextual, and Escape closes settings from input focus. First-time human protocol is documented separately; no human comprehension claim is made.
+
+Final validation: 565 tests / 19 files passed (33.39s), 18/18 browser checks passed (1.7m), 11 Python tests passed, both validators passed 448 records, production typecheck/build passed. Two assisted six-floor campaigns won (815-turn alternate, 987-turn combat); not balance evidence. An earlier browser run overlapped a production asset rebuild and got one missing root response; the subsequent full stable-build run passed. Original authority, reconnect/nonce and Phaser assertions remain active. Current 0.3.0 health/HTML/two emitted assets/448-record catalog smoke passed on isolated loopback 2568. Reusable cloud install/start draft saved; snapshot publication/restoration is not claimed.
+
+Remaining: actual zero-knowledge novice sessions, dense-feedback edge cases, text-heavy advanced mechanics/ordered boss devices, short-height layout, queued gear-swap preview, WAN/human balance/accessibility/Windows/endurance qualification. See ALPHA3.md and FIRST_TIME_PLAYTEST.md.
+
+## Source history
+
+- `0b524c7` A3.1 Establish readable pixel sprites camera and pointer mapping
+- `dc4f26b` A3.2 Teach Floor 1 through persistent contextual guidance
+- `daeeb37` A3.3 Make AP planning truthful and disclose controls progressively
+- `99c0d7d` A3.4 Explain resolved turns and expose physical causes
+- `9cec1bf` A3.5 Frame earned moments and add confirmed semantic sound cues
+- `v0.3.0-local-alpha` A3.6 Verify real first-run flows and package Alpha 3 candidate
+
+The tag resolves to the final source commit. The ZIP's delivery-manifest.json records the full commit and build hashes. A packaging-only delivery commit adds the archive; no merge to main or public deployment.

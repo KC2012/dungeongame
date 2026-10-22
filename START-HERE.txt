@@ -1,0 +1,33 @@
+THE CRAWL — ALPHA 3 / 0.3.0 LOCAL CANDIDATE
+
+This folder contains the complete game source and a prebuilt client/server.
+Node.js 22 or newer is required. No paid service, account or deployment needed.
+
+1. Stop any older running game host with Ctrl+C in its terminal.
+2. Extract this ZIP into a NEW folder. Keep your old game and saves as backups.
+3. Open a terminal in the extracted dungeongame folder (where package.json is).
+4. Run:
+     npm ci --omit=dev
+     npm run host
+5. Open http://localhost:2567 in a desktop browser.
+6. Create a private room with Guidance On, then Begin the run.
+
+For a repeatable first-run test, use seed 1234 or 264461152 and Night Custodian.
+Settings offers Guidance On / Off / Reset. Reset before creating a NEW room to
+repeat the teaching layout. Old saved floors are not automatically rearranged.
+Advanced controls reveals every command. Show panels restores exact details.
+
+Movement: WASD / arrows / click floor. Shift + arrows aims. Click enemies to
+plan an affordable approach + attack; check the displayed costs. Ready [R]
+commits a combat plan. Escape clears inspection/selection or closes a drawer.
+
+To develop/rebuild instead, run npm ci, then npm run build and npm run host.
+See docs/ALPHA3.md for changes, screenshots, tests, known limits and controls.
+See docs/alpha3/FIRST_TIME_PLAYTEST.md for a first-time human test protocol.
+The older WINDOWS-FIX.txt is historical Alpha 1 documentation.
+
+The 565-test suite, 18 browser checks and 11 Python checks passed. Actual
+novice comprehension, WAN and human accessibility/balance remain unverified.
+This is a playable local candidate, not a certified release candidate.
+delivery-manifest.json records the exact source commit and compiled hashes.
+history.bundle preserves the source milestone history for optional Git use.

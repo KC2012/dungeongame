@@ -602,3 +602,11 @@ details summary {
 .moment button {padding:4px 7px;font-size:11px;}
 #producer-line[hidden] {display:none;}
 .broadcast-strip:has(#producer-line[hidden]) {grid-template-columns:1fr;padding:3px 14px;min-height:22px;}
+/* Hover previews must never resize the camera underneath the pointer. */
+#target-intent {position:absolute;top:8px;right:8px;z-index:3;max-width:min(380px,46%);padding:9px 12px;background:#1e3037ee;border:1px solid #6c9096;pointer-events:none;}
+.target-readout {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:25px;flex-shrink:0;}
+#round-recap {max-width:min(490px,58%);}
+.guidance {display:flex;gap:16px;align-items:center;padding:7px 14px;font-size:12px;}
+.guidance b {flex:0 0 220px;}
+.guidance p {margin:0;}
+@media (max-width:760px) {.guidance {display:block;}.guidance p {margin-top:3px;}}

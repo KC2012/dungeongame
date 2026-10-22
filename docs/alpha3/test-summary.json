@@ -1,0 +1,180 @@
+{
+  "version": "0.3.0",
+  "status": "LOCAL_ALPHA_CANDIDATE",
+  "baselineRef": "alpha2-known-good",
+  "sourceRef": "v0.3.0-local-alpha",
+  "branch": "alpha3/make-the-game-understandable",
+  "baseline": {
+    "npmTests": 547,
+    "npmFiles": 14,
+    "browserTests": 11,
+    "pythonTests": 11,
+    "catalogRecords": 448,
+    "build": "passed"
+  },
+  "checks": {
+    "npm test": {
+      "passed": 565,
+      "failed": 0,
+      "skipped": 0,
+      "files": 19,
+      "seconds": 33.39
+    },
+    "npm run e2e": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "reportedDuration": "1.7m",
+      "guidedSeeds": [
+        1234,
+        264461152
+      ],
+      "details": "Production host, real browser input; guided walkthrough routing reads authority checkpoints, does not inject state. Includes four-browser authority/reconnect, nonce retry, rapid inputs, pointers, sound and real Phaser effects."
+    },
+    "python unittest": {
+      "passed": 11,
+      "failed": 0
+    },
+    "contentValidation": {
+      "records": 448,
+      "python": "passed",
+      "typescript": "passed"
+    },
+    "npm run build": {
+      "typecheck": "passed",
+      "client": "passed",
+      "server": "passed",
+      "warning": "Existing large client chunk (~1.98 MB) warning"
+    },
+    "campaign": {
+      "passed": 2,
+      "failed": 0,
+      "assisted": true,
+      "routes": [
+        "alternate",
+        "combat"
+      ],
+      "floors": 6,
+      "report": "campaign.json"
+    },
+    "productionSmoke": {
+      "version": "0.3.0",
+      "health": "passed",
+      "html": "passed",
+      "assets": 2,
+      "catalogRecords": 448,
+      "bind": "loopback",
+      "port": 2568
+    }
+  },
+  "coverageNotes": [
+    "600 seeded generated floors in existing generation regression; 60 guided seeds verify deterministic layout, reachability and actual conduction/stun.",
+    "Existing randomized rounds, independent-process replay, persistence/network/content suites retained.",
+    "Final caption/hover/notice polish built and covered by all 18 final browser checks.",
+    "An earlier browser run overlapped a build replacing dist and failed one root-page request; the subsequent stable-build full run passed all 18. No assertions disabled."
+  ],
+  "notRun": [
+    "Actual novice zero-knowledge human playtest",
+    "Separate-internet multiplayer",
+    "New long endurance run",
+    "Human sound/accessibility/balance review",
+    "Windows runtime recertification for Alpha 3"
+  ],
+  "files": [
+    {
+      "file": "tests/integration/network.test.ts",
+      "status": "passed",
+      "tests": 1
+    },
+    {
+      "file": "tests/integration/persistence.test.ts",
+      "status": "passed",
+      "tests": 7
+    },
+    {
+      "file": "tests/integration/windows-persistence.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/unit/achievement-hooks.test.ts",
+      "status": "passed",
+      "tests": 60
+    },
+    {
+      "file": "tests/unit/broadcast.test.ts",
+      "status": "passed",
+      "tests": 4
+    },
+    {
+      "file": "tests/unit/content-behavior.test.ts",
+      "status": "passed",
+      "tests": 152
+    },
+    {
+      "file": "tests/unit/engine.test.ts",
+      "status": "passed",
+      "tests": 237
+    },
+    {
+      "file": "tests/unit/explanation.test.ts",
+      "status": "passed",
+      "tests": 5
+    },
+    {
+      "file": "tests/unit/fuzz.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/unit/guidance.test.ts",
+      "status": "passed",
+      "tests": 4
+    },
+    {
+      "file": "tests/unit/identity.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/unit/moments-audio.test.ts",
+      "status": "passed",
+      "tests": 2
+    },
+    {
+      "file": "tests/unit/offers.test.ts",
+      "status": "passed",
+      "tests": 33
+    },
+    {
+      "file": "tests/unit/planning.test.ts",
+      "status": "passed",
+      "tests": 5
+    },
+    {
+      "file": "tests/unit/presentation.test.ts",
+      "status": "passed",
+      "tests": 9
+    },
+    {
+      "file": "tests/unit/progression.test.ts",
+      "status": "passed",
+      "tests": 24
+    },
+    {
+      "file": "tests/unit/reactions.test.ts",
+      "status": "passed",
+      "tests": 11
+    },
+    {
+      "file": "tests/unit/scenarios.test.ts",
+      "status": "passed",
+      "tests": 3
+    },
+    {
+      "file": "tests/unit/visual-language.test.ts",
+      "status": "passed",
+      "tests": 2
+    }
+  ]
+}

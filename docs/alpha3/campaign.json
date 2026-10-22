@@ -1,0 +1,27 @@
+{
+  "assisted": true,
+  "sourceHash": "7c2d1e93ae533b7d0f6372327a097d8656a87048c39ad52654c20178193d8f2e",
+  "botSourceHash": "ff25b99a4b01519985ea84c7b47323ce2262eb1de7ea9c5669f7f41a4a9324c8",
+  "assistance": "Starting 500 HP, +8 armor and rail driver; no teleporting, save resets, free objective flags or in-run stat modifications.",
+  "elapsedSeconds": 13.276,
+  "rows": [
+    {
+      "seed": 0,
+      "players": 1,
+      "route": "alternate",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 815,
+      "reason": "achievement"
+    },
+    {
+      "seed": 1,
+      "players": 1,
+      "route": "combat",
+      "result": "VICTORY",
+      "floor": 6,
+      "turns": 987,
+      "reason": "achievement"
+    }
+  ]
+}

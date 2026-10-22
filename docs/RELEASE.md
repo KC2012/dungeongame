@@ -1,4 +1,4 @@
-> Alpha 2 is now the current local build. See [Alpha 2 delivery](ALPHA2.md). The Alpha 1 release record below is retained as historical evidence.
+> Alpha 3 is the current local candidate. See [Alpha 3 delivery](ALPHA3.md), `release-manifest.json`, and the packaged `delivery-manifest.json` for exact source/build identity. Earlier release records below are historical.
 
 # Local alpha delivery
 

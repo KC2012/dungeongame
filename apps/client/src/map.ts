@@ -159,11 +159,12 @@ export class DungeonScene extends Phaser.Scene {
         this.add
           .text(x * 16 + 8, y * 16 + 8, v, {
             fontFamily: "monospace",
-            fontSize: "10px",
+            fontSize: "12px",
             color,
             stroke: "#121812",
             strokeThickness: 2,
           })
+          .setScale(1 / this.zoom)
           .setOrigin(0.5)
           .setDepth(10),
       );

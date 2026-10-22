@@ -25,8 +25,8 @@ To use another machine on a trusted LAN, deliberately bind the host to the desir
 ## Controls and loop
 
 - WASD/arrows move. In exploration, the server confirms each action immediately. In combat, movement and actions enter a 3 AP queue. Terrain and statuses change costs; the displayed budget uses the engine's calculation.
-- 1 selects movement, 2 attacks, 3 guards, I opens inventory, C opens character, F inspects, R toggles readiness, Escape cancels, and Space confirms the selected target. In a targeting mode, arrows move the cursor.
-- Mouse targeting and keyboard targeting share the inspector. Read marked boss tiles before committing; hazards affect allies. Area actions warn when a crawler may be hit.
+- 1 selects movement, 2 attacks, 3 guards, I opens inventory, C opens character, F inspects, R toggles readiness, Escape cancels, and Space confirms the selected target. Movement keys always move; Shift + arrows aim the cursor. Escape also closes drawers when a settings field has focus.
+- Mouse targeting and keyboard targeting share the inspector. Hover identifies tiles; F then click pins inspection until Escape. Clicking an enemy constructs an affordable approach + attack plan or explains the AP shortfall. Guidance On/Off/Reset and Advanced controls support new and experienced players; see ALPHA3.md. Read marked boss tiles before committing; hazards affect allies. Area actions warn when a crawler may be hit.
 - Move adjacent to objects to see interaction buttons. A physical route is always available for required objectives. Hacking and disabling can operate the same devices. Optional locked maintenance routes accept keys, hacking, or structural damage.
 - All living crawlers must gather near the saferoom before entering. Rest is limited per crawler/floor. Shop, craft, accept/decline disclosed bargains, and select profession/adaptation from floor 3 onward. Crew votes are required to descend.
 - Gifts require recipient consent. Boss rewards follow a draft and can be passed. Overflow stays in the saferoom chest. Downed allies need an adjacent revival; dead crawlers spectate/ping, and teammates can recover their gear.

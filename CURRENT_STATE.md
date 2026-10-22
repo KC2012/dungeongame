@@ -1,44 +1,26 @@
-# THE CRAWL — Alpha 2 local presentation build
+# THE CRAWL — Alpha 3 local candidate
 
-Version **0.2.0 LOCAL_ALPHA**, 2026-10-21 Pacific. The A2.1–A2.5 implementation passes are delivered on `alpha2/make-the-game-visible`. New-player comprehension and full release acceptance are not yet human-validated. No public deployment, tunnel, purchase, paid service, push or remote release.
+Version **0.3.0 LOCAL_ALPHA_CANDIDATE**, 2026-10-22 Pacific. Development branch `alpha3/make-the-game-understandable`; source tag `v0.3.0-local-alpha`. The playable implementation passes A3.1–A3.6 are delivered. Human first-time comprehension remains unverified; do not call the zero-knowledge acceptance gate passed.
 
-Alpha 1 is preserved at `alpha1-import-baseline` (`41d79ba`) and in the untouched original uploaded ZIP/extraction. See [baseline](docs/alpha2/BASELINE.md) for its SHA-256 and the missing-original-history caveat. Historical Alpha 1 performance/campaign/endurance reports remain under docs; they are not relabeled as Alpha 2 results.
+Alpha 2 is preserved at `alpha2-known-good` / `v0.2.0-local-alpha`, commit `e31bf5450dd43470080884c134c27e7346d1c9ee`. Alpha 1 remains at `alpha1-import-baseline` (`41d79ba`), with its original upload preserved. No merge, public deployment, tunnel, spending or paid services. A separate delivery branch carries the downloadable package using the previously authorized GitHub delivery channel; `main` is not changed.
 
 | Milestone | Delivered |
 | --- | --- |
-| A2.1 | Confirmed client timeline, sequenced movement, melee/ranged/impact/miss/critical/armor/shield/damage/heal/status/collision/down/death/revive/ability feedback, environmental reactions and stronger boss danger tiles. Reduced motion; no input gating. |
-| A2.2 | Four authored micro-situations inserted into existing procedural rooms using existing mechanics; readable materials, containers, power states and room plaques. Protected central paths/objects/actors. |
-| A2.3 | Enemy role glyphs/silhouettes, tactics/weaknesses, guardian crests/phase cues and HUD, tactical item hints and two-stage Floor 3 identity choices. |
-| A2.4 | Original short Producer reactions, priority/cooldown/mute, actual Audience score/change and event anchoring; scoring rules unchanged. |
-| A2.5 | Wider map, reversible map focus, contextual readout and exact targeting feedback, collapsible expert panels with all detailed information retained. Parent-resize regression fixed. |
+| A3.1 | 39 original generated pixel sprites, closer camera/tactical framing, visual hierarchy, live pointer/camera mapping. |
+| A3.2 | Persisted Guidance On/Off/Reset; real Floor 1 movement/supplies, one forgiving rat, dry-path relay/wet sentry lesson; contextual defense/cover/equipment/progression/objectives. |
+| A3.3 | Map focus by default; progressive/Advanced controls; AP pips, named costed plans, projected movement/doors/endpoint and affordable approach+attack; movement keys always move, Shift aims; pinned inspection. |
+| A3.4 | Named on-map causal outcomes/history; specific authoritative rejection reasons; actual electrical arcs/blast bounds; recoil and stronger guardian source/area/timing; known-network opportunities. |
+| A3.5 | Earned moments and Floor 3 choice shortcuts; selective Producer discovery response; optional confirmed-event semantic audio with gesture unlock/mute. |
+| A3.6 | Two real browser first-combat/relay routes; zoom/scroll/resize inspection regression; stable hover geometry, smaller stacked effect captions, stale-notice and settings Escape fixes; first-time human protocol. |
 
-## Actual current checks
+Actual final checks: **565 npm tests in 19 files passed** (33.39s), **18 browser scenarios passed** (1.7m), **11 Python tests passed**, both validators passed **448 records**, typecheck/client/server production build passed. Two assisted six-floor campaigns won by alternate/combat routes; those are not balance evidence. Existing 600-floor generation regression, 60 guided seeds, fuzz/replay/content/network/persistence checks remain active. Stable-build full browser run has zero failures/skips. An earlier browser run was interrupted by rebuilding its served assets; that run is not presented as passing.
 
-- Repeated full reusable setup: frozen `npm ci`, Python venv/pinned jsonschema dependencies, both validators, Python tests, full npm suite and production build succeeded.
-- `npm test`: **547 passed, 14 files, zero failed/skipped**, 28.95s. Includes 10,000 randomized rounds, independent-process replay, all existing content behavior, progression, save/reconnect and authority/network suites, plus presentation regressions.
-- Python: **11 passed**; both validators: **448 catalog records passed**.
-- `npm run build`: typecheck and client/server bundles passed; existing ~1.95MB client-bundle warning remains.
-- `npm run e2e`: **11 passed**, 48.2s. Original two/four-browser authority and reconnect/nonce checks, choice lockout, settings, actual Phaser event presentation, map-focus resize/expert access, input during effects and no historical replay on resume.
-- New generation check: **600 seeded floors** repeated for deterministic hashes, object/exit reachability and safe spawns. Two assisted six-floor campaigns won through alternate/combat routes. No human balance inference.
-- Direct Alpha 1/2 combat comparison: **1,000 cases** with identical non-event state, RNG and event type/order. Event payload enrichment and newly generated scenarios intentionally differ.
-- Screenshots and compact machine-readable evidence: [Alpha 2 report](docs/ALPHA2.md), [phase record](docs/alpha2/PROGRESS.md), [test summary](docs/alpha2/test-summary.json).
+Evidence: [Alpha 3 report and launch](docs/ALPHA3.md), [phase history](docs/alpha3/PROGRESS.md), [machine-readable test summary](docs/alpha3/test-summary.json), [manual first-time protocol](docs/alpha3/FIRST_TIME_PLAYTEST.md), [asset sheet](docs/alpha3/sprite-sheet.svg), and screenshots under `docs/alpha3`. Original Alpha 2 evidence is retained under `docs/alpha2` without relabeling.
 
-## Boundaries and remaining work
+The deterministic core and authoritative multiplayer remain in place. Simulation-facing edits are opt-in guided Floor 1 placement/stats using existing content, action receipts/environment metadata, precise failures, and a refused exploration action publishing a revision without spending a turn or RNG. Existing save schema/nonce/reconnect rules remain supported. Old saved floors are not rearranged; back up saves and use matching host/client builds. See the report for these boundaries and planner assumptions.
 
-The deterministic core, authority, tactical planning and existing progression remain in place. Simulation-facing edits are authored situation placement and presentation metadata, including accurate capped healing. Schema-1 saves remain supported; existing floors are not retroactively changed. Use matching host/client versions, and back up saves when switching versions.
+Known limits: complex item/ability/boss-device rules still rely on text; dense feedback and short viewports need more human polish; brief within-snapshot statuses may lack cues; planner assumes current equipment and stationary other actors; browser audio checks do not assess auditory quality. No new WAN, human balance/accessibility, Windows runtime, long endurance or desktop profiling certification. Existing ~1.98 MB bundle warning remains. No novice human has validated independent ten-minute understanding.
 
-Dense chain labels can still crowd; states applied and expired inside one snapshot may lack separate visual cues; guardians still share a lightweight base silhouette with floor/phase marks. Human first-time-player readability, accessibility/tone/balance, separate-network multiplayer, desktop long-tail profiling and new endurance testing remain outstanding. Alpha 1's 16.23s worst-case load maximum is not recertified or hidden. Recommendations and exact launch/test instructions are in docs/ALPHA2.md.
+Cloud instance: production 0.3.0 health/HTML/assets/catalog smoke passed on loopback **2568**, isolated `.data/alpha3-local` saves. Port 2567 may still serve the preserved Alpha 2 process; no unknown host was stopped. The onboarding skill's reusable `install_script` and `start_skill` draft were updated for Alpha 3 and saved, not published or restored into a new task. Processes must restart after snapshot restoration. Local desktop launch defaults to 2567; see the report.
 
-Next task: observe first-time players explaining world feedback, then prioritize missed causal links and dense-feedback placement before expanding content.
-
-Production 0.2.0 health/HTML/assets/catalog smoke passed after version alignment; local host is running on port 2567 with isolated `.data/alpha2-local` saves. Reusable cloud `install_script` and `start_skill` draft saved successfully. Snapshot publication and restoration in a new task have not been performed. Review/save Environment settings and publish the environment if a reusable cloud snapshot is desired.
-
-Alpha 3 branch alpha3/make-the-game-understandable; Alpha 2 preserved at alpha2-known-good. A3.1 delivered original readable pixel recipes, closer camera and live-bounds pointer conversion. 549 tests and 11 browser checks passed. See docs/alpha3/AUDIT.md and PROGRESS.md. Alpha 3 is in progress.
-
-A3.2: persisted On/Off/Reset guidance and opt-in host-authoritative teaching arrangement on Floor 1. 553 unit/integration tests passed; guided-floor conduction tested across 60 seeds. Browser first-run, reset and four-client route pass after correcting first-enemy placement. Alpha 3 remains in progress.
-
-A3.3: projected movement/door/AP planning, ghost endpoint and auto-approach attack, consistent movement keys, progressive controls with Advanced override, full-width map and pinned inspection. 558 tests passed; corrected fast-input/resume and four-browser authority/resize regressions pass. Presentation still in active development.
-
-A3.4: named on-map turn recap/history, authority-specific action rejection, real conduction edges/blast bounds, contextual machine consequences and source/timing telegraphs. 563 automated tests and all 14 browser scenarios passed; build passed. Failed exploration actions publish a new snapshot revision without advancing the world turn.
-
-A3.5: earned-moment notices/choice CTAs, selective teaching Producer and optional outcome-driven semantic audio. 565 tests passed; affected browser sound/reset checks pass after fixing Escape handling from settings controls. No new content catalogs or paid dependencies.
+Next work: observe three first-time players using the included protocol, fix repeated recognition/plan/cause failures, then test late-floor complexity and mixed-experience multiplayer. Prefer this evidence over expanding catalogs.

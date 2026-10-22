@@ -1,6 +1,6 @@
 # THE CRAWL — The Concourse
 
-**ALPHA 2 · 0.2.0 · LOCAL_ALPHA.** An implemented, server-authoritative six-floor tactical browser co-op game for 1–4 crawlers, based on the original design package below. This is an unofficial private fan-setting interpretation with original playable characters, writing, floors and procedural pixel art.
+**ALPHA 3 · 0.3.0 · LOCAL_ALPHA candidate.** An implemented, server-authoritative six-floor tactical browser co-op game for 1–4 crawlers, based on the original design package below. This is an unofficial private fan-setting interpretation with original playable characters, writing, floors and procedural pixel art.
 
 ```sh
 npm ci
@@ -10,7 +10,7 @@ npm run host
 
 Use Node.js 22+; commands run from the repository root. The default host binds loopback port 2567. Create or join a private room in a desktop browser. No accounts, paid services, public deployment or tunnel are required.
 
-Alpha 2 makes confirmed combat, environmental reactions, enemy roles, boss danger and Audience feedback visible in the dungeon. See [Alpha 2 delivery, evidence and limitations](docs/ALPHA2.md).
+Alpha 3 adds readable pixel sprites, guided first-floor encounters, progressive controls, costed action plans, pinned inspection, causal outcomes and optional semantic audio. See [Alpha 3 delivery, evidence and limitations](docs/ALPHA3.md), including the first-time playtest protocol. Human zero-knowledge comprehension remains unverified. Alpha 2 is preserved at `alpha2-known-good`.
 
 See [local hosting and controls](docs/HOSTING.md), [current implementation and actual test evidence](CURRENT_STATE.md), [known issues](docs/ISSUES.md), and [acceptance comparison](docs/ACCEPTANCE_REPORT.md), and [local release contents](docs/RELEASE.md). `PLAYABLE_RC` is not claimed: separate-network testing and human balance/accessibility acceptance remain required.
 

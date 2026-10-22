@@ -35,7 +35,7 @@ export class WorldEffects {
         ? this.scene.add
             .text(0, 0, cue.label, {
               fontFamily: "monospace",
-              fontSize: "7px",
+              fontSize: "12px",
               color: "#" + cue.color.toString(16).padStart(6, "0"),
               backgroundColor: "#111914",
               padding: { x: 2, y: 1 },
@@ -88,6 +88,9 @@ export class WorldEffects {
   update() {
     const now = this.scene.time.now,
       g = this.g;
+    const zoom = this.scene.cameras.main.zoom;
+    const labels: { x: number; y: number; width: number; height: number }[] =
+      [];
     g.clear();
     this.active = this.active.filter((v) => {
       const age = now - v.born - (this.reducedMotion ? 0 : v.cue.delay);
@@ -141,16 +144,27 @@ export class WorldEffects {
         g.lineBetween(x - 2, y + 4, x + 6, y + 2);
       } else if (c.kind === "ring")
         g.strokeCircle(x, y, this.reducedMotion ? 8 : 5 + p * 7);
-      // Spread dense feedback into three stable lanes. Reduced motion keeps text stationary.
-      v.text
-        ?.setVisible(true)
-        .setPosition(
-          x,
-          y -
-            10 -
-            (c.kind === "text" ? 10 : 0) -
-            (this.reducedMotion ? 0 : p * 8),
-        );
+      // Labels stay a readable screen size when zoomed, and stack above nearby outcomes.
+      // Keep the actual arcs/impacts on their tiles; only their captions move.
+      if (v.text) {
+        v.text.setScale(1 / zoom);
+        const width = v.text.width / zoom,
+          height = v.text.height / zoom;
+        let top = y - 22 - height - (this.reducedMotion ? 0 : p * 5);
+        for (let lane = 0; lane < 12; lane++) {
+          const collision = labels.find(
+            (box) =>
+              x - width / 2 < box.x + box.width &&
+              x + width / 2 > box.x &&
+              top < box.y + box.height &&
+              top + height > box.y,
+          );
+          if (!collision) break;
+          top = collision.y - height - 2 / zoom;
+        }
+        labels.push({ x: x - width / 2, y: top, width, height });
+        v.text.setVisible(true).setPosition(x, top + height);
+      }
       return true;
     });
   }
