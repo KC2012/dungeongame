@@ -1,3 +1,4 @@
+import { authorSituation } from "./scenarios";
 import { compareIds } from "./random";
 import { catalog, entry } from "../../content/src/index";
 import { random } from "./random";
@@ -307,6 +308,9 @@ function buildFloor(s: State): void {
     .filter((_, i) => i % 3 === s.floor % 3)
     .slice(0, 12)
     .map((e) => ({ id: e.id, count: 1, durability: 12 }));
+  // Insert one authored encounter and one optional discovery; central paths remain untouched.
+  authorSituation(s, 2, coords[2]);
+  authorSituation(s, 7, coords[7]);
   const failures = validateFloor(s);
   if (failures.length)
     throw Error(

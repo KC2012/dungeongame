@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import type { State, Actor, Point } from "../../../packages/engine/src/types";
 import { PresentationStream } from "./presentation";
 import { WorldEffects } from "./effects";
+import { scenarios } from "../../../packages/content/src/scenarios";
 export class DungeonScene extends Phaser.Scene {
   stream = new PresentationStream();
   effects?: WorldEffects;
@@ -155,6 +156,20 @@ export class DungeonScene extends Phaser.Scene {
             g.fillRect(x * 16 + 3, y * 16 + 5, 4, 1);
           }
         }
+        if (t.tags.includes("volatile")) {
+          g.fillStyle(0xb5744f);
+          g.fillRect(x * 16 + 4, y * 16 + 3, 8, 10);
+          label(x, y, "!", "#ffdeb0");
+        } else if (t.tags.includes("flammable")) {
+          g.fillStyle(0x8c7950);
+          g.fillRect(x * 16 + 3, y * 16 + 11, 10, 2);
+        }
+        if (t.tags.includes("gas") && !t.hazards.poison)
+          label(x, y, "P", "#c4a3de");
+        if (t.tags.includes("ice")) {
+          g.lineStyle(1, 0xb1ebef);
+          g.lineBetween(x * 16 + 2, y * 16 + 12, x * 16 + 12, y * 16 + 2);
+        }
         if (t.cover) {
           g.fillStyle(0x777963);
           g.fillRect(x * 16 + 3, y * 16 + 5, 10, 7);
@@ -194,6 +209,17 @@ export class DungeonScene extends Phaser.Scene {
         }
         if (t.trap) label(x, y, "^");
       }
+    const named = new Set<number>();
+    for (let i = 0; i < s.tiles.length; i++) {
+      const t = s.tiles[i];
+      if (!t.explored || named.has(t.room)) continue;
+      const scenario = scenarios.find((v) => t.tags.includes("scene:" + v.id));
+      if (!scenario) continue;
+      named.add(t.room);
+      const base = t.room === 2 ? { x: 36, y: 4 } : { x: 22, y: 32 };
+      if (s.tiles[base.y * s.width + base.x]?.explored)
+        label(base.x, base.y, scenario.name.toUpperCase(), "#c9c5a4");
+    }
     for (const o of s.objects) {
       if (!s.tiles[o.y * s.width + o.x]?.explored) continue;
       g.fillStyle(
@@ -210,6 +236,10 @@ export class DungeonScene extends Phaser.Scene {
             }[o.kind],
       );
       g.fillRect(o.x * 16 + 3, o.y * 16 + 3, 10, 10);
+      if (o.kind === "machine") {
+        g.lineStyle(1, o.powered && !o.disabled ? 0xf7e77d : 0x688475);
+        g.strokeRect(o.x * 16 + 1, o.y * 16 + 1, 14, 14);
+      }
       label(
         o.x,
         o.y,
@@ -219,7 +249,7 @@ export class DungeonScene extends Phaser.Scene {
           safe: "+",
           exit: ">",
           cache: "$",
-          machine: "O",
+          machine: o.powered && !o.disabled ? "Z" : "−",
           secret: "*",
         }[o.kind],
         "#151b15",

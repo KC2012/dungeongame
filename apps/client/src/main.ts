@@ -6,6 +6,7 @@ import {
 } from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
+import { scenarios } from "../../../packages/content/src/scenarios";
 import "./style.css";
 import type {
   State,
@@ -616,7 +617,8 @@ function inspector() {
     (a) => !a.dead && same(a, selected!),
   );
   const o = game.objects.find((o) => same(o, selected!));
-  el.innerHTML = `${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
+  const situation = scenarios.find((v) => t.tags.includes("scene:" + v.id));
+  el.innerHTML = `${situation ? `<h3>${escape(situation.name)}</h3><p class="statusline">${escape(situation.situation)}</p><small>${escape(situation.possibilities)}</small>` : ""}${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
     t.hazards,
   )
     .map(

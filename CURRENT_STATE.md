@@ -39,3 +39,5 @@ Remaining acceptance work: actual separate-internet/degraded-WAN play, desktop l
 ## Alpha 2 in progress — A2.1
 
 Dedicated branch alpha2/make-the-game-visible; imported Alpha 1 preserved at tag alpha1-import-baseline (41d79ba) and original ZIP retained unchanged. A2.1 adds confirmed client effects, stronger telegraphs and reduced-motion feedback. Full automated suite: 535 passed; baseline six production browser scenarios passed; new Phaser presentation fixture passed. See docs/alpha2/PROGRESS.md and screenshots. Alpha 2 is not yet complete.
+
+A2.2: four authored situations added through existing materials and objects, preserving safe central routes. 538 automated tests passed, including 600-floor deterministic/reachability checks; 7 browser tests passed; two assisted six-floor campaigns won via alternate/combat routes. See docs/alpha2/PROGRESS.md.

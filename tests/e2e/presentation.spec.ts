@@ -46,5 +46,8 @@ test("real Phaser renders confirmed movement, combat and chain effects without c
   await run("down");
   await page.waitForTimeout(100);
   await page.screenshot({ path: "docs/alpha2/a21-reduced-motion-down.png" });
+  await run("scenario");
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: "docs/alpha2/a22-flooded-relay.png" });
   expect(errors).toEqual([]);
 });
