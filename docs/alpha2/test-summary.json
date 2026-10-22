@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "baseline": {
+    "vitest": 529,
+    "python": 11,
+    "browser": 6
+  },
+  "alpha2": {
+    "vitest": {
+      "passed": 547,
+      "failed": 0,
+      "pending": 0,
+      "files": 14
+    },
+    "python": {
+      "passed": 11,
+      "failed": 0
+    },
+    "browser": {
+      "startTime": "2026-10-22T01:03:13.018Z",
+      "duration": 48218.565,
+      "expected": 11,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "contentRecords": 448,
+    "cleanFrozenInstall": "passed",
+    "buildAndTypecheck": "passed",
+    "seededFloorChecks": 600,
+    "assistedSixFloorCampaigns": 2,
+    "alpha1CombatParityCases": 1000
+  },
+  "scope": "Local automated checks. No separate-network test, new 30-minute browser soak, or human comprehension certification."
+}

@@ -46,6 +46,7 @@ export function visualCues(
   events: GameEvent[],
 ): VisualCue[] {
   const cues: VisualCue[] = [];
+  const movementSteps = new Map<string, number>();
   const positions = new Map(
     Object.values(before.actors).map((a) => [a.id, point(a)]),
   );
@@ -70,6 +71,7 @@ export function visualCues(
       duration: kind === "move" ? 160 : kind === "strike" ? 260 : 900,
       actorId: kind === "move" ? e.actorId : undefined,
     });
+    return cues[cues.length - 1];
   };
   for (const e of events) {
     const source = after.actors[e.actorId] ?? before.actors[e.actorId];
@@ -83,19 +85,23 @@ export function visualCues(
       const id =
         e.type === "move" || e.type === "slide" ? e.actorId : e.targetIds[0];
       const actor = after.actors[id];
-      const old = positions.get(id);
+      const old = e.payload.from ?? positions.get(id);
       if (actor && old && at && !equal(old, at)) {
-        add(
+        const motion = add(
           e,
           "move",
           at,
           e.type === "move" ? "" : e.type.toUpperCase(),
           ink.force,
           old,
+          (movementSteps.get(id) ?? 0) * 160,
         );
-        cues[cues.length - 1] && (cues[cues.length - 1].actorId = id);
+        movementSteps.set(id, (movementSteps.get(id) ?? 0) + 1);
+        if (motion) motion.actorId = id;
         positions.set(id, point(at));
       }
+      if (e.payload.collision)
+        add(e, "impact", at, "COLLISION", ink.physical, undefined, 200);
     } else if (e.type === "hit" || e.type === "miss") {
       // The reducer emits hit after damage. Delay associated damage below to give a readable cue -> travel -> impact sequence.
       if (source && target) {
@@ -155,7 +161,7 @@ export function visualCues(
         e,
         "ring",
         at,
-        `${e.type === "heal" ? "+" : "SHIELD "}${e.payload.amount}`,
+        `${e.type === "heal" ? "+" : "SHIELD "}${e.type === "shield" ? (e.payload.total ?? e.payload.amount) : e.payload.amount}`,
         e.type === "heal" ? ink.heal : ink.water,
         undefined,
         delay,
@@ -277,6 +283,16 @@ export function visualCues(
     const t = after.tiles[i],
       old = before.tiles[i];
     if (!old?.explored || !t.explored) continue;
+    const location = { x: i % after.width, y: Math.floor(i / after.width) };
+    if (old.kind === "wall" && t.hp < old.hp)
+      add(
+        { runId: after.runId, eventId: after.nextEventId } as GameEvent,
+        "burst",
+        location,
+        t.kind === "wall" ? `STRUCTURE −${old.hp - t.hp}` : "BREACH",
+        ink.physical,
+      );
+
     for (const [element, h] of Object.entries(t.hazards)) {
       if (old.hazards[element] && old.hazards[element].intensity >= h.intensity)
         continue;

@@ -125,3 +125,56 @@ describe("confirmed visual stream", () => {
     expect(event.payload.range).toBe(5);
   });
 });
+
+it("unlogged AI movement and structural damage are visible through confirmed deltas", () => {
+  const s = fixture(),
+    n = clone(s);
+  n.actors.e.x++;
+  const i = 12 * n.width + 12;
+  s.tiles[i].kind = "wall";
+  s.tiles[i].hp = 8;
+  n.tiles[i].kind = "wall";
+  n.tiles[i].hp = 3;
+  const cues = visualCues(s, n, []);
+  expect(cues.some((c) => c.kind === "move" && c.actorId === "e")).toBe(true);
+  expect(cues.some((c) => c.label === "STRUCTURE −5")).toBe(true);
+});
+
+it("healing, shield and collision feedback report actual capped results", async () => {
+  const { effect } = await import("../../packages/engine/src/effects");
+  const { push } = await import("../../packages/engine/src/combat");
+  const s = fixture();
+  s.actors.a.hp = s.actors.a.maxHP - 1;
+  effect(s, s.actors.a, s.actors.a, s.actors.a, {
+    type: "heal",
+    magnitude: 10,
+    target: "self",
+  });
+  expect(s.events.find((e) => e.type === "heal")?.payload.amount).toBe(1);
+  effect(s, s.actors.a, s.actors.a, s.actors.a, {
+    type: "shield",
+    magnitude: 20,
+    target: "self",
+  });
+  expect(s.events.find((e) => e.type === "shield")?.payload.total).toBe(12);
+  const n = clone(s);
+  const enemy = n.actors.e;
+  n.tiles[enemy.y * n.width + enemy.x + 1].kind = "wall";
+  push(n, n.actors.a, enemy, 2);
+  expect(n.events.find((e) => e.type === "push")?.payload.collision).toBe(true);
+  expect(visualCues(s, n, n.events).some((c) => c.label === "COLLISION")).toBe(
+    true,
+  );
+});
+
+it("preserves each committed movement step in a multi-AP path", () => {
+  const s = fixture(),
+    n = clone(s);
+  const events = [];
+  for (const x of [9, 10, 11])
+    events.push(emit(n, "move", "a", [], {}, { x, y: 8 }));
+  n.actors.a.x = 11;
+  const steps = visualCues(s, n, events).filter((c) => c.kind === "move");
+  expect(steps.map((c) => c.delay)).toEqual([0, 160, 320]);
+  expect(steps.map((c) => c.from?.x)).toEqual([8, 9, 10]);
+});

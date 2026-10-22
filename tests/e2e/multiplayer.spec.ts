@@ -392,3 +392,59 @@ test("Producer mute and reduced motion persist while precise gameplay interfaces
   await page.keyboard.press("ArrowRight");
   await expect(page.locator("#inspector")).toContainText("Inspector");
 });
+
+test("map focus enlarges the dungeon and expert panels remain accessible by keyboard", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await startSolo(page);
+  const width = await page.locator("canvas").evaluate((c) => c.clientWidth);
+  await expect(page.locator("#log-panel")).not.toHaveAttribute("open", "");
+  await page.getByRole("button", { name: "Map focus", exact: true }).click();
+  await expect(page.locator("#app")).toHaveAttribute("data-map-focus", "true");
+  await expect
+    .poll(() => page.locator("canvas").evaluate((c) => c.clientWidth))
+    .toBeGreaterThan(width + 150);
+  await page.screenshot({ path: "docs/alpha2/a25-map-focus-1280.png" });
+  await page.locator("#map").focus();
+  await page.keyboard.press("f");
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("#app")).toHaveAttribute("data-map-focus", "false");
+  await expect(page.locator("#inspector")).toBeVisible();
+  await expect(page.locator("#target-readout")).not.toBeEmpty();
+  await page.locator("#log-panel summary").click();
+  await expect(page.locator("#log")).toBeVisible();
+  for (const width of [1280, 1920]) {
+    await page.setViewportSize({ width, height: width === 1280 ? 720 : 1080 });
+    await page.evaluate(() => {
+      const side = document.querySelector<HTMLElement>(".side");
+      if (side) side.scrollTop = 0;
+    });
+    await page.screenshot({ path: `docs/alpha2/a25-dungeon-${width}.png` });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+});
+
+test("presentation does not hold up confirmed input or replay effects on resume", async ({
+  page,
+}) => {
+  await startSolo(page);
+  await page.keyboard.press("ArrowUp");
+  await page.keyboard.press("ArrowUp");
+  await expect(page.locator("#header-info")).toContainText("Round 2");
+  await expect(page.locator("#app")).toHaveAttribute("data-pending", "0");
+  await expect
+    .poll(() => page.locator("canvas").getAttribute("data-visual-cues"))
+    .not.toBe("0");
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Reconnect / resume saved run", exact: true })
+    .click();
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.locator("canvas")).toHaveAttribute("data-visual-cues", "0");
+  await expect(page.locator("#header-info")).toContainText("Round 2");
+});

@@ -21,6 +21,14 @@ export class WorldEffects {
     this.g.clear();
   }
   enqueue(cues: VisualCue[]) {
+    const moving = new Set(
+      cues.filter((c) => c.kind === "move").map((c) => c.actorId),
+    );
+    this.active = this.active.filter((v) => {
+      const keep = v.cue.kind !== "move" || !moving.has(v.cue.actorId);
+      if (!keep) v.text?.destroy();
+      return keep;
+    });
     for (const cue of cues) {
       if (this.active.length >= 160) this.active.shift()?.text?.destroy();
       const text = cue.label
@@ -42,12 +50,17 @@ export class WorldEffects {
   }
   position(id: string, fallback: Point): Point {
     if (this.reducedMotion) return fallback;
-    const motion = this.active
-      .filter((v) => v.cue.kind === "move" && v.cue.actorId === id)
-      .at(-1);
+    const motions = this.active.filter(
+      (v) => v.cue.kind === "move" && v.cue.actorId === id,
+    );
+    const motion =
+      motions.find(
+        (v) => this.scene.time.now < v.born + v.cue.delay + v.cue.duration,
+      ) ?? motions.at(-1);
     if (!motion?.cue.from) return fallback;
     const t = Phaser.Math.Clamp(
-      (this.scene.time.now - motion.born) / motion.cue.duration,
+      (this.scene.time.now - motion.born - motion.cue.delay) /
+        motion.cue.duration,
       0,
       1,
     );

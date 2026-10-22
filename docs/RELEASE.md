@@ -1,3 +1,5 @@
+> Alpha 2 is now the current local build. See [Alpha 2 delivery](ALPHA2.md). The Alpha 1 release record below is retained as historical evidence.
+
 # Local alpha delivery
 
 Version/tag: `v0.1.0-local-alpha`. This is a local source-and-build delivery, with no public release, push, tunnel or deployment.

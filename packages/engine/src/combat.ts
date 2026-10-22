@@ -191,7 +191,14 @@ export function attack(
     "hit",
     a.id,
     [t.id],
-    { roll, chance, crit, armor: Math.min(armor, Math.max(0, raw - 1)), range, origin: { x: a.x, y: a.y } },
+    {
+      roll,
+      chance,
+      crit,
+      armor: Math.min(armor, Math.max(0, raw - 1)),
+      range,
+      origin: { x: a.x, y: a.y },
+    },
     t,
   );
   return true;
@@ -210,6 +217,8 @@ export function push(
   }
   if (t.tags.includes("boss") && !t.statuses.exposed)
     magnitude = Math.min(1, magnitude);
+  const origin = { x: t.x, y: t.y };
+  let collision = false;
   let dx = t.x - a.x,
     dy = t.y - a.y;
   if (Math.abs(dx) >= Math.abs(dy)) {
@@ -229,6 +238,7 @@ export function push(
       (!walkable(s, p) && tile(s, p)?.kind !== "pit") ||
       Object.values(s.actors).some((o) => !o.dead && !same(o, t) && same(o, p))
     ) {
+      collision = true;
       hurt(s, t, 2 * (magnitude - i), "physical", a.id);
       break;
     }
@@ -245,7 +255,7 @@ export function push(
       break;
     }
   }
-  emit(s, pull ? "pull" : "push", a.id, [t.id], {}, t);
+  emit(s, pull ? "pull" : "push", a.id, [t.id], { from: origin, collision }, t);
 }
 
 /** Shared arrival/standing exposure ledger prevents double damage in one resolution. */

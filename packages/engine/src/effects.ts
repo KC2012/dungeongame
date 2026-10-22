@@ -67,15 +67,16 @@ export function effect(
     case "heal":
       for (const v of targets) {
         if (v.dead || v.downed) continue;
+        const previousHP = v.hp;
         v.hp = Math.min(v.maxHP, v.hp + e.magnitude + stat(a, "heal"));
-        emit(s, "heal", a.id, [v.id], { amount: e.magnitude });
+        emit(s, "heal", a.id, [v.id], { amount: v.hp - previousHP });
       }
       return targets.some((v) => !v.dead && !v.downed);
     case "shield":
       for (const v of targets) {
         v.shield = Math.min(12, Math.max(v.shield, e.magnitude));
         v.shieldSource = a.id;
-        emit(s, "shield", a.id, [v.id], { amount: e.magnitude });
+        emit(s, "shield", a.id, [v.id], { amount: e.magnitude, total: v.shield });
       }
       if (targets.length > 1)
         emit(

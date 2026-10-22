@@ -1,0 +1,5 @@
+{
+  "cases": 1000,
+  "passed": 1000,
+  "scope": "Alpha 1 vs Alpha 2 attack, armor/shield, capped healing and wall collision; identical non-event state, RNG and event type/order. Payload enrichment deliberately excluded. Newly generated authored situations are an intentional content difference."
+}

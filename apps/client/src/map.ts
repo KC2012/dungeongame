@@ -19,6 +19,9 @@ export class DungeonScene extends Phaser.Scene {
   choose: (p: Point) => void = () => {};
   hover: (p: Point) => void = () => {};
   previewRadius = 0;
+  targetBlocked = false;
+  targetLabel = "";
+  aiming = false;
   zoom = 2;
   constructor() {
     super("dungeon");
@@ -396,7 +399,24 @@ export class DungeonScene extends Phaser.Scene {
         }
     }
     if (this.target) {
-      g.lineStyle(1, 0xf7e2a8);
+      const own = s.actors[this.actorId];
+      if (this.aiming && own) {
+        g.lineStyle(1, this.targetBlocked ? 0xd3856b : 0xb7c59b, 0.65);
+        g.lineBetween(
+          own.x * 16 + 8,
+          own.y * 16 + 8,
+          this.target.x * 16 + 8,
+          this.target.y * 16 + 8,
+        );
+      }
+      g.lineStyle(1, this.targetBlocked ? 0xe69a76 : 0xf7e2a8);
+      if (this.targetLabel)
+        label(
+          this.target.x,
+          this.target.y - 0.8,
+          this.targetLabel,
+          this.targetBlocked ? "#f0b49a" : "#d7e7b3",
+        );
       g.strokeRect(this.target.x * 16, this.target.y * 16, 16, 16);
     }
     const own = s.actors[this.actorId];

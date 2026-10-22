@@ -55,6 +55,7 @@ let room: Room | undefined,
   scene: DungeonScene | undefined,
   phaser: Phaser.Game | undefined,
   drawer = "",
+  mapFocus = false,
   session: any,
   connected = false,
   startedAt = Date.now();
@@ -164,7 +165,7 @@ function title() {
   phaser?.destroy(true);
   phaser = undefined;
   scene = undefined;
-  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE LOCAL ALPHA</span>${button("Credits", "credits")}${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Suit palette<select id="palette"><option value="0">Ochre</option><option value="1">Moss</option><option value="2">Lilac</option><option value="3">Slate</option><option value="4">Clay</option><option value="5">Linen</option>${profileUnlocks.includes("concourse_survivor") ? '<option value="6">Broadcast gold · survivor</option>' : ""}${profileUnlocks.includes("producer_favorite") ? '<option value="7">Producer seal · earned favor</option>' : ""}</select></label><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") + '<label>Restore a host backup<input type="file" id="backup-file" accept="application/json"></label>' : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
+  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE ALPHA 2</span>${button("Credits", "credits")}${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Suit palette<select id="palette"><option value="0">Ochre</option><option value="1">Moss</option><option value="2">Lilac</option><option value="3">Slate</option><option value="4">Clay</option><option value="5">Linen</option>${profileUnlocks.includes("concourse_survivor") ? '<option value="6">Broadcast gold · survivor</option>' : ""}${profileUnlocks.includes("producer_favorite") ? '<option value="7">Producer seal · earned favor</option>' : ""}</select></label><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") + '<label>Restore a host backup<input type="file" id="backup-file" accept="application/json"></label>' : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
   backgroundHelp();
 }
 function backgroundHelp() {
@@ -403,7 +404,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -428,6 +429,23 @@ function render() {
       audio: { noAudio: true },
     });
   }
+  const workspace = document.querySelector<HTMLElement>(".workspace")!;
+  const layoutChanged = workspace.classList.contains("focus-map") !== mapFocus;
+  workspace.classList.toggle("focus-map", mapFocus);
+  root.dataset.mapFocus = String(mapFocus);
+  const focusButton = document.querySelector<HTMLButtonElement>(
+    '[data-act="map-focus"]',
+  )!;
+  focusButton.textContent = mapFocus ? "Show panels" : "Map focus";
+  focusButton.setAttribute("aria-pressed", String(mapFocus));
+  if (layoutChanged)
+    requestAnimationFrame(() => {
+      const map = document.querySelector<HTMLElement>("#map");
+      if (map && phaser) {
+        phaser.scale.setParentSize(map.clientWidth, map.clientHeight);
+        scene?.paint();
+      }
+    });
   const reconnect = document.querySelector<HTMLButtonElement>(
     '[data-act="reconnect"]',
   );
@@ -464,7 +482,7 @@ function render() {
     ? `<b>${escape(boss.name)}</b><span>${boss.hp}/${boss.maxHP} HP · Phase ${boss.bossPhase + 1}</span><div class="health"><span style="width:${(100 * boss.hp) / boss.maxHP}%"></span></div><small>${boss.telegraph.length ? "⚠ MARKED TILES STRIKE NEXT ENEMY PHASE · move clear before Ready" : "Watch for the next marked attack"} · Devices ${game.alternate.length}/${f.alternateBoss.goal}</small>`
     : "";
   document.querySelector("#mission")!.innerHTML =
-    `<h3>Floor objective</h3><b>${escape(f.requiredObjective.id.replaceAll("_", " "))}</b><p class="muted">${game.objective.length}/${f.requiredObjective.goal} complete</p><p class="statusline">Boss: ${game.bossDefeated ? "resolved" : escape(find("bosses", f.boss).name)}<br>Alternative: ${game.alternate.length}/${f.alternateBoss.goal} devices<br>Audience ${game.audience}/100 · Credits ${game.credits} · XP ${game.xp}</p>`;
+    `<h3>Floor objective</h3><b>${escape(f.requiredObjective.id.replaceAll("_", " "))}</b><p class="muted">${game.objective.length}/${f.requiredObjective.goal} complete</p><details><summary>Floor details</summary><p class="statusline">Boss: ${game.bossDefeated ? "resolved" : escape(find("bosses", f.boss).name)}<br>Alternative: ${game.alternate.length}/${f.alternateBoss.goal} devices<br>Audience ${game.audience}/100 · Credits ${game.credits} · XP ${game.xp}</p></details>`;
   document.querySelector("#party")!.innerHTML = `<h3>Crew</h3>${Object.values(
     game.actors,
   )
@@ -579,6 +597,11 @@ function eventText(e: State["events"][number]): string {
 }
 function targetPreview(p: Point, target?: Actor): string {
   const actor = me();
+  if (scene) {
+    scene.targetBlocked = false;
+    scene.targetLabel = "";
+    scene.aiming = ["ATTACK", "ABILITY", "USE"].includes(mode);
+  }
   if (!game || !actor || !["ATTACK", "ABILITY", "USE"].includes(mode))
     return "";
   const weapon = find("items", actor.equipment.weapon ?? "");
@@ -622,19 +645,30 @@ function targetPreview(p: Point, target?: Actor): string {
     Object.values(game.actors).some(
       (a) => a.kind === "crawler" && !a.dead && distance(a, p) <= radius,
     );
+  if (scene) {
+    scene.targetBlocked = !clear || d > range;
+    scene.targetLabel = hit ? hit.trim().replace(/^· /, "") : `${ap} AP`;
+  }
   return `<p class="note">Current position: ${ap} AP · max range ${range} · distance ${d} · ${clear ? "clear LOS" : "blocked LOS"}${d > range ? " · out of range" : ""}${hit}${entry.focusCost ? " · " + entry.focusCost + " Focus" : ""}${radius ? " · area radius " + radius : ""}${allyRisk ? " · WARNING: crawler in area" : ""}. Resolution can change after queued movement.</p>`;
 }
 function inspector() {
   if (!game) return;
   const el = document.querySelector("#inspector");
   if (!el) return;
+  const readout = document.querySelector<HTMLElement>("#target-readout");
+  const panel = document.querySelector<HTMLDetailsElement>("#inspector-panel");
+  if (panel && (selected || mode === "INSPECT")) panel.open = true;
   if (!selected) {
+    if (readout)
+      readout.textContent =
+        "M pursuer · R gunner · G sentry · + support · crosshatch: danger";
     el.innerHTML =
       "<h3>Inspector</h3><small>Click a tile in Inspect mode to read its hazards and machinery.</small>";
     return;
   }
   const t = tile(game, selected);
   if (!t?.explored) {
+    if (readout) readout.textContent = "Unexplored";
     el.innerHTML = "<h3>Unexplored</h3>";
     return;
   }
@@ -648,6 +682,15 @@ function inspector() {
       ? find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId)
       : undefined;
   const role = enemy ? enemyIdentity(enemy) : undefined;
+  if (readout)
+    readout.textContent = `${a?.name ?? o?.name ?? t.kind} ${a ? "· HP " + a.hp + "/" + a.maxHP : ""} ${Object.entries(
+      t.hazards,
+    )
+      .map(([el, h]) => `${el.toUpperCase()} ${h.damage}/tick`)
+      .join(
+        " · ",
+      )} ${t.tags.includes("volatile") ? "· VOLATILE" : ""} ${o?.kind === "machine" ? (o.powered && !o.disabled ? "· POWERED" : "· OFFLINE") : ""}`;
+
   el.innerHTML = `${role ? `<p class="pill">${escape(role.glyph)} · ${escape(role.name)}</p><small>${escape(role.plan)}${enemy?.weakness ? " Weakness: " + escape(enemy.weakness) + "." : ""}</small>` : ""}${situation ? `<h3>${escape(situation.name)}</h3><p class="statusline">${escape(situation.situation)}</p><small>${escape(situation.possibilities)}</small>` : ""}${targetPreview(selected, a)}<h3>Inspector · ${selected.x}, ${selected.y}</h3><b>${escape(a?.name ?? o?.name ?? t.kind)}</b><p class="statusline">${a ? `HP ${a.hp}/${a.maxHP} · ${escape(a.tags.join(", "))}<br>${escape(a.kind === "enemy" ? (find(a.tags.includes("boss") ? "bosses" : "monsters", a.catalogId).telegraph ?? "Watch marked tiles.") : "Ally")}` : o ? `${escape(o.kind)} · ${o.done ? "complete" : "available"} · ${escape(o.operation ?? "")}` : `${escape(t.tags.join(", "))} · Cover ${t.cover}`}</p>${Object.entries(
     t.hazards,
   )
@@ -963,7 +1006,12 @@ async function act(value: string) {
       mode = id;
       render();
       break;
+    case "map-focus":
+      mapFocus = !mapFocus;
+      render();
+      break;
     case "inspect":
+      mapFocus = false;
       mode = "INSPECT";
       render();
       break;

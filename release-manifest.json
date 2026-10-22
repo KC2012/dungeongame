@@ -1,14 +1,14 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "LOCAL_ALPHA",
-  "sourceCommit": "ae41b47b316130eb81668ca9be19dcfaa28d6183",
-  "tag": "v0.1.0-local-alpha",
+  "sourceRef": "v0.2.0-local-alpha",
+  "branch": "alpha2/make-the-game-visible",
   "buildFiles": {
-    "dist/client/assets/index-BX5Er227.js": "11e29fd87cf35b8384c755ed3c07a46a6e3b1269577922adf666c16e6938321b",
-    "dist/client/assets/index-COejIZ3x.css": "81c8fbe001a95b1c7bc7a7c8621328b1cf3798e1eb85253f70699cd03cf0ebe2",
-    "dist/client/index.html": "5c16e57f857df3604c4c48ecef58f7cff42145d698e0d6cec4955b85391eb974",
-    "dist/server.js": "6aaf54517fb9aa34c71f5726be5764210354bd1598a0306665d3ba318a7c561b"
+    "dist/server.js": "042be1b296a5f9eaea26c93ec5992d939e01f8a91d3916f0676151a73f053afd",
+    "dist/client/index.html": "94c7c28285c93184a426e7a2593b3857a60a596fd83b977bb2ad9fbbb41be602",
+    "dist/client/assets/index-CcQRBk6M.css": "68fa9c97222a1284311e444aa7343adbe4508a794c485ef4de8c64a48394ce85",
+    "dist/client/assets/index-C5HRHpUo.js": "fd38c7960f997ca04766d349111d3971069359d5314833250d4b497d2787b152"
   },
   "runtime": "Node >=22; npm ci --omit=dev then npm run host from dungeongame",
-  "qualification": "Local source and compiled delivery; remote/human acceptance and desktop timing remain unverified."
+  "qualification": "Local Alpha 2 presentation delivery. Human comprehension/accessibility, WAN, desktop timing and fresh endurance acceptance remain unverified. Exact source commit recorded in the packaged delivery-manifest.json."
 }
