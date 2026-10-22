@@ -165,7 +165,14 @@ export function attack(
   if (roll > chance) {
     if (range > 2 && t.reaction === "GUARD" && stat(t, "shield") > 0)
       emit(s, "projectile_deflected", t.id, [a.id], {}, t);
-    emit(s, "miss", a.id, [t.id], { roll, chance }, t);
+    emit(
+      s,
+      "miss",
+      a.id,
+      [t.id],
+      { roll, chance, range, origin: { x: a.x, y: a.y } },
+      t,
+    );
     return true;
   }
   const crit = roll <= 5;
@@ -173,18 +180,20 @@ export function attack(
     0,
     stat(t, "armor") + (t.statuses.corroded ? -2 : 0) + t.guard - pierce,
   );
-  const amount = Math.max(
-    1,
-    Math.floor(
-      (base +
-        stat(a, range > 2 ? "Wit" : "Might") +
-        random(s, "combat", 4) +
-        1) *
-        (crit ? 1.5 : 1),
-    ) - armor,
+  const raw = Math.floor(
+    (base + stat(a, range > 2 ? "Wit" : "Might") + random(s, "combat", 4) + 1) *
+      (crit ? 1.5 : 1),
   );
+  const amount = Math.max(1, raw - armor);
   hurt(s, t, amount, element, a.id);
-  emit(s, "hit", a.id, [t.id], { roll, chance, crit }, t);
+  emit(
+    s,
+    "hit",
+    a.id,
+    [t.id],
+    { roll, chance, crit, armor: Math.min(armor, Math.max(0, raw - 1)), range, origin: { x: a.x, y: a.y } },
+    t,
+  );
   return true;
 }
 export function push(

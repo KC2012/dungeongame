@@ -1,0 +1,32 @@
+<!doctype html><html><head><title>THE CRAWL presentation regression fixture</title><style>body{margin:0;background:#111914;color:#e4dfc5;font:14px monospace}header{padding:12px}#map{width:960px;height:640px}</style></head><body><header>THE CRAWL // confirmed simulation presentation fixture</header><div id="map"></div><script type="module">
+import Phaser from 'phaser';
+import { DungeonScene } from '/apps/client/src/map.ts';
+import { newGame, addCrawler, begin, clone, makeActor, perform, hash } from '/packages/engine/src/index.ts';
+import { attack, hurt, status, push } from '/packages/engine/src/combat.ts';
+import { enqueue, environment } from '/packages/engine/src/environment.ts';
+const scene=new DungeonScene();
+const phaser=new Phaser.Game({type:Phaser.CANVAS,parent:'map',width:960,height:640,pixelArt:true,scene:[scene],audio:{noAudio:true}});
+let s=newGame(42);addCrawler(s,'a','Iona','night_custodian');begin(s);
+s.actors={a:s.actors.a,e:makeActor('e','Armored sentry','enemy','turnstile_rat',11,8)};
+s.actors.a.x=8;s.actors.a.y=8;s.actors.e.hp=s.actors.e.maxHP=100;
+s.tiles.forEach(t=>{t.explored=true;t.kind='floor';t.hazards={};t.tags=[];t.cover=0});
+s.actors.a.inventory.push({id:'water_bladder',count:1,durability:12});
+window.fixture={scene,phaser,get state(){return s},ready:false,run(kind){
+ const n=clone(s);n.revision++;
+ if(kind==='move'){perform(n,n.actors.a,{type:'MOVE',x:9,y:8});}
+ if(kind==='attack'){attack(n,n.actors.a,n.actors.e,8,'physical',5);}
+ if(kind==='environment'){
+   for(let x=9;x<14;x++){const t=n.tiles[9*n.width+x];t.tags=['wet','conductive','flammable'];}
+   enqueue(n,{x:10,y:9},'shock',2,'a',6);enqueue(n,{x:12,y:9},'fire',2,'a',2);environment(n);
+   status(n.actors.e,'burning',2,3,'a');
+ }
+ if(kind==='boss'){n.actors.e.tags.push('boss');n.actors.e.telegraph=[{x:8,y:8},{x:9,y:8},{x:8,y:9}];}
+ if(kind==='down'){hurt(n,n.actors.a,999,'physical','e');}
+ if(kind==='push'){push(n,n.actors.a,n.actors.e,2);}
+ const checksum=hash(n);scene.setState(n,'a',undefined,[]);s=n;
+ return {checksum,after:hash(n),cues:scene.effects.total};
+}};
+phaser.events.once('ready',()=>{scene.setState(s,'a',undefined,[]);window.fixture.ready=true;});
+// Scene creation occurs after the game's ready signal in some Phaser versions.
+
+</script></body></html>

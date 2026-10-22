@@ -1,6 +1,11 @@
 import Phaser from "phaser";
 import type { State, Actor, Point } from "../../../packages/engine/src/types";
+import { PresentationStream } from "./presentation";
+import { WorldEffects } from "./effects";
 export class DungeonScene extends Phaser.Scene {
+  stream = new PresentationStream();
+  effects?: WorldEffects;
+  reducedMotion = false;
   graphics!: Phaser.GameObjects.Graphics;
   texts: Phaser.GameObjects.Text[] = [];
   snapshot?: State;
@@ -17,6 +22,7 @@ export class DungeonScene extends Phaser.Scene {
   }
   create() {
     this.graphics = this.add.graphics();
+    this.effects = new WorldEffects(this);
     // Camera viewport dimensions change before this Scale event is dispatched.
     // Recenter immediately instead of waiting for another authority snapshot.
     const resize = () => this.paint();
@@ -46,11 +52,28 @@ export class DungeonScene extends Phaser.Scene {
     this.paint();
   }
   setState(s: State, id: string, target: Point | undefined, queued: Point[]) {
+    const cues = this.stream.accept(s);
+    if (
+      this.snapshot &&
+      (this.snapshot.floor !== s.floor || this.snapshot.runId !== s.runId)
+    )
+      this.effects?.clear();
+    this.effects?.enqueue(cues);
     this.snapshot = s;
     this.actorId = id;
     this.target = target;
     this.queued = queued;
     this.paint();
+  }
+  update() {
+    if (!this.effects) return;
+    this.effects.reducedMotion = this.reducedMotion;
+    // Paint interpolation only while a short movement cue is live.
+    if (this.effects.count) this.paint();
+    this.effects.update();
+    const canvas = this.game.canvas;
+    canvas.dataset.visualCues = String(this.effects.total);
+    canvas.dataset.activeEffects = String(this.effects.count);
   }
   paint() {
     if (!this.graphics || !this.snapshot) return;
@@ -202,18 +225,32 @@ export class DungeonScene extends Phaser.Scene {
         "#151b15",
       );
     }
-    for (const a of Object.values(s.actors)) {
+    for (const actor of Object.values(s.actors)) {
+      const a = {
+        ...actor,
+        ...(this.effects?.position(actor.id, actor) ?? actor),
+      };
       for (const p of a.telegraph) {
         if (!s.tiles[p.y * s.width + p.x]?.explored) continue;
-        g.lineStyle(1, 0xf0aa73);
+        g.fillStyle(0xd46736, 0.35);
+        g.fillRect(p.x * 16, p.y * 16, 16, 16);
+        g.lineStyle(1, 0xffb77a);
         g.strokeRect(p.x * 16 + 1, p.y * 16 + 1, 14, 14);
+        g.lineBetween(p.x * 16 + 2, p.y * 16 + 2, p.x * 16 + 14, p.y * 16 + 14);
+        g.lineBetween(p.x * 16 + 14, p.y * 16 + 2, p.x * 16 + 2, p.y * 16 + 14);
         label(p.x, p.y, "!", "#ffd7a1");
       }
-      if (a.dead) continue;
+      if (a.dead) {
+        g.lineStyle(1, 0x8f8173);
+        g.lineBetween(a.x * 16 + 4, a.y * 16 + 5, a.x * 16 + 12, a.y * 16 + 13);
+        g.lineBetween(a.x * 16 + 12, a.y * 16 + 5, a.x * 16 + 4, a.y * 16 + 13);
+        continue;
+      }
       const party = Object.values(s.actors).filter((v) => v.kind === "crawler");
+      const slot = party.findIndex((v) => v.id === a.id);
       g.fillStyle(
         a.kind === "crawler"
-          ? colors[a.palette ?? party.indexOf(a) % 4]
+          ? colors[a.palette ?? slot % 4]
           : a.tags.includes("boss")
             ? 0xc69b78
             : 0xa76859,
@@ -233,12 +270,29 @@ export class DungeonScene extends Phaser.Scene {
         a.x,
         a.y,
         a.kind === "crawler"
-          ? String(party.indexOf(a) + 1)
+          ? String(slot + 1)
           : a.tags.includes("boss")
             ? "B"
             : "E",
       );
-      if (a.downed) label(a.x, a.y, "+", "#ffce92");
+      if (a.downed) label(a.x, a.y, "+" + a.downed, "#ffce92");
+      const glyphs: Record<string, string> = {
+        burning: "!",
+        stunned: "Z",
+        poisoned: "P",
+        chilled: "*",
+        corroded: "A",
+        exposed: "v",
+        hidden: "?",
+      };
+      const status = Object.keys(a.statuses)
+        .map((k) => glyphs[k] ?? "+")
+        .join("");
+      if (status) label(a.x, a.y - 0.65, status, "#c6e5dc");
+      if (a.shield || a.guard) {
+        g.lineStyle(1, 0x9ec8db);
+        g.strokeRect(a.x * 16 + 1, a.y * 16 + 2, 14, 13);
+      }
       if (a.id === this.actorId) {
         g.lineStyle(1, 0xffdb87);
         g.strokeRect(a.x * 16, a.y * 16, 16, 16);

@@ -13,11 +13,19 @@ export default defineConfig({
     },
     trace: "retain-on-failure",
   },
-  webServer: {
-    command: "npm run host",
-    url: "http://127.0.0.1:" + port + "/api/health",
-    env: { PORT: port, DATA_DIR: process.env.E2E_DATA_DIR ?? ".data/e2e" },
-    reuseExistingServer: false,
-    timeout: 30000,
-  },
+  webServer: [
+    {
+      command: "npm run host",
+      url: "http://127.0.0.1:" + port + "/api/health",
+      env: { PORT: port, DATA_DIR: process.env.E2E_DATA_DIR ?? ".data/e2e" },
+      reuseExistingServer: false,
+      timeout: 30000,
+    },
+    {
+      command: "npx vite --config tools/presentation-vite.config.ts",
+      url: "http://127.0.0.1:5179/tests/fixtures/presentation.html",
+      reuseExistingServer: false,
+      timeout: 30000,
+    },
+  ],
 });

@@ -35,3 +35,7 @@ Version **0.1.0 LOCAL_ALPHA**. Full six-floor gameplay is implemented. **Not PLA
 The intended M0–M8 implementation is delivered as a **local alpha**, with milestone evidence and remaining external gates explicitly separated. The tagged source, compiled host/client and notices are packaged under /workspace/artifacts; docs/RELEASE.md describes extraction and runtime-only install. No checkpoint or session token is included. Source was committed locally, with no push or deployment.
 
 Remaining acceptance work: actual separate-internet/degraded-WAN play, desktop long-tail profiling, complete human accessibility/keyboard review, friends rubric, normal solo/team balance and run-length measurement. See docs/ACCEPTANCE_REPORT.md and docs/ISSUES.md. The 16.23-second load-test maximum is retained and prevents claiming full performance certification. No reproduced core save-loss, duplication, false-victory or infinite-reaction defect remains in the executed tests.
+
+## Alpha 2 in progress — A2.1
+
+Dedicated branch alpha2/make-the-game-visible; imported Alpha 1 preserved at tag alpha1-import-baseline (41d79ba) and original ZIP retained unchanged. A2.1 adds confirmed client effects, stronger telegraphs and reduced-motion feedback. Full automated suite: 535 passed; baseline six production browser scenarios passed; new Phaser presentation fixture passed. See docs/alpha2/PROGRESS.md and screenshots. Alpha 2 is not yet complete.

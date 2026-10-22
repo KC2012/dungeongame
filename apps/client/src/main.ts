@@ -309,6 +309,8 @@ function bindRoom() {
   room.onLeave((code: number) => {
     if (room !== current) return;
     connected = false;
+    scene?.stream.reset();
+    scene?.effects?.clear();
     inFlight = undefined;
     bufferedActions.length = 0;
     if (!intentionalLeave)
@@ -397,6 +399,7 @@ function render() {
   if (!document.querySelector("#map")) {
     root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
+    scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
     scene.hover = (p) => {
       if (mode === "MOVE" || !game || (selected && same(selected, p))) return;
@@ -774,7 +777,7 @@ function showDrawer(kind: string) {
     html =
       '<p class="intro">The Concourse · The Crawl. Original playable characters, dialogue, content and procedural pixel geometry. Phaser, Colyseus and other open-source dependencies retain their own licenses. An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl; not affiliated with or licensed by the author or publisher. No book text, novel cast, logos or licensed sprites are included.</p>';
   } else if (kind === "settings") {
-    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><p class="muted">Reduced motion is always enabled: the game uses no camera shake, flicker, or animated attacks.</p><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
+    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
   } else if (a && game) {
     if (kind === "inventory") {
       const total = a.inventory.reduce(
@@ -1181,6 +1184,7 @@ document.addEventListener("change", (e) => {
     };
     localStorage.setItem("concourse.settings", JSON.stringify(settings));
     document.documentElement.style.fontSize = settings.font + "px";
+    if (scene) scene.reducedMotion = settings.reducedMotion;
   }
 });
 document.addEventListener("keydown", (e) => {
