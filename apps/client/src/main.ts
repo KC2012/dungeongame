@@ -14,6 +14,8 @@ import {
   weaponFacts,
 } from "./planning";
 import { controlsFor } from "./progressive-ui";
+import { ResolutionFeed } from "./resolution";
+import { knownConduction } from "./opportunities";
 import { Guidance } from "./guidance";
 import { Broadcast } from "./broadcast";
 import { enemyIdentity, itemOpportunity } from "./identity";
@@ -37,6 +39,7 @@ import {
   los,
 } from "../../../packages/engine/src/grid";
 const broadcast = new Broadcast();
+const resolution = new ResolutionFeed();
 const guidance = new Guidance(localStorage);
 const root = document.querySelector<HTMLDivElement>("#app")!;
 const escape = (v: unknown) =>
@@ -288,6 +291,7 @@ function bindRoom() {
   });
   room.onMessage("snapshot", (m: any) => {
     if (room !== current) return;
+    resolution.accept(m.game, actorId);
     guidance.accept(m.game, actorId);
     broadcast.accept(m.game, performance.now());
     game = m.game;
@@ -328,6 +332,7 @@ function bindRoom() {
   room.onLeave((code: number) => {
     if (room !== current) return;
     connected = false;
+    resolution.reset();
     broadcast.reset();
     scene?.stream.reset();
     scene?.effects?.clear();
@@ -417,7 +422,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small><div id="crawler-strip"></div></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="target-intent"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; Shift arrows aim; F inspect; R ready; I inventory; C character."><div id="round-recap" class="round-recap" role="status"></div></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>Click objects to use · Shift + arrows aim · Space confirms · Esc clears</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -488,6 +493,12 @@ function render() {
       : game.phase === "SAFE_ROOM"
         ? "SAFEROOM · services available"
         : "EXPLORATION · server-confirmed movement";
+  const recap = document.querySelector<HTMLElement>("#round-recap")!;
+  recap.hidden = !resolution.current.length;
+  recap.innerHTML = `<b>What happened · round ${game.round}</b>${button("×", "close-recap", 'aria-label="Hide recap"')}<ul>${resolution.current
+    .slice(0, 4)
+    .map((line) => `<li>${escape(line)}</li>`)
+    .join("")}</ul>${button("All outcomes / history", "round-history")}`;
   const lesson = guidance.lesson(game, actorId);
   const guide = document.querySelector<HTMLElement>("#guidance")!;
   guide.hidden = !guidance.data.enabled;
@@ -587,7 +598,8 @@ function render() {
   inspector();
   const log = document.querySelector("#log")!;
   log.innerHTML = game.events
-    .slice(-40)
+    .filter((e) => !["quick_plan", "room_enter"].includes(e.type))
+    .slice(-800)
     .reverse()
     .map((e) => `<p><small>${e.round}</small> ${escape(eventText(e))}</p>`)
     .join("");
@@ -636,6 +648,8 @@ function eventText(e: State["events"][number]): string {
   if (e.type === "cast")
     return `${source} uses ${find(e.payload.kind === "ABILITY" ? "abilities" : "items", e.payload.id).name}`;
   if (e.type === "miss") return `${source} misses ${targets}`;
+  if (e.type === "action_performed")
+    return `${source}: ${String(e.payload.action).toLowerCase()} confirmed (${e.payload.cost} AP)`;
   if (e.payload.message) return e.payload.message;
   if (e.payload.reason) return e.payload.reason;
   return `${e.type.replaceAll("_", " ")}${targets ? " · " + targets : ""}`;
@@ -715,6 +729,7 @@ function inspector() {
       "<h3>Inspector</h3><small>Click a tile in Inspect mode to read its hazards and machinery.</small>";
     return;
   }
+  if (scene) scene.opportunityTiles = [];
   const t = tile(game, selected);
   if (!t?.explored) {
     if (readout) readout.textContent = "Unexplored";
@@ -736,9 +751,11 @@ function inspector() {
   if (intent) {
     if (a?.kind === "enemy") {
       const attack = attackPreview(projected.view, projected.actor, a);
-      intent.innerHTML = `<b>${escape(a.name)}</b> · HP ${a.hp}/${a.maxHP} · ${escape(role?.name ?? "Enemy")}<br><span>${escape(weaponFacts(projected.actor).name)}: ${attack.cost} AP · range ${attack.range} · ${attack.clear ? "clear LOS" : "blocked LOS"} · cover ${attack.cover}${attack.chance !== undefined ? ` · ${attack.chance}% hit` : ""}</span><small>${escape(attack.problem ?? "Click to add the attack. Ready resolves the plan.")}</small>`;
+      intent.innerHTML = `<b>${escape(a.name)}</b> · HP ${a.hp}/${a.maxHP} · ${escape(role?.name ?? "Enemy")}<br><span>${escape(weaponFacts(projected.actor).name)}: ${attack.cost} AP · range ${attack.range} · ${attack.clear ? "clear LOS" : "blocked LOS"} · cover ${attack.cover} (−${attack.cover * 8} hit chance points)${attack.chance !== undefined ? ` · ${attack.chance}% hit` : ""}</span><small>${escape(attack.problem ?? "Click to add the attack. Ready resolves the plan.")}</small>`;
       if (attack.cover) guidance.note("cover");
     } else if (o) {
+      if (scene && o.kind === "machine" && !o.powered)
+        scene.opportunityTiles = knownConduction(game, o);
       intent.innerHTML = `<b>${escape(o.kind === "cache" ? "Supply crate" : o.kind === "alternate" ? "Boss device" : o.kind === "objective" ? "Objective terminal" : o.kind === "exit" ? "Descent stairs" : o.name)}</b><small>${o.kind === "machine" ? (o.powered ? "Switch off → water spreads. Water alone deals no damage." : "Activate → electricity enters connected wet/conductive tiles. Keep crawlers on dry ground.") : o.done ? "Already completed." : "Approach and click to interact. Interaction normally costs 1 AP."}</small>`;
     } else intent.textContent = "";
   }
@@ -964,6 +981,8 @@ function showDrawer(kind: string) {
   if (kind === "credits") {
     html =
       '<p class="intro">The Concourse · The Crawl. Original playable characters, dialogue, content and procedural pixel geometry. Phaser, Colyseus and other open-source dependencies retain their own licenses. An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl; not affiliated with or licensed by the author or publisher. No book text, novel cast, logos or licensed sprites are included.</p>';
+  } else if (kind === "round-history") {
+    html = `<p class="intro">Confirmed outcomes. History is retained for this browser session; the authority log remains in the expert panels.</p>${resolution.history.map((r) => `<article class="item"><h2>Round ${r.round}</h2><ul>${r.lines.map((line) => `<li>${escape(line)}</li>`).join("")}</ul></article>`).join("")}`;
   } else if (kind === "settings") {
     html = `<div class="stack"><label>Guidance<select id="guidance-mode"><option value="on" ${guidance.data.enabled ? "selected" : ""}>On</option><option value="off" ${!guidance.data.enabled ? "selected" : ""}>Off · full controls</option></select></label>${button("Reset guidance progress", "guidance-reset")}<small>Reset replays prompts. A newly created guided room also receives the Floor 1 teaching arrangement.</small><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
   } else if (a && game) {
@@ -1117,6 +1136,13 @@ async function act(value: string) {
       break;
     case "mode":
       mode = id;
+      render();
+      break;
+    case "round-history":
+      showDrawer("round-history");
+      break;
+    case "close-recap":
+      resolution.current = [];
       render();
       break;
     case "advanced-controls":

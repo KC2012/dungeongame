@@ -588,3 +588,10 @@ details summary {
 .broadcast-strip { min-height:34px; padding:6px 14px; }
 #map { min-height:280px; }
 @media (max-width:760px) { .workspace {grid-template-rows:minmax(500px,70dvh) auto;} .commit {margin-left:0;} }
+.round-recap { position:absolute; bottom:8px; left:8px; z-index:3; max-width:min(530px,70%); padding:9px 12px; background:#172831ed; border:1px solid #72949c; font-size:12px; line-height:1.45; pointer-events:auto; }
+.round-recap[hidden] {display:none;}
+.round-recap ul {padding-left:16px;margin:5px 0;}
+.round-recap button {padding:3px 7px;font-size:11px;}
+.round-recap [data-act="close-recap"] {float:right;margin-left:15px;}
+.map-column {min-height:0;}
+#map {min-height:200px;}

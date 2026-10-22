@@ -77,6 +77,7 @@ export function guidedFirstFloor(s: State) {
     sentry.hp = sentry.maxHP = 15;
   }
   at(34, 8).cover = 2;
+  at(35, 10).cover = 1;
   // No object is moved onto a wall and the ordinary central route stays dry.
   for (const o of s.objects) {
     const t = at(o.x, o.y);

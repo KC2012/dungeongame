@@ -38,3 +38,5 @@ Alpha 3 branch alpha3/make-the-game-understandable; Alpha 2 preserved at alpha2-
 A3.2: persisted On/Off/Reset guidance and opt-in host-authoritative teaching arrangement on Floor 1. 553 unit/integration tests passed; guided-floor conduction tested across 60 seeds. Browser first-run, reset and four-client route pass after correcting first-enemy placement. Alpha 3 remains in progress.
 
 A3.3: projected movement/door/AP planning, ghost endpoint and auto-approach attack, consistent movement keys, progressive controls with Advanced override, full-width map and pinned inspection. 558 tests passed; corrected fast-input/resume and four-browser authority/resize regressions pass. Presentation still in active development.
+
+A3.4: named on-map turn recap/history, authority-specific action rejection, real conduction edges/blast bounds, contextual machine consequences and source/timing telegraphs. 563 automated tests and all 14 browser scenarios passed; build passed. Failed exploration actions publish a new snapshot revision without advancing the world turn.

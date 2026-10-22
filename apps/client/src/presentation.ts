@@ -28,6 +28,7 @@ export type VisualCue = {
   delay: number;
   duration: number;
   actorId?: string;
+  radius?: number;
 };
 const point = (p: Point): Point => ({ x: p.x, y: p.y });
 const equal = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
@@ -69,7 +70,8 @@ export function visualCues(
       color,
       delay,
       duration: kind === "move" ? 160 : kind === "strike" ? 260 : 900,
-      actorId: kind === "move" ? e.actorId : undefined,
+      actorId: kind === "move" ? e.actorId : e.targetIds?.[0],
+      radius: e.payload?.radius,
     });
     return cues[cues.length - 1];
   };
@@ -79,6 +81,17 @@ export function visualCues(
       after.actors[e.targetIds[0]] ?? before.actors[e.targetIds[0]];
     if (e.targetIds.length && !target) continue;
     const at = e.tile ?? target ?? source;
+    if (e.type === "shock_chain")
+      for (const edge of e.payload.edges ?? [])
+        add(
+          e,
+          "arc",
+          edge.to,
+          "",
+          ink.shock,
+          edge.from,
+          Math.min(400, cues.length * 35),
+        );
     const color = ink[e.payload.element] ?? ink.physical;
     const delay = Math.min(420, cues.length * 16);
     if (["move", "push", "pull", "conveyor", "slide"].includes(e.type)) {

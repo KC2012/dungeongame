@@ -18,6 +18,7 @@ export class DungeonScene extends Phaser.Scene {
   sprites: Phaser.GameObjects.Image[] = [];
   planned?: Point;
   pinned = false;
+  opportunityTiles: Point[] = [];
   snapshot?: State;
   actorId = "";
   spectateId = "";
@@ -114,8 +115,16 @@ export class DungeonScene extends Phaser.Scene {
     if (this.effects.count) this.paint();
     this.effects.update();
     const canvas = this.game.canvas;
-    const camera=this.cameras.main;const origin=camera.getWorldPoint(0,0);const own=this.snapshot?.actors[this.actorId];
-    canvas.dataset.viewport=JSON.stringify({width:camera.width,height:camera.height,zoom:camera.zoom,origin:{x:origin.x,y:origin.y},actor:own?{x:own.x,y:own.y}:null});
+    const camera = this.cameras.main;
+    const origin = camera.getWorldPoint(0, 0);
+    const own = this.snapshot?.actors[this.actorId];
+    canvas.dataset.viewport = JSON.stringify({
+      width: camera.width,
+      height: camera.height,
+      zoom: camera.zoom,
+      origin: { x: origin.x, y: origin.y },
+      actor: own ? { x: own.x, y: own.y } : null,
+    });
     canvas.dataset.visualCues = String(this.effects.total);
     canvas.dataset.activeEffects = String(this.effects.count);
   }
@@ -319,13 +328,34 @@ export class DungeonScene extends Phaser.Scene {
       };
       for (const p of a.telegraph) {
         if (!s.tiles[p.y * s.width + p.x]?.explored) continue;
-        g.fillStyle(0xd46736, 0.35);
-        g.fillRect(p.x * 16, p.y * 16, 16, 16);
-        g.lineStyle(1, 0xffb77a);
-        g.strokeRect(p.x * 16 + 1, p.y * 16 + 1, 14, 14);
-        g.lineBetween(p.x * 16 + 2, p.y * 16 + 2, p.x * 16 + 14, p.y * 16 + 14);
-        g.lineBetween(p.x * 16 + 14, p.y * 16 + 2, p.x * 16 + 2, p.y * 16 + 14);
+        this.danger.fillStyle(0xd46736, 0.35);
+        this.danger.fillRect(p.x * 16, p.y * 16, 16, 16);
+        this.danger.lineStyle(1, 0xffb77a);
+        this.danger.strokeRect(p.x * 16 + 1, p.y * 16 + 1, 14, 14);
+        this.danger.lineBetween(
+          p.x * 16 + 2,
+          p.y * 16 + 2,
+          p.x * 16 + 14,
+          p.y * 16 + 14,
+        );
+        this.danger.lineBetween(
+          p.x * 16 + 14,
+          p.y * 16 + 2,
+          p.x * 16 + 2,
+          p.y * 16 + 14,
+        );
         label(p.x, p.y, "!", "#ffd7a1");
+      }
+      if (a.telegraph.length && a.tags.includes("boss")) {
+        label(a.x, a.y - 1, "STRIKES NEXT ENEMY PHASE", "#ffd7a1");
+        const p = a.telegraph[0];
+        this.danger.lineStyle(1, 0xefb185, 0.7);
+        this.danger.lineBetween(
+          a.x * 16 + 8,
+          a.y * 16 + 8,
+          p.x * 16 + 8,
+          p.y * 16 + 8,
+        );
       }
       if (a.dead) {
         g.lineStyle(1, 0x8f8173);
@@ -408,6 +438,10 @@ export class DungeonScene extends Phaser.Scene {
         overlay.strokeRect(a.x * 16, a.y * 16, 16, 16);
       }
     }
+    for (const p of this.opportunityTiles) {
+      this.danger.lineStyle(1, 0x87dbe3, 0.8);
+      this.danger.strokeRect(p.x * 16 + 1, p.y * 16 + 1, 14, 14);
+    }
     if (this.planned && this.queued.length) {
       sprite("crawler", this.planned.x, this.planned.y, 7, 0.4);
       label(this.planned.x, this.planned.y + 0.7, "PLAN", "#b5dbb4");
@@ -450,7 +484,10 @@ export class DungeonScene extends Phaser.Scene {
       overlay.strokeRect(this.target.x * 16, this.target.y * 16, 16, 16);
     }
     const own = s.actors[this.actorId];
-    if(own&&!own.dead){overlay.lineStyle(1,0xffdb87);overlay.strokeRect(own.x*16,own.y*16,16,16);}
+    if (own && !own.dead) {
+      overlay.lineStyle(1, 0xffdb87);
+      overlay.strokeRect(own.x * 16, own.y * 16, 16, 16);
+    }
     const a =
       own && !own.dead
         ? own

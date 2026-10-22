@@ -1,3 +1,4 @@
+import { catalog } from "../../../packages/content/src/index";
 import type { State } from "../../../packages/engine/src/types";
 export const lessons = [
   "move",
@@ -123,18 +124,44 @@ export class Guidance {
         text: "The wooden supply crate is beside the starting area. Approach it, then click it or use Open supplies below.",
         focus: "interact",
       };
-    if (s.phase === "PLANNING" && has("round") && !has("guard"))
-      return {
-        title: "Spend the last point on defense",
-        text: "Guard costs 1 AP and gives +2 armor for the enemy phase. It pairs with a 2-AP attack. Queued actions are still editable.",
-        focus: "guard",
-      };
     const room = a ? s.tiles[a.y * s.width + a.x]?.room : -1;
     if (room === 2 && !has("environment"))
       return {
         title: "The room itself is a weapon",
         text: "Blue water connects the discharged relay to a stationary sentry. Activating the relay sends electricity through wet ground. Stay on the dry walkway.",
         focus: "environment",
+      };
+    if (s.phase === "PLANNING" && has("round") && !has("guard"))
+      return {
+        title: "Spend the last point on defense",
+        text: "Guard costs 1 AP and gives +2 armor for the enemy phase. It pairs with a 2-AP attack. Queued actions are still editable.",
+        focus: "guard",
+      };
+    const ranged = Object.values(s.actors).some(
+      (v) =>
+        v.kind === "enemy" &&
+        !v.dead &&
+        ["seek_ranged", "skirmisher"].includes(
+          catalog.monsters.find((m) => m.id === v.catalogId)?.ai,
+        ),
+    );
+    if (has("round") && has("guard") && ranged && !has("dodge"))
+      return {
+        title: "Avoid one normal attack",
+        text: "Dodge costs 1 AP and reduces the chance that the next normal attack hits you. It does not cancel a boss area strike: leave marked ground for those.",
+        focus: "dodge",
+      };
+    const weapon = catalog.items.find((v) => v.id === a?.equipment.weapon);
+    if (
+      has("round") &&
+      has("guard") &&
+      (weapon?.range ?? 1) > 2 &&
+      !has("overwatch")
+    )
+      return {
+        title: "Watch an approach",
+        text: "Overwatch reserves one reaction attack with your equipped weapon. Keep the enemy inside your weapon's range and line of sight.",
+        focus: "overwatch",
       };
     if (has("round") && !has("cover"))
       return {

@@ -57,7 +57,23 @@ export class WorldEffects {
       motions.find(
         (v) => this.scene.time.now < v.born + v.cue.delay + v.cue.duration,
       ) ?? motions.at(-1);
-    if (!motion?.cue.from) return fallback;
+    if (!motion?.cue.from) {
+      const impact = this.active.find(
+        (v) =>
+          v.cue.kind === "impact" &&
+          v.cue.actorId === id &&
+          this.scene.time.now - v.born - v.cue.delay >= 0 &&
+          this.scene.time.now - v.born - v.cue.delay < 180,
+      );
+      return impact
+        ? {
+            x:
+              fallback.x +
+              Math.sin((this.scene.time.now - impact.born) * 0.035) * 0.055,
+            y: fallback.y,
+          }
+        : fallback;
+    }
     const t = Phaser.Math.Clamp(
       (this.scene.time.now - motion.born - motion.cue.delay) /
         motion.cue.duration,
@@ -101,6 +117,11 @@ export class WorldEffects {
         if (c.from) g.lineBetween(c.from.x * 16 + 8, c.from.y * 16 + 8, x, y);
         g.lineBetween(x - 5, y + 5, x + 5, y - 5);
       } else if (c.kind === "burst") {
+        if (c.radius)
+          for (let dy = -c.radius; dy <= c.radius; dy++)
+            for (let dx = -c.radius; dx <= c.radius; dx++)
+              if (Math.abs(dx) + Math.abs(dy) <= c.radius)
+                g.strokeRect(x + dx * 16 - 8, y + dy * 16 - 8, 16, 16);
         const r = this.reducedMotion ? 10 : 4 + Math.min(age / 30, 12);
         for (let i = 0; i < 8; i++) {
           const a = (i * Math.PI) / 4;

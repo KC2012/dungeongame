@@ -1,3 +1,4 @@
+import { actionReason } from "./action-reasons";
 import { compareIds } from "./random";
 import type { Action, Actor, Plan, Point, State } from "./types";
 import {
@@ -740,7 +741,7 @@ export function perform(s: State, a: Actor, c: Action): boolean {
       } else if (o.kind === "machine") {
         o.powered = !o.powered;
         enqueue(s, o, o.powered ? "shock" : "water", 2, a.id);
-        emit(s, "found_off_switch", a.id, [], { id: o.id }, o);
+        emit(s, "found_off_switch", a.id, [], { id: o.id, powered:o.powered, element:o.powered?"shock":"water" }, o);
         ok = true;
       } else if (o.kind === "secret") {
         o.done = true;
@@ -1379,7 +1380,8 @@ export function resolveRound(
           if (claimant?.actorId === occupant.id) runMove(bp);
         }
       }
-      if (!perform(s, a, c)) reject(s, a, "Move unavailable; AP refunded");
+      const reason=actionReason(s,a,c,actionCost(s,a,c));
+      if (!perform(s, a, c)) reject(s, a, reason+"; AP refunded");
       done.add(a.id);
       visiting.delete(a.id);
     };
@@ -1388,8 +1390,8 @@ export function resolveRound(
   commands: for (const plan of ordered)
     for (const c of plan.actions.filter((c) => c.type !== "MOVE").slice(0, 4)) {
       const a = s.actors[plan.actorId];
-      if (a && !perform(s, a, c))
-        reject(s, a, "Action unavailable; AP refunded");
+      const reason=a?actionReason(s,a,c,actionCost(s,a,c)):"Missing crawler";
+      if (a && !perform(s, a, c)) reject(s,a,reason+"; AP refunded");
       if (
         s.floor !== original.floor ||
         (s.phase as string) === "RESULT" ||
@@ -1479,7 +1481,8 @@ export function microAction(
   );
   s.exposures = [];
   a.ap = 3;
-  if (!perform(s, a, action)) reject(s, a, "Action unavailable");
+  const reason=actionReason(s,a,action,actionCost(s,a,action));
+  if (!perform(s, a, action)){reject(s,a,reason+"; no turn spent");s.revision++;}
   else {
     if (
       (s.phase as string) !== "SAFE_ROOM" &&

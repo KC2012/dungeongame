@@ -126,7 +126,7 @@ export function environment(s: State): void {
           delete t.hazards.poison;
           t.tags = t.tags.filter((x) => x !== "gas");
           next.push({ ...e, element: "blast", damage: 8 });
-          emit(s, "gas_ignition", e.source, [], {}, e);
+          emit(s, "gas_ignition", e.source, [], { radius: 1 }, e);
         }
         if (t.tags.includes("ice")) {
           t.tags = t.tags.filter((x) => x !== "ice");
@@ -135,7 +135,7 @@ export function environment(s: State): void {
         if (t.tags.includes("volatile")) {
           t.tags = t.tags.filter((x) => x !== "volatile");
           next.push({ ...e, element: "blast", damage: 10 });
-          emit(s, "explosion_chain", e.source, [], {}, e);
+          emit(s, "explosion_chain", e.source, [], { radius: 1 }, e);
         }
       }
       if (e.element === "cold" && t.tags.includes("wet")) {
@@ -155,6 +155,7 @@ export function environment(s: State): void {
         if (!network) {
           network = new Set<number>([index]);
           const todo = [{ x: e.x, y: e.y }];
+          const edges: { from: Point; to: Point }[] = [];
           for (let i = 0; i < todo.length && network.size < 8; i++)
             for (const n of neighbors(todo[i])) {
               const nt = tile(s, n),
@@ -167,12 +168,20 @@ export function environment(s: State): void {
                 network.size < 8
               ) {
                 network.add(idx);
+                edges.push({ from: todo[i], to: n });
                 todo.push(n);
               }
             }
           conducted.set(e.source, network);
           if (network.size > 1)
-            emit(s, "shock_chain", e.source, [], { tiles: network.size }, e);
+            emit(
+              s,
+              "shock_chain",
+              e.source,
+              [],
+              { tiles: network.size, network: todo, edges },
+              e,
+            );
           for (const idx of network)
             if (idx !== index)
               next.push({
