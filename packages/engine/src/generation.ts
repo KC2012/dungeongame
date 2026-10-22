@@ -1,3 +1,4 @@
+import { guidedFirstFloor } from "./guided-floor";
 import { authorSituation } from "./scenarios";
 import { compareIds } from "./random";
 import { catalog, entry } from "../../content/src/index";
@@ -311,6 +312,7 @@ function buildFloor(s: State): void {
   // Insert one authored encounter and one optional discovery; central paths remain untouched.
   authorSituation(s, 2, coords[2]);
   authorSituation(s, 7, coords[7]);
+  guidedFirstFloor(s);
   const failures = validateFloor(s);
   if (failures.length)
     throw Error(

@@ -34,3 +34,5 @@ Next task: observe first-time players explaining world feedback, then prioritize
 Production 0.2.0 health/HTML/assets/catalog smoke passed after version alignment; local host is running on port 2567 with isolated `.data/alpha2-local` saves. Reusable cloud `install_script` and `start_skill` draft saved successfully. Snapshot publication and restoration in a new task have not been performed. Review/save Environment settings and publish the environment if a reusable cloud snapshot is desired.
 
 Alpha 3 branch alpha3/make-the-game-understandable; Alpha 2 preserved at alpha2-known-good. A3.1 delivered original readable pixel recipes, closer camera and live-bounds pointer conversion. 549 tests and 11 browser checks passed. See docs/alpha3/AUDIT.md and PROGRESS.md. Alpha 3 is in progress.
+
+A3.2: persisted On/Off/Reset guidance and opt-in host-authoritative teaching arrangement on Floor 1. 553 unit/integration tests passed; guided-floor conduction tested across 60 seeds. Browser first-run, reset and four-client route pass after correcting first-enemy placement. Alpha 3 remains in progress.

@@ -6,6 +6,7 @@ import {
 } from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
+import { Guidance } from "./guidance";
 import { Broadcast } from "./broadcast";
 import { enemyIdentity, itemOpportunity } from "./identity";
 import { scenarios } from "../../../packages/content/src/scenarios";
@@ -28,6 +29,7 @@ import {
   los,
 } from "../../../packages/engine/src/grid";
 const broadcast = new Broadcast();
+const guidance = new Guidance(localStorage);
 const root = document.querySelector<HTMLDivElement>("#app")!;
 const escape = (v: unknown) =>
   String(v ?? "").replace(
@@ -165,7 +167,7 @@ function title() {
   phaser?.destroy(true);
   phaser = undefined;
   scene = undefined;
-  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE ALPHA 2</span>${button("Credits", "credits")}${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Suit palette<select id="palette"><option value="0">Ochre</option><option value="1">Moss</option><option value="2">Lilac</option><option value="3">Slate</option><option value="4">Clay</option><option value="5">Linen</option>${profileUnlocks.includes("concourse_survivor") ? '<option value="6">Broadcast gold · survivor</option>' : ""}${profileUnlocks.includes("producer_favorite") ? '<option value="7">Producer seal · earned favor</option>' : ""}</select></label><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") + '<label>Restore a host backup<input type="file" id="backup-file" accept="application/json"></label>' : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
+  root.innerHTML = `<header><b class="brand">THE CRAWL</b><span>CONCOURSE // PRIVATE ALPHA 2</span>${button("Credits", "credits")}${button("Settings", "settings")}</header><main class="title"><div class="eyebrow">The Producer welcomes your compliance</div><h1>Six floors.<br>One way off the air.</h1><p class="intro">A tactical cooperative crawl through the Concourse. Read the room, improvise with its machinery, and keep your friends alive. Every round is resolved by the host server.</p><div class="columns"><section class="card"><h2>Enter the Concourse</h2><label>Crawler name<input id="name" maxlength="24" value="Crawler"></label><label>Background<select id="background">${(catalog.backgrounds ?? []).map((e) => `<option value="${e.id}">${escape(e.name)}</option>`).join("")}</select></label><p id="background-help" class="muted"></p><label>Suit palette<select id="palette"><option value="0">Ochre</option><option value="1">Moss</option><option value="2">Lilac</option><option value="3">Slate</option><option value="4">Clay</option><option value="5">Linen</option>${profileUnlocks.includes("concourse_survivor") ? '<option value="6">Broadcast gold · survivor</option>' : ""}${profileUnlocks.includes("producer_favorite") ? '<option value="7">Producer seal · earned favor</option>' : ""}</select></label><label>Guidance<select id="title-guidance"><option value="on" ${guidance.data.enabled ? "selected" : ""}>On · learn through Floor 1</option><option value="off" ${!guidance.data.enabled ? "selected" : ""}>Off · full controls</option></select></label><label>Run seed <small>Leave blank for a new floor layout</small><input id="seed" inputmode="numeric" placeholder="Random"></label>${button("Create private room", "create", 'class="primary"')}</section><section class="card"><h2>Join your crew</h2><p class="muted">Use the six character room code and the invitation secret supplied by your host, or open their invitation link.</p><label>Room code<input id="code" maxlength="6" value="${escape(new URLSearchParams(location.search).get("room") ?? "")}"></label><label>Invitation secret<input id="invite" type="password" value="${escape(location.hash.slice(1))}" autocomplete="off"></label>${button("Join room", "join")}${saved() ? button("Reconnect / resume saved run", "resume") + '<label>Restore a host backup<input type="file" id="backup-file" accept="application/json"></label>' : ""}<details><summary>How to play</summary><p class="muted">Move with arrows or WASD. Outside combat, moves happen immediately. In combat, queue up to 3 AP and press R to ready. All active crawlers must be ready. Click enemies to attack; inspect machinery for alternative solutions. Inventory: I. Character: C. Escape: cancel.</p></details></section></div><p class="disclaimer">An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl. Not licensed or affiliated. All playable cast, dialogue, floors and procedural pixel art are original. No accounts, paid services or remote AI. This local alpha has not passed separate-network acceptance testing.</p></main><div class="drawer" id="drawer"></div>`;
   backgroundHelp();
 }
 function backgroundHelp() {
@@ -194,6 +196,7 @@ async function connect(which: string) {
         name,
         background,
         palette,
+        guided: guidance.data.enabled,
         ...(seed ? { seed: Number(seed) } : {}),
       });
     } else if (which === "join") {
@@ -276,6 +279,7 @@ function bindRoom() {
   });
   room.onMessage("snapshot", (m: any) => {
     if (room !== current) return;
+    guidance.accept(m.game, actorId);
     broadcast.accept(m.game, performance.now());
     game = m.game;
     root.dataset.checksum = m.checksum;
@@ -404,7 +408,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}${button("Map focus", "map-focus", 'aria-pressed="false"')}</div></div><div id="guidance" class="guidance" role="status"></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="target-readout" class="target-readout" role="status"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><details id="inspector-panel" class="expert"><summary>Inspector · exact details</summary><section id="inspector"></section></details><details class="expert" id="log-panel"><summary>Transmission log</summary><div id="log" class="log" role="log"></div></details></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -460,6 +464,11 @@ function render() {
       : game.phase === "SAFE_ROOM"
         ? "SAFEROOM · services available"
         : "EXPLORATION · server-confirmed movement";
+  const lesson = guidance.lesson(game, actorId);
+  const guide = document.querySelector<HTMLElement>("#guidance")!;
+  guide.hidden = !guidance.data.enabled;
+  guide.dataset.lesson = lesson.focus;
+  guide.innerHTML = `<b>${escape(lesson.title)}</b><p>${escape(lesson.text)}</p>`;
   const f = catalog.floors[game.floor - 1];
   const producer = document.querySelector<HTMLElement>("#producer-line")!;
   const notice = broadcast.current;
@@ -521,7 +530,7 @@ function render() {
     )
     .join(
       "",
-    )}${nearby.map((o) => button(`${escape(o.kind === "cache" ? "Loot" : o.kind === "safe" ? "Enter" : "Use")} · ${escape(o.name)}`, "object:" + o.id)).join("") || '<p class="muted">Approach a marked object to interact.</p>'}${Object.values(
+    )}${nearby.map((o) => button(`${escape(o.kind === "cache" ? (o.id === "cache_0" && game!.counters.guidedFloor === 1 ? "Open supplies" : "Loot") : o.kind === "safe" ? "Enter" : "Use")} · ${escape(o.name)}`, "object:" + o.id)).join("") || '<p class="muted">Approach a marked object to interact.</p>'}${Object.values(
     game.actors,
   )
     .filter((v) => v.downed && !v.dead && distance(a, v) <= 1)
@@ -852,7 +861,7 @@ function showDrawer(kind: string) {
     html =
       '<p class="intro">The Concourse · The Crawl. Original playable characters, dialogue, content and procedural pixel geometry. Phaser, Colyseus and other open-source dependencies retain their own licenses. An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl; not affiliated with or licensed by the author or publisher. No book text, novel cast, logos or licensed sprites are included.</p>';
   } else if (kind === "settings") {
-    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
+    html = `<div class="stack"><label>Guidance<select id="guidance-mode"><option value="on" ${guidance.data.enabled ? "selected" : ""}>On</option><option value="off" ${!guidance.data.enabled ? "selected" : ""}>Off · full controls</option></select></label>${button("Reset guidance progress", "guidance-reset")}<small>Reset replays prompts. A newly created guided room also receives the Floor 1 teaching arrangement.</small><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
   } else if (a && game) {
     if (kind === "inventory") {
       const total = a.inventory.reduce(
@@ -1009,6 +1018,11 @@ async function act(value: string) {
     case "map-focus":
       mapFocus = !mapFocus;
       render();
+      break;
+    case "guidance-reset":
+      guidance.reset();
+      render();
+      if (!game) title();
       break;
     case "inspect":
       mapFocus = false;
@@ -1274,6 +1288,10 @@ document.addEventListener("change", (e) => {
         },
       );
     }
+  }
+  if (["guidance-mode", "title-guidance"].includes(t.id)) {
+    guidance.toggle(t.value === "on");
+    if (game) render();
   }
   if (t.id === "skill") skillId = t.value;
   if (t.id === "background") backgroundHelp();

@@ -120,6 +120,7 @@ export class CrawlRoom extends Room {
           : randomBytes(4).readUInt32LE(),
         randomBytes(8).toString("hex"),
       );
+      this.game.counters.guidedFloor = options?.guided === true ? 1 : 0;
       this.game.unlocks = store.unlocked();
       this.invite = token();
       this.inviteHash = digest(this.invite);

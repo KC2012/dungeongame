@@ -359,7 +359,7 @@ test("crawler development separates permanent choices and retains exact item mec
     page.getByRole("button", { name: "Choose Breaker", exact: true }),
   ).toBeDisabled();
   await expect(page.getByText(/Unlocks/).first()).toBeVisible();
-  await page.screenshot({ path: "docs/alpha2/a23-crawler-development.png" });
+  await page.screenshot({ path: "docs/alpha3/a23-crawler-development.png" });
   await page.keyboard.press("Escape");
   await page.keyboard.press("i");
   await expect(page.locator("#drawer")).toContainText("weight");
@@ -405,7 +405,7 @@ test("map focus enlarges the dungeon and expert panels remain accessible by keyb
   await expect
     .poll(() => page.locator("canvas").evaluate((c) => c.clientWidth))
     .toBeGreaterThan(width + 150);
-  await page.screenshot({ path: "docs/alpha2/a25-map-focus-1280.png" });
+  await page.screenshot({ path: "docs/alpha3/a25-map-focus-1280.png" });
   await page.locator("#map").focus();
   await page.keyboard.press("f");
   await page.keyboard.press("ArrowRight");
@@ -420,7 +420,7 @@ test("map focus enlarges the dungeon and expert panels remain accessible by keyb
       const side = document.querySelector<HTMLElement>(".side");
       if (side) side.scrollTop = 0;
     });
-    await page.screenshot({ path: `docs/alpha2/a25-dungeon-${width}.png` });
+    await page.screenshot({ path: `docs/alpha3/a25-dungeon-${width}.png` });
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

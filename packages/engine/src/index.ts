@@ -891,6 +891,7 @@ export function perform(s: State, a: Actor, c: Action): boolean {
   if (ok) {
     a = s.actors[a.id];
     a.ap = Math.max(0, a.ap - cost);
+    emit(s,"action_performed",a.id,target?[target.id]:[],{action:c.type,id:c.id,cost},p);
   }
   return ok;
 }

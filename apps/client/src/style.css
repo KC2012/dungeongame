@@ -560,3 +560,6 @@ details summary {
     grid-row: auto;
   }
 }
+.guidance { padding: 10px 16px; background: #233943; border-left: 3px solid #83c8d0; font-size: 13px; line-height: 1.5; }
+.guidance p { color: #b8d0ce; margin-top: 3px; max-width: 100ch; }
+.guidance[hidden] { display: none; }

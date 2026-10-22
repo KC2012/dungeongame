@@ -21,13 +21,13 @@ test("real Phaser renders confirmed movement, combat and chain effects without c
   expect(attack.after).toBe(attack.checksum);
   expect(attack.cues).toBeGreaterThan(move.cues);
   await page.waitForTimeout(350);
-  await page.screenshot({ path: "docs/alpha2/a21-combat.png" });
+  await page.screenshot({ path: "docs/alpha3/a21-combat.png" });
   await run("environment");
   await expect(page.locator("#fixture-broadcast")).toContainText("PRODUCER");
-  await page.screenshot({ path: "docs/alpha2/a24-producer-reaction.png" });
+  await page.screenshot({ path: "docs/alpha3/a24-producer-reaction.png" });
   await run("boss");
   await page.waitForTimeout(200);
-  await page.screenshot({ path: "docs/alpha2/a21-chain-telegraph.png" });
+  await page.screenshot({ path: "docs/alpha3/a21-chain-telegraph.png" });
   await expect
     .poll(() =>
       page.evaluate(() => (window as any).fixture.scene.effects.count),
@@ -47,12 +47,12 @@ test("real Phaser renders confirmed movement, combat and chain effects without c
   });
   await run("down");
   await page.waitForTimeout(100);
-  await page.screenshot({ path: "docs/alpha2/a21-reduced-motion-down.png" });
+  await page.screenshot({ path: "docs/alpha3/a21-reduced-motion-down.png" });
   await run("roster");
   await page.waitForTimeout(300);
-  await page.screenshot({ path: "docs/alpha2/a23-enemy-roles.png" });
+  await page.screenshot({ path: "docs/alpha3/a23-enemy-roles.png" });
   await run("scenario");
   await page.waitForTimeout(1500);
-  await page.screenshot({ path: "docs/alpha2/a22-flooded-relay.png" });
+  await page.screenshot({ path: "docs/alpha3/a22-flooded-relay.png" });
   expect(errors).toEqual([]);
 });
