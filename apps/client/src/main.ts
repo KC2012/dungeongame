@@ -6,6 +6,7 @@ import {
 } from "../../../packages/content/src/index";
 import { Client, type Room } from "colyseus.js";
 import { DungeonScene } from "./map";
+import { Broadcast } from "./broadcast";
 import { enemyIdentity, itemOpportunity } from "./identity";
 import { scenarios } from "../../../packages/content/src/scenarios";
 import "./style.css";
@@ -26,6 +27,7 @@ import {
   same,
   los,
 } from "../../../packages/engine/src/grid";
+const broadcast = new Broadcast();
 const root = document.querySelector<HTMLDivElement>("#app")!;
 const escape = (v: unknown) =>
   String(v ?? "").replace(
@@ -273,6 +275,7 @@ function bindRoom() {
   });
   room.onMessage("snapshot", (m: any) => {
     if (room !== current) return;
+    broadcast.accept(m.game, performance.now());
     game = m.game;
     root.dataset.checksum = m.checksum;
     root.dataset.revision = String(m.game.revision);
@@ -311,6 +314,7 @@ function bindRoom() {
   room.onLeave((code: number) => {
     if (room !== current) return;
     connected = false;
+    broadcast.reset();
     scene?.stream.reset();
     scene?.effects?.clear();
     inFlight = undefined;
@@ -399,7 +403,7 @@ function render() {
     focusAction = focused?.dataset.act;
   const drawerScroll = document.querySelector("#drawer")?.scrollTop ?? 0;
   if (!document.querySelector("#map")) {
-    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div id="boss-hud" aria-live="polite"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
+    root.innerHTML = `<header><b class="brand">THE CRAWL</b><span id="header-info"></span><div class="row">${button("Invite", "invite")}${button("Settings", "settings")}${button("Reconnect", "reconnect")}${actorId === hostId ? button("Export save", "export") : ""}</div></header><main class="workspace"><section class="map-column"><div class="map-bar"><div><b id="floor-name"></b><br><small id="phase-name"></small></div><div class="controls">${button("−", "zoom-out", 'aria-label="Zoom out"')}${button("+", "zoom-in", 'aria-label="Zoom in"')}${button("Inspect [F]", "inspect")}</div></div><div class="broadcast-strip"><div id="producer-line" role="status" aria-live="polite"></div><div id="audience-meter"></div></div><div id="boss-hud" aria-live="polite"></div><div id="map" tabindex="0" role="application" aria-label="Dungeon map. Arrow keys move; F inspect; R ready; I inventory; C character."></div><div class="map-bar"><small>WASD / arrows move · click target · R ready · Esc cancel</small><small>? objective · # boss device · + safe · > descent</small></div></section><aside class="side"><section id="mission"></section><section id="party"></section><section id="inspector"></section><section><h3>Transmission log</h3><div id="log" class="log" role="log" aria-live="polite"></div></section></aside><section class="actions" id="actions"></section><section class="actions" id="context"></section></main><div class="drawer" id="drawer"></div>`;
     scene = new DungeonScene();
     scene.reducedMotion = settings.reducedMotion;
     scene.choose = pick;
@@ -439,6 +443,18 @@ function render() {
         ? "SAFEROOM · services available"
         : "EXPLORATION · server-confirmed movement";
   const f = catalog.floors[game.floor - 1];
+  const producer = document.querySelector<HTMLElement>("#producer-line")!;
+  const notice = broadcast.current;
+  const producerText =
+    settings.announcer && notice
+      ? `PRODUCER / ${notice.title} — ${notice.text}`
+      : "PRODUCER / " +
+        (settings.announcer ? "Watching the floor." : "Commentary muted");
+  if (producer.textContent !== producerText)
+    producer.textContent = producerText;
+  const change = broadcast.audienceChange;
+  document.querySelector("#audience-meter")!.innerHTML =
+    `<b>◉ ${game.audience}</b><small> / 100 AUDIENCE</small>${change ? `<span class="audience-change">${change.delta > 0 ? "+" : ""}${change.delta} · ${escape(change.cause)}</span>` : ""}<meter min="0" max="100" value="${game.audience}" aria-label="Audience interest">${game.audience}</meter>`;
   const boss = Object.values(game.actors).find(
     (v) => v.tags.includes("boss") && !v.dead,
   );
@@ -793,7 +809,7 @@ function showDrawer(kind: string) {
     html =
       '<p class="intro">The Concourse · The Crawl. Original playable characters, dialogue, content and procedural pixel geometry. Phaser, Colyseus and other open-source dependencies retain their own licenses. An unofficial private fan-setting interpretation inspired by Dungeon Crawler Carl; not affiliated with or licensed by the author or publisher. No book text, novel cast, logos or licensed sprites are included.</p>';
   } else if (kind === "settings") {
-    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
+    html = `<div class="stack"><label>Text size<select id="font"><option value="14">Standard</option><option value="16" ${settings.font === 16 ? "selected" : ""}>Large</option><option value="18" ${settings.font === 18 ? "selected" : ""}>Extra large</option></select></label><label><input id="sound" type="checkbox" ${settings.sound ? "checked" : ""}>Synthesized action sounds</label><label><input id="motion" type="checkbox" ${settings.reducedMotion ? "checked" : ""}>Reduced motion · stationary feedback, no travel</label><label><input id="announcer" type="checkbox" ${settings.announcer ? "checked" : ""}>Producer commentary</label><p class="muted">No flashing effects or time-limited text. Keyboard and pointer use the same inspector. All hazards have letter or shape labels.</p></div>`;
   } else if (a && game) {
     if (kind === "inventory") {
       const total = a.inventory.reduce(
@@ -1213,16 +1229,18 @@ document.addEventListener("change", (e) => {
   }
   if (t.id === "skill") skillId = t.value;
   if (t.id === "background") backgroundHelp();
-  if (["font", "sound", "motion"].includes(t.id)) {
+  if (["font", "sound", "motion", "announcer"].includes(t.id)) {
     settings = {
       ...settings,
       font: t.id === "font" ? Number(t.value) : settings.font,
       sound: t.id === "sound" ? t.checked : settings.sound,
+      announcer: t.id === "announcer" ? t.checked : settings.announcer,
       reducedMotion: t.id === "motion" ? t.checked : settings.reducedMotion,
     };
     localStorage.setItem("concourse.settings", JSON.stringify(settings));
     document.documentElement.style.fontSize = settings.font + "px";
     if (scene) scene.reducedMotion = settings.reducedMotion;
+    if (game && game.phase !== "LOBBY") render();
   }
 });
 document.addEventListener("keydown", (e) => {

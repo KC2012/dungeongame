@@ -27,3 +27,11 @@ Validation: production build passed; 540 tests passed (including all existing su
 Limitations: silhouettes are lightweight glyph/pixel shapes, not bespoke animated sprite art. Six bosses share a guardian silhouette with floor crests; unique hand-animated boss bodies remain a presentation opportunity. Actual floor-3 selection correctness is covered by the existing progression suite; the browser regression checks the real character UI and pre-floor-3 lockout.
 
 A2.3 browser outcome: all 8 passed (41.3s), including real character-screen choice lockout, item mechanics, actual Phaser role/guardian rendering and existing two/four-client/reconnect scenarios. Screenshots: a23-enemy-roles.png and a23-crawler-development.png.
+
+## A2.4 — Producer and Audience
+
+Original, short Producer transmissions select confirmed chain reactions, rescues, near-death survival, deaths, discoveries, threshold crossings, bargains, boss entrances/defeats/systemic resolutions and floor transitions. Six-second ordinary-comment cooldown; critical loss/rescue/boss outcomes may interrupt. Latest line remains readable rather than disappearing on a timer. A mute control persists with settings. Audience meter displays actual authority score and net change, attributed to the earned achievement, multiple-event resolution, spotlight or quiet-round decay. Map feedback anchors actual net Audience change at a confirmed event participant where available. No client scoring or new Director rules.
+
+Validation: full suite 544 passed, build/typecheck passed, all 9 browser tests passed (44.6s), including mute/reduced-motion persistence and engine-driven Producer reaction rendering. Additional attribution and snapshot-movement refinements verified by targeted presentation/broadcast suites. Screenshot a24-producer-reaction.png is from the actual engine/Phaser harness. Existing AI movements without explicit move events now also interpolate from confirmed snapshot deltas.
+
+Limitations: ordinary comments can be suppressed by rate limiting; the full Transmission Log remains authoritative detail. No generated voices, remote model, paid service or new narrative dependency. Human review of repetition/tone is pending.

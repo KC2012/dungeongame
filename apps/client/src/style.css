@@ -424,3 +424,9 @@ details summary {
 .identity-moment > h2 { margin: 16px 0; }
 .identity-moment .chosen { border: 2px solid #c5d895; background: #34432d; }
 .opportunity { color: #d9cf91 !important; border-left: 2px solid #bba566; padding-left: 8px; }
+.broadcast-strip { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 9px 14px; border-bottom: 1px solid #445346; background: #1c2620; font-size: 11px; min-height: 46px; align-items: center; }
+#producer-line { color: #c5cdb5; max-width: 75ch; line-height: 1.5; }
+#audience-meter { min-width: 130px; text-align: right; }
+#audience-meter b { color: #e5ca81; font-size: 14px; }
+#audience-meter meter { display: block; width: 100%; height: 5px; margin-top: 4px; }
+.audience-change { display: block; color: #bedb9b; margin-top: 3px; }

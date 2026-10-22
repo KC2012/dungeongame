@@ -236,6 +236,23 @@ export function visualCues(
   for (const a of Object.values(after.actors)) {
     const old = before.actors[a.id];
     if (!old) continue; // newly visible does not mean newly applied
+    if (
+      !equal(old, a) &&
+      !cues.some((c) => c.kind === "move" && c.actorId === a.id)
+    ) {
+      add(
+        {
+          runId: after.runId,
+          eventId: after.nextEventId,
+          actorId: a.id,
+        } as GameEvent,
+        "move",
+        a,
+        "",
+        ink.physical,
+        old,
+      );
+    }
     for (const [name, status] of Object.entries(a.statuses))
       if (!old.statuses[name] || old.statuses[name].serial !== status.serial)
         add(
@@ -274,6 +291,27 @@ export function visualCues(
         Math.min(500, (i % 8) * 40),
       );
     }
+  }
+  const delta = after.audience - before.audience;
+  if (delta) {
+    const cause =
+      events.find((e) => e.type === "achievement") ??
+      events.find((e) => e.type === "shock_chain" || e.type === "revive_ally");
+    const at = cause
+      ? (after.actors[cause.targetIds[0]] ??
+        after.actors[cause.actorId] ??
+        cause.tile)
+      : undefined;
+    if (at)
+      add(
+        { runId: after.runId, eventId: after.nextEventId } as GameEvent,
+        "text",
+        at,
+        `AUDIENCE ${delta > 0 ? "+" : ""}${delta}`,
+        ink.heal,
+        undefined,
+        500,
+      );
   }
   return cues.slice(0, 160);
 }

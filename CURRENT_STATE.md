@@ -43,3 +43,5 @@ Dedicated branch alpha2/make-the-game-visible; imported Alpha 1 preserved at tag
 A2.2: four authored situations added through existing materials and objects, preserving safe central routes. 538 automated tests passed, including 600-floor deterministic/reachability checks; 7 browser tests passed; two assisted six-floor campaigns won via alternate/combat routes. See docs/alpha2/PROGRESS.md.
 
 A2.3: role silhouettes/glyphs, enemy tactics/weaknesses, boss HP/phase/danger/device feedback, existing-item opportunity hints and two-stage Floor 3 contract presentation. 540 tests and all 8 browser scenarios passed; build/typecheck passed. Rules preserved; see milestone limitations in docs/alpha2/PROGRESS.md.
+
+A2.4: confirmed-event Producer commentary and actual Audience deltas, priority/cooldown and persistent mute, plus map Audience feedback. 544 tests and 9 browser scenarios passed; targeted post-review refinements passed. No Director scoring changes. See docs/alpha2/PROGRESS.md.

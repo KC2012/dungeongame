@@ -364,3 +364,31 @@ test("crawler development separates permanent choices and retains exact item mec
   await page.keyboard.press("i");
   await expect(page.locator("#drawer")).toContainText("weight");
 });
+
+test("Producer mute and reduced motion persist while precise gameplay interfaces remain available", async ({
+  page,
+}) => {
+  await startSolo(page);
+  await expect(page.locator("#audience-meter")).toContainText("AUDIENCE");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByLabel("Producer commentary").uncheck();
+  await page
+    .getByLabel("Reduced motion · stationary feedback, no travel")
+    .check();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#producer-line")).toContainText(
+    "Commentary muted",
+  );
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("concourse.settings")!).reducedMotion,
+    ),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await expect(page.getByLabel("Producer commentary")).not.toBeChecked();
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("f");
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("#inspector")).toContainText("Inspector");
+});

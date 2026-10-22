@@ -23,6 +23,8 @@ test("real Phaser renders confirmed movement, combat and chain effects without c
   await page.waitForTimeout(350);
   await page.screenshot({ path: "docs/alpha2/a21-combat.png" });
   await run("environment");
+  await expect(page.locator("#fixture-broadcast")).toContainText("PRODUCER");
+  await page.screenshot({ path: "docs/alpha2/a24-producer-reaction.png" });
   await run("boss");
   await page.waitForTimeout(200);
   await page.screenshot({ path: "docs/alpha2/a21-chain-telegraph.png" });
